@@ -1,0 +1,11 @@
+streamlit
+pandas
+numpy
+json
+matplotlib.pyplot
+requests
+nltk
+collections
+sklearn
+spacy
+gensin
