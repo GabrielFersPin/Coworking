@@ -58,6 +58,8 @@ Each model was evaluated based on the R-squared value and Mean Squared Error (MS
 ### 3. Text Analysis and Word Cloud
 The project analyzed reviews from Google Maps to identify the most frequently mentioned words that could help predict customer satisfaction and desired features. A word cloud was generated to visualize the most important keywords based on their frequency and relevance.
 
+![World Cloud](/workspaces/Coworking/src/Images/Top2WordCloud.png)
+
 ### 4. Data Visualization
 - **Correlation heatmaps** were generated to visualize the relationship between different features and coworking space prices.
 - **Scatter plots** and **line charts** were used to explore relationships between various demographic and price features.
