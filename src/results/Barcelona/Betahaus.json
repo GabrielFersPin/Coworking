@@ -1,0 +1,395 @@
+{
+    "html_attributions": [],
+    "result": {
+        "address_components": [
+            {
+                "long_name": "7",
+                "short_name": "7",
+                "types": [
+                    "street_number"
+                ]
+            },
+            {
+                "long_name": "Carrer de Vilafranca",
+                "short_name": "Carrer de Vilafranca",
+                "types": [
+                    "route"
+                ]
+            },
+            {
+                "long_name": "Gr\u00e0cia",
+                "short_name": "Gr\u00e0cia",
+                "types": [
+                    "sublocality_level_1",
+                    "sublocality",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "Barcelona",
+                "short_name": "Barcelona",
+                "types": [
+                    "locality",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "Barcelona",
+                "short_name": "B",
+                "types": [
+                    "administrative_area_level_2",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "Catalunya",
+                "short_name": "CT",
+                "types": [
+                    "administrative_area_level_1",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "Spain",
+                "short_name": "ES",
+                "types": [
+                    "country",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "08024",
+                "short_name": "08024",
+                "types": [
+                    "postal_code"
+                ]
+            }
+        ],
+        "adr_address": "<span class=\"street-address\">Carrer de Vilafranca, 7</span>, <span class=\"extended-address\">Gr\u00e0cia</span>, <span class=\"postal-code\">08024</span> <span class=\"locality\">Barcelona</span>, <span class=\"country-name\">Spain</span>",
+        "business_status": "OPERATIONAL",
+        "current_opening_hours": {
+            "open_now": false,
+            "periods": [
+                {
+                    "close": {
+                        "date": "2025-02-10",
+                        "day": 1,
+                        "time": "2000"
+                    },
+                    "open": {
+                        "date": "2025-02-10",
+                        "day": 1,
+                        "time": "0800"
+                    }
+                },
+                {
+                    "close": {
+                        "date": "2025-02-11",
+                        "day": 2,
+                        "time": "2000"
+                    },
+                    "open": {
+                        "date": "2025-02-11",
+                        "day": 2,
+                        "time": "0800"
+                    }
+                },
+                {
+                    "close": {
+                        "date": "2025-02-12",
+                        "day": 3,
+                        "time": "2000"
+                    },
+                    "open": {
+                        "date": "2025-02-12",
+                        "day": 3,
+                        "time": "0800"
+                    }
+                },
+                {
+                    "close": {
+                        "date": "2025-02-13",
+                        "day": 4,
+                        "time": "2000"
+                    },
+                    "open": {
+                        "date": "2025-02-13",
+                        "day": 4,
+                        "time": "0800"
+                    }
+                },
+                {
+                    "close": {
+                        "date": "2025-02-14",
+                        "day": 5,
+                        "time": "2000"
+                    },
+                    "open": {
+                        "date": "2025-02-14",
+                        "day": 5,
+                        "time": "0800"
+                    }
+                }
+            ],
+            "weekday_text": [
+                "Monday: 8:00\u202fAM\u2009\u2013\u20098:00\u202fPM",
+                "Tuesday: 8:00\u202fAM\u2009\u2013\u20098:00\u202fPM",
+                "Wednesday: 8:00\u202fAM\u2009\u2013\u20098:00\u202fPM",
+                "Thursday: 8:00\u202fAM\u2009\u2013\u20098:00\u202fPM",
+                "Friday: 8:00\u202fAM\u2009\u2013\u20098:00\u202fPM",
+                "Saturday: Closed",
+                "Sunday: Closed"
+            ]
+        },
+        "formatted_address": "Carrer de Vilafranca, 7, Gr\u00e0cia, 08024 Barcelona, Spain",
+        "formatted_phone_number": "655 62 71 49",
+        "geometry": {
+            "location": {
+                "lat": 41.406983,
+                "lng": 2.1567652
+            },
+            "viewport": {
+                "northeast": {
+                    "lat": 41.40831173029149,
+                    "lng": 2.158166780291503
+                },
+                "southwest": {
+                    "lat": 41.40561376970849,
+                    "lng": 2.155468819708499
+                }
+            }
+        },
+        "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+        "icon_background_color": "#7B9EB0",
+        "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+        "international_phone_number": "+34 655 62 71 49",
+        "name": "Betahaus | Coworking Barcelona",
+        "opening_hours": {
+            "open_now": false,
+            "periods": [
+                {
+                    "close": {
+                        "day": 1,
+                        "time": "2000"
+                    },
+                    "open": {
+                        "day": 1,
+                        "time": "0800"
+                    }
+                },
+                {
+                    "close": {
+                        "day": 2,
+                        "time": "2000"
+                    },
+                    "open": {
+                        "day": 2,
+                        "time": "0800"
+                    }
+                },
+                {
+                    "close": {
+                        "day": 3,
+                        "time": "2000"
+                    },
+                    "open": {
+                        "day": 3,
+                        "time": "0800"
+                    }
+                },
+                {
+                    "close": {
+                        "day": 4,
+                        "time": "2000"
+                    },
+                    "open": {
+                        "day": 4,
+                        "time": "0800"
+                    }
+                },
+                {
+                    "close": {
+                        "day": 5,
+                        "time": "2000"
+                    },
+                    "open": {
+                        "day": 5,
+                        "time": "0800"
+                    }
+                }
+            ],
+            "weekday_text": [
+                "Monday: 8:00\u202fAM\u2009\u2013\u20098:00\u202fPM",
+                "Tuesday: 8:00\u202fAM\u2009\u2013\u20098:00\u202fPM",
+                "Wednesday: 8:00\u202fAM\u2009\u2013\u20098:00\u202fPM",
+                "Thursday: 8:00\u202fAM\u2009\u2013\u20098:00\u202fPM",
+                "Friday: 8:00\u202fAM\u2009\u2013\u20098:00\u202fPM",
+                "Saturday: Closed",
+                "Sunday: Closed"
+            ]
+        },
+        "photos": [
+            {
+                "height": 2667,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/101365235891510421513\">Betahaus | Coworking Barcelona</a>"
+                ],
+                "photo_reference": "AVzFdbnhxqS1dtHK6RkT4WH_BPtqe370QgeoZB-HrOieEXogzvEZhm6EbAIHlZnR-ql4VfAjh-O2A8TWYTZ8A_q6fUgMFsbtnkFrwSZ7wDw6IoLOSXT0bovE6TloUHekxI_CpnDwXOwoPZ4nBA78e4MsYzMOp5pF5uke6QaosoS1MFngfik",
+                "width": 4000
+            },
+            {
+                "height": 1333,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/101365235891510421513\">Betahaus | Coworking Barcelona</a>"
+                ],
+                "photo_reference": "AVzFdbkHyey1n9UFxR75wv-jLVY7KRiUMlVzaEqrE1H06EprwHOE5-_zZ6KV_EIbYjMCP44EsC2GXt0x2TWDvucH6Z6_009-3xbXe5b5y0Vnynsr7HHtJSWlXwZLu6ggDmJKAJhYu6G9p2Or3i0OxA5YatNwG7Bmc39DOlZWjtzozMgMyKA",
+                "width": 2000
+            },
+            {
+                "height": 3204,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/101365235891510421513\">Betahaus | Coworking Barcelona</a>"
+                ],
+                "photo_reference": "AVzFdbmNH7YR5ZJAWpkIwRgS7HjAqm8TyjOmrWayWSM2uGINcWwg0FnhfaaRzPY0_qIjtk7vEzjLrt7Qgodx4bLZp7vyWEZGUpPtco3EKljZGCg0XFT4ErdW1BxfMh0TdFmxDaB0KgvdwIBFSX7gdx6alQlRgKrriVSmJw1TDe-URB4R1HQ",
+                "width": 4800
+            },
+            {
+                "height": 1200,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/101365235891510421513\">Betahaus | Coworking Barcelona</a>"
+                ],
+                "photo_reference": "AVzFdbln8SqA1s_m_1kxcX46bG2sPjl5skBlCe-Y1pg7w6_k63I4BvdTgh561-qgQGatLUPr3LNsftB9Vyh-aHtOCNdFAoHAQVbDAcsSozlWjw33wu2IzZHJT_BDa8YWmUiGZfgdOKMEKx8LDQwYsfCGLGmKj7It0AqtpGGIkFjy4OA7L6g",
+                "width": 1600
+            },
+            {
+                "height": 1024,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/101365235891510421513\">Betahaus | Coworking Barcelona</a>"
+                ],
+                "photo_reference": "AVzFdbmtOSe5c-VJ15pH3d6IBDRIvDPnHEgbZj4mPpdYYCm4WKwlfoWzKv339-CLsD_IY8je17iuivYzF-a9Wb7TwO4VnYwbr0Rafoib8ZPSZNOQM0nP7Hfi3O-9m6W2qAum3jmLqzwr-lAme_6LxDQHnBqgEj8WfYObqCBCUSGjMn-tiuY",
+                "width": 768
+            },
+            {
+                "height": 1758,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/101365235891510421513\">Betahaus | Coworking Barcelona</a>"
+                ],
+                "photo_reference": "AVzFdblPpkhZGcPTYl_N9LSqrhOxzMhMt7Wu0wYPDPrlbG1bs74J160v1J2DyIT0hr0AtnOTLTPVnNPoVCN6XreSC5rpkSthcG136USZrxIeojHm7SordoQjTMdBNq6g2suFIJa561VTWWx8Q2EvFxzpol4Xs75RpQklEG2YvJ4N0jQsbL0",
+                "width": 2500
+            },
+            {
+                "height": 1679,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/101365235891510421513\">Betahaus | Coworking Barcelona</a>"
+                ],
+                "photo_reference": "AVzFdbl8xZHVS5OV1Vet95HsipSKx5Va7dA9bYUz79aovxLF-jjfdeyGCUHiLrkXzpIkj_M24kBSBFrO-5eV2ih4JUNaxc1s66tapfTYgbjKIsrCWohxU_-4RKtdt3pwHywkKx-90nLUkl82Lm2yG23rDiHFHnCYvyz9NTivQqPL8UN8bMU",
+                "width": 2500
+            },
+            {
+                "height": 1202,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/101365235891510421513\">Betahaus | Coworking Barcelona</a>"
+                ],
+                "photo_reference": "AVzFdbkqcnZZI0N_ipvfHueTbikxz-kyRJaaH08m_FKxWfFJYPWqr1TYXQuxl6kX8B5pRPB05jJKrxWmSzAi_3f0xIESSk4wHfEOD2NlFMhPjWTd6xS6mExhA-2q2NIlV9lw2yFIqIVN-1irdyNuGZNMaErBi9GvHQKHmq3bW_hzGQvX5J0",
+                "width": 1800
+            },
+            {
+                "height": 853,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/101365235891510421513\">Betahaus | Coworking Barcelona</a>"
+                ],
+                "photo_reference": "AVzFdblDA55s2K8mKYWhzg3GuuW46d6FJ0yfgnVLKJTxwS25pMyBLkI1V3hwoXBP8y_QYlGPODGgeDuff4yK9eIwuo9n8TUtGnz-yOprD1ZDZjnaAIJUDIa7TPKb6cKpVx6GeyNUIhsl2lduD0D8qSghTRvLi9Rair1W6R0jYG5k_1KYKT8",
+                "width": 1280
+            },
+            {
+                "height": 1537,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/101365235891510421513\">Betahaus | Coworking Barcelona</a>"
+                ],
+                "photo_reference": "AVzFdbnXE9FqYu7GSA2RMhEdtIrHGqXJGwiOi0gxzLiLS61njE9BTOAj38FFP9U28LOK97EtWPTMPEerZ6nve0gqGVOz7Vq9YsdZD5jDKR8uUYP-rn5GQUMysBKGWddTWJioOChZ8RA6ouK4KlohSS9l4Cxl3rSarxPCWFHaNT9sZHt7bQU",
+                "width": 2049
+            }
+        ],
+        "place_id": "ChIJL2uOcbuipBIRPFrHBWTTkNc",
+        "plus_code": {
+            "compound_code": "C544+QP Barcelona, Spain",
+            "global_code": "8FH4C544+QP"
+        },
+        "rating": 4.8,
+        "reference": "ChIJL2uOcbuipBIRPFrHBWTTkNc",
+        "reviews": [
+            {
+                "author_name": "Kalin Tsanov",
+                "author_url": "https://www.google.com/maps/contrib/105979407414931756620/reviews",
+                "language": "en",
+                "original_language": "en",
+                "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjXZz5Ykl0BceXHt4dDik9v1bcDy5pOYz21IKOr-AyzHUZmlrz-D=s128-c0x00000000-cc-rp-mo-ba4",
+                "rating": 5,
+                "relative_time_description": "5 months ago",
+                "text": "I love working at betahaus. The staff is friendly, welcoming and helpful and the place itself is very spacious, clean and quiet. There are plenty of floors/seats to chose from and there\u2019s always a free cabin available to take calls in. Free coffee, tea and water. It\u2019s cheaper compared to bigger chains like Attico and Cloudworks. I\u2019m super happy that I ran into this office!",
+                "time": 1723894676,
+                "translated": false
+            },
+            {
+                "author_name": "Niamh Mannion",
+                "author_url": "https://www.google.com/maps/contrib/108178164215790738268/reviews",
+                "language": "en",
+                "original_language": "en",
+                "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjW9Huo4NiRLbaDJ2oN8mrnw_UP7FwbNl2ahID0v8mTbhB7MR5eV=s128-c0x00000000-cc-rp-mo",
+                "rating": 5,
+                "relative_time_description": "3 months ago",
+                "text": "Amazing co-working spot. Everyone was great and super helpful. Loved the vibe they had, was super spacious, and lots of amenities. They offer lots of activities! Best co-working spot I\u2019ve been too! Even though it\u2019s slightly out of my way from born, I\u2019ll definitely be back!",
+                "time": 1730395216,
+                "translated": false
+            },
+            {
+                "author_name": "Dimitris Dortas",
+                "author_url": "https://www.google.com/maps/contrib/112675530635622523879/reviews",
+                "language": "en",
+                "original_language": "en",
+                "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjVpjxMoWvIzpy7ikoSzsS0TUvpmgLz-e8VT7nLDwQI6C9of7wY=s128-c0x00000000-cc-rp-mo",
+                "rating": 5,
+                "relative_time_description": "2 months ago",
+                "text": "Definitely one of the greatest coworking Spaces around the city, probably even the best. Great atmosphere very spacious many rooms and many amenities. Definitely would recommend it to anyone. The staff is also very kind and helpful",
+                "time": 1732804663,
+                "translated": false
+            },
+            {
+                "author_name": "Eddie Allbutt",
+                "author_url": "https://www.google.com/maps/contrib/111525579594190992584/reviews",
+                "language": "en",
+                "original_language": "en",
+                "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjUuZzlR5z-mRrUnrNinZZTn5b4NM05a76zy4PbUFzIITL0RJitS=s128-c0x00000000-cc-rp-mo",
+                "rating": 5,
+                "relative_time_description": "a month ago",
+                "text": "A great place to work, where they make you feel at home. Amazing sunny terraces with beautiful views over the city. It\u2019s got everything I need from a workspace. Happy to be a member.",
+                "time": 1736184753,
+                "translated": false
+            },
+            {
+                "author_name": "Aurore Combe",
+                "author_url": "https://www.google.com/maps/contrib/106844908614378490705/reviews",
+                "language": "en",
+                "original_language": "en",
+                "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjU6TFjvybOCuh5MVvfk5VxDt6IgTghPORt2aLFh0yc5nw1510-m=s128-c0x00000000-cc-rp-mo",
+                "rating": 5,
+                "relative_time_description": "4 years ago",
+                "text": "I just arrived to Betahaus and Barcelona as a freelancer coach. The space is great !! It's bright, I love the design (wood, plants and large rooms + 4 terrasses and a view that makes you travel on the roofs of Barcelona). People are super friendly and supportive. In few days, you feel like you can connect and built a nice network as well as work pals. You become a part of a community supported by technology and events. I recommend this place if you want to have a work place that inspire you and support your productivity. The price is also very attractive for a fixed desk.",
+                "time": 1606911020,
+                "translated": false
+            }
+        ],
+        "types": [
+            "real_estate_agency",
+            "point_of_interest",
+            "establishment"
+        ],
+        "url": "https://maps.google.com/?cid=15533147541347981884",
+        "user_ratings_total": 388,
+        "utc_offset": 60,
+        "vicinity": "Carrer de Vilafranca, 7, Barcelona",
+        "website": "https://www.betahaus.es/",
+        "wheelchair_accessible_entrance": true
+    },
+    "status": "OK"
+}
