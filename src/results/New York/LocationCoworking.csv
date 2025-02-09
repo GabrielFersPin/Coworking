@@ -1,6 +1,6 @@
-name,Neightboorhood,Population,Median Household Income,People Between 18 and 64,Transport
-WORKVILLE,Midtown,58.789,192.347,0.7,6
-Rise New York,Midtown,58.789,192.347,0.7,6
-The Farm SoHo NYC,SoHo,11.675,175.209,0.7,4
-OASIS by Workville,Midtown,58.789,192.347,0.7,6
-The New Work Project,Williansburg,8.804.190,97.432,0.6,2
+name,Neightboorhood,Population,Median Household Income,People Between 18 and 64,Transport,Day Pass,Month Pass
+WORKVILLE,Midtown,58.789,192.347,0.7,6,49,300
+Rise New York,Midtown,58.789,192.347,0.7,6,,250
+The Farm SoHo NYC,SoHo,11.675,175.209,0.7,4,29,179
+OASIS by Workville,Midtown,58.789,192.347,0.7,6,49,350
+The New Work Project,Williansburg,138.98,97.432,0.6,2,40,370
