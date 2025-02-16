@@ -1,21 +1,21 @@
 name,Neightboorhood,Population,Median Household Income,Percentage of population between 16 and 64 years,Transport,Day Pass,Month Pass
-Basis Point Shinbashi,Shinbashi,100000,6500000,0.65,4,2500,40000
-Pasela Co-work Higashishinjuku,Higashishinjuku,25000,4500000,0.65,3,2000,30000
-AWS Startup Loft Tokyo,Akasaka,50000,7000000,0.65,3,3000,45000
-LULL TECH BEACH shibuya coworking space,Shibuya,230000,5500000,149500,3,3000,40000
-【法人登記可】コワーキングスペースfactoria nishiogi,Nishiogi,80000,4200000,0.65,3,2000,30000
+Basis Point Shinbashi,Shinbashi,100000,"67,176.52",0.65,4,25.84,413.39
+Pasela Co-work Higashishinjuku,Higashishinjuku,25000,"46,506.82",0.65,3,20.67,310.05
+AWS Startup Loft Tokyo,Akasaka,50000,"72,343.94",0.65,3,31.00,465.07
+LULL TECH BEACH shibuya coworking space,Shibuya,230000,"56,841.67",0.65,3,31.00,413.39
+【法人登記可】コワーキングスペースfactoria nishiogi,Nishiogi,80000,"43,406.37",0.65,3,20.67,310.05
 WORKVILLE,Midtown,58789,192347,0.7,6,49,300
-Rise New York,Midtown,58789,192347,0.7,6,,250
+Rise New York,Midtown,58789,192347,0.7,6,0,250
 The Farm SoHo NYC,SoHo,11675,175209,0.7,4,29,179
 OASIS by Workville,Midtown,58789,192347,0.7,6,49,350
-The New Work Project,Williansburg,138.98,97.432,0.6,2,40,370
-Talent Garden Madrid ,Delicias,28575,45392,0.7,6,20,285
-Freeland Cowork,Adelfas,18832,50837,0.65,5,20,150
-LOOM Huertas,Cortes,10816,40008,0.76,10,275,275,
-EslabOn,Opañel,33883,30853,0.7,4,15,179
-Area,Delicias,28575,45392,0.7,4,20,240
-Betahaus | Coworking Barcelona,Gràcia,123.000,23.868,0.66,1,20,275
-OneCoWork Plaça Catalunya | Barcelona Coworking,Ciutat Vella,45.671,12.512,0.75,5,25,235
-OneCoWork Catedral | Barcelona Coworking,Ciutat Vella,45.671,12.512,0.75,5,25,265
-Coworking space Camaleó,Ciutat Vella,45.671,12.512,0.75,3,25,200
-La Vaca Coworking Barcelona,Sants-Montjuic,40.157,18.710,0.63,2,22,240
+The New Work Project,Williansburg,138980,97432,0.6,2,40,370
+Talent Garden Madrid ,Delicias,28575,"65,785.51",0.7,6,28.99,413.04
+Freeland Cowork,Adelfas,18832,"73,676.81",0.65,5,28.99,217.39
+LOOM Huertas,Cortes,10816,"57,982.61",0.76,10,43.48,398.55
+EslabOn,Opañel,33883,"44,714.49",0.7,4,21.74,259.42
+Area,Delicias,28575,"65,785.51",0.7,4,28.99,347.83
+Betahaus | Coworking Barcelona,Gràcia,123973,"34,591.30",0.66,1,28.99,398.55
+OneCoWork Plaça Catalunya | Barcelona Coworking,Ciutat Vella,45671,"18,133.33",0.75,5,36.23,340.58
+OneCoWork Catedral | Barcelona Coworking,Ciutat Vella,45671,"18,133.33",0.75,5,36.23,384.06
+Coworking space Camaleó,Ciutat Vella,45671,"18,133.33",0.75,3,36.23,289.86
+La Vaca Coworking Barcelona,Sants-Montjuic,40157,"27,115.94",0.63,2,31.88,347.83
