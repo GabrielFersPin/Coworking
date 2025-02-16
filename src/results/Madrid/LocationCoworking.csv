@@ -1,6 +1,6 @@
-name,Neightboorhood,Population,Percentage of population between 16 and 64 years,ForeignPopulation,Unemployes,Household average net rent,Metro,Closest bus stop
-Talent Garden Madrid ,Delicias,28.575,"69,3%",13.00%,962,45392,6,900m
-Freeland Cowork,Adelfas,18.832,"64,6 %","8,6 %",591,50837,5,150m
-Coworking LOOM Huertas,Cortes,10816,"76,4%","28,4%",438,40008,10,110m
-EslabOn Coworking,Opañel,33883,"68,7%",25.00%,1619,30853,4,140m
-Coworking Area – Plaza Río 2,Delicias,28.575,"69,3%",13.00%,962,45392,4,270m
+name,Neightboorhood,Population,Percentage of population between 16 and 64 years,ForeignPopulation,Unemployes,Household average net rent,Metro,Closest bus stop,Mesa Fija,Mesa Flexible,Despacho Priado,Pases/Bonos (días)
+Talent Garden Madrid ,Delicias,28575,"69,3%",13.00%,962,45392,6,900m,285,195,400,20
+Freeland Cowork,Adelfas,18832,"64,6 %","8,6 %",591,50837,5,150m,150,95,375,20
+LOOM Huertas,Cortes,10816,"76,4%","28,4%",438,40008,10,110m,275,275,275,275
+EslabOn,Opañel,33883,"68,7%",25.00%,1619,30853,4,140m,179,139,300,15
+Area,Delicias,28575,"69,3%",13.00%,962,45392,4,270m,240,180,1000,20
