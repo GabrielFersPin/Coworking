@@ -1,21 +1,21 @@
-name,Neightboorhood,Population,Median Household Income,Percentage of population between 16 and 64 years,Transport,Day Pass,Month Pass
-Basis Point Shinbashi,Shinbashi,100000,"67,176.52",0.65,4,25.84,413.39
-Pasela Co-work Higashishinjuku,Higashishinjuku,25000,"46,506.82",0.65,3,20.67,310.05
-AWS Startup Loft Tokyo,Akasaka,50000,"72,343.94",0.65,3,31.00,465.07
-LULL TECH BEACH shibuya coworking space,Shibuya,230000,"56,841.67",0.65,3,31.00,413.39
-【法人登記可】コワーキングスペースfactoria nishiogi,Nishiogi,80000,"43,406.37",0.65,3,20.67,310.05
-WORKVILLE,Midtown,58789,192347,0.7,6,49,300
-Rise New York,Midtown,58789,192347,0.7,6,0,250
-The Farm SoHo NYC,SoHo,11675,175209,0.7,4,29,179
-OASIS by Workville,Midtown,58789,192347,0.7,6,49,350
-The New Work Project,Williansburg,138980,97432,0.6,2,40,370
-Talent Garden Madrid ,Delicias,28575,"65,785.51",0.7,6,28.99,413.04
-Freeland Cowork,Adelfas,18832,"73,676.81",0.65,5,28.99,217.39
-LOOM Huertas,Cortes,10816,"57,982.61",0.76,10,43.48,398.55
-EslabOn,Opañel,33883,"44,714.49",0.7,4,21.74,259.42
-Area,Delicias,28575,"65,785.51",0.7,4,28.99,347.83
-Betahaus | Coworking Barcelona,Gràcia,123973,"34,591.30",0.66,1,28.99,398.55
-OneCoWork Plaça Catalunya | Barcelona Coworking,Ciutat Vella,45671,"18,133.33",0.75,5,36.23,340.58
-OneCoWork Catedral | Barcelona Coworking,Ciutat Vella,45671,"18,133.33",0.75,5,36.23,384.06
-Coworking space Camaleó,Ciutat Vella,45671,"18,133.33",0.75,3,36.23,289.86
-La Vaca Coworking Barcelona,Sants-Montjuic,40157,"27,115.94",0.63,2,31.88,347.83
+name,Country,Neightboorhood,Population,Median Household Income,Percentage of population between 16 and 64 years,Transport,Day Pass,Month Pass
+Basis Point Shinbashi,Japan,Shinbashi,100000,67176.52,0.65,4,25.84,413.39
+Pasela Co-work Higashishinjuku,Japan,Higashishinjuku,25000,46506.82,0.65,3,20.67,310.05
+AWS Startup Loft Tokyo,Japan,Akasaka,50000,72343.94,0.65,3,31,465.07
+LULL TECH BEACH shibuya coworking space,Japan,Shibuya,230000,56841.67,0.65,3,31,413.39
+【法人登記可】コワーキングスペースfactoria nishiogi,Japan,Nishiogi,80000,43406.37,0.65,3,20.67,310.05
+WORKVILLE,USA,Midtown,58789,192347,0.7,6,49,300
+Rise New York,USA,Midtown,58789,192347,0.7,6,0,250
+The Farm SoHo NYC,USA,SoHo,11675,175209,0.7,4,29,179
+OASIS by Workville,USA,Midtown,58789,192347,0.7,6,49,350
+The New Work Project,USA,Williansburg,138980,97432,0.6,2,40,370
+Talent Garden Madrid ,Spain,Delicias,28575,65785.51,0.7,6,28.99,413.04
+Freeland Cowork,Spain,Adelfas,18832,73676.81,0.65,5,28.99,217.39
+LOOM Huertas,Spain,Cortes,10816,57982.61,0.76,10,43.48,398.55
+EslabOn,Spain,Opañel,33883,44714.49,0.7,4,21.74,259.42
+Area,Spain,Delicias,28575,65785.51,0.7,4,28.99,347.83
+Betahaus | Coworking Barcelona,Spain,Gràcia,123973,34591.3,0.66,1,28.99,398.55
+OneCoWork Plaça Catalunya | Barcelona Coworking,Spain,Ciutat Vella,45671,18133.33,0.75,5,36.23,340.58
+OneCoWork Catedral | Barcelona Coworking,Spain,Ciutat Vella,45671,18133.33,0.75,5,36.23,384.06
+Coworking space Camaleó,Spain,Ciutat Vella,45671,18133.33,0.75,3,36.23,289.86
+La Vaca Coworking Barcelona,Spain,Sants-Montjuic,40157,27115.94,0.63,2,31.88,347.83
