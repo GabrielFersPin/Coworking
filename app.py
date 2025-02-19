@@ -81,4 +81,4 @@ df["Score"] = (max_price - df["Day Pass"]) + (df["Rating"] * 10) - df["distance_
 recommended_spaces = df.sort_values(by="Score", ascending=False).head(5)
 st.dataframe(recommended_spaces)
 
-st.write("### Developed by [Your Name] - Powered by Machine Learning 🚀")
+st.write("### Developed by Gabriel Pinheiro - Powered by Machine Learning 🚀")
