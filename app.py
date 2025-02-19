@@ -9,16 +9,14 @@ from streamlit_folium import folium_static
 # Load Data
 @st.cache_data
 def load_data():
-    df = pd.read_csv("MergedPlacesScoreDistance.csv")
-    return df
+    return pd.read_csv("/workspaces/Coworking/src/results/MergedPlacesScoreDistance.csv")
 
 df = load_data()
 
 # Load trained model
 @st.cache_resource
 def load_model():
-    model = joblib.load("/workspaces/Coworking/src/results/random_forest_model.pkl")  # Replace with your actual model file
-    return model
+    return joblib.load("/workspaces/Coworking/src/results/random_forest_model.pkl")
 
 model = load_model()
 
