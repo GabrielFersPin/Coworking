@@ -50,14 +50,27 @@ Using `folium`, coworking spaces are plotted on a map with circle markers repres
 ## 💡 How to Use
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/coworking-analysis.git
-   cd coworking-analysis
+   git clone https://github.com/GabrielFersPin/Coworking.git
+   cd Coworking
    ```
-2. Install dependencies:
+2. Create a Virtual Environment:
+    ```bash
+    python -m venv new_venv
+    ``
+3. Activate the Virtual Environment:
+    - Windows:
+    ```bash
+    new_venv\Scripts\activate
+    ```
+    - MacOS/Linux:
+    ```bash
+    source new_venv/bin/activate
+    ``` 
+4. Install Dependecies:
    ```bash
    pip install -r requirements.txt
    ```
-3. Run the Streamlit app:
+5. Run the Streamlit app:
    ```bash
    streamlit run app.py
    ```
@@ -69,10 +82,4 @@ Special thanks to the open-source community and data providers for enabling this
 
 📌 **Author:** Gabriel Fernandes Pinheiro  
 🔗 [LinkedIn](https://www.linkedin.com/in/yourprofile) | [GitHub](https://github.com/yourusername)
-
-
-### 1. Clone the Repository
-```bash
-git clone https://github.com/yourusername/coworking-space-market-analysis.git
-cd coworking-space-market-analysis
 
