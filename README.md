@@ -40,7 +40,7 @@ A **scoring function** ranks coworking spaces by:
 3. **Convenience**: Distance from the city center (penalized)
 
 ## 🌎 Interactive Map Example
-Using `folium`, coworking spaces are plotted on a map with circle markers representing rating popularity.
+
 
 ## 🛠 Technologies Used
 - **Python**: `pandas`, `scikit-learn`, `folium`, `Streamlit`
