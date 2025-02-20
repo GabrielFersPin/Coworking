@@ -36,8 +36,8 @@ if filtered_data.empty:
     st.stop()
 
 # Display Data
-st.title("Coworking Space Finder")
-st.dataframe(filtered_data["name"])
+st.title("Top 5 Coworking Spaces in " + selected_city)
+st.dataframe(filtered_data["name", "Neighborhood", "Rating", "User Rating Count"])
 
 # Display Ratings
 st.header("Ratings Overview")
@@ -46,12 +46,12 @@ st.write("Average User Rating Count: ", filtered_data["User Rating Count"].mean(
 
 # Display Ratings Distribution
 st.header("Ratings Distribution")
-fig = px.histogram(filtered_data, x="Rating", nbins=10, title="Ratings Distribution")
+fig = px.histogram(filtered_data, x="Rating", y='name', title="Ratings Distribution")
 st.plotly_chart(fig)
 
 # Display User Rating Count Distribution
 st.header("User Rating Count Distribution")
-fig = px.histogram(filtered_data, x="User Rating Count", nbins=10, title="User Rating Count Distribution")
+fig = px.histogram(filtered_data, x="User Rating Count", y='name', title="User Rating Count Distribution")
 st.plotly_chart(fig)
 
 # Display prices
@@ -61,10 +61,10 @@ st.write("Monthly Price: ", filtered_data["Month Pass"].mean())
 
 # Display Prices Distribution
 st.header("Prices Distribution")
-fig = px.histogram(filtered_data, x="Day Pass", nbins=10, title="Day Pass Price Distribution")
+fig = px.histogram(filtered_data, x="Day Pass", y='name', title="Day Pass Price Distribution")
 st.plotly_chart(fig)
 
-fig = px.histogram(filtered_data, x="Month Pass", nbins=10, title="Monthly Price Distribution")
+fig = px.histogram(filtered_data, x="Month Pass", y='name', title="Monthly Price Distribution")
 st.plotly_chart(fig)
 
 # Display Transport connectivity
@@ -73,7 +73,7 @@ st.write("Number of conections with public transport: ", filtered_data["Transpor
 
 # Display Transport Connectivity Distribution
 st.header("Transport Connectivity Distribution")
-fig = px.histogram(filtered_data, x="Transport", nbins=10, title="Transport Connectivity Distribution")
+fig = px.histogram(filtered_data, x="Transport", y='name', title="Transport Connectivity Distribution")
 st.plotly_chart(fig)
 
 # Display Distance to the city center
@@ -83,11 +83,6 @@ st.write("Distance to the city center: ", filtered_data["distance_from_center"])
 # Display the score of the place
 st.header("Score Overview")
 st.write("Score: ", filtered_data["Weighted Rating"])
-
-# Show website links separately
-st.subheader("Visit Coworking Websites:")
-for _, row in filtered_data.iterrows():
-    st.markdown(f"[{row['name']}]({row['site']})", unsafe_allow_html=True)
 
 # Map Visualization
 st.header(f"Coworking Spaces in {selected_city}")
