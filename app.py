@@ -48,9 +48,6 @@ if filtered_data.empty:
 else:
     map_center = [filtered_data["Latitude"].mean(), filtered_data["Longitude"].mean()]
 
-filtered_data["Latitude"] = pd.to_numeric(filtered_data["Latitude"], errors="coerce")
-filtered_data["Longitude"] = pd.to_numeric(filtered_data["Longitude"], errors="coerce")
-
 
 # Map Visualization
 st.header(f"Coworking Spaces in {selected_neighborhood}, {selected_city}, {selected_country}")
