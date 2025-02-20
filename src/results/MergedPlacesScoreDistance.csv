@@ -1,4 +1,4 @@
-name,City,Country,Neightboorhood,Population,Median Household Income,Percentage of population between 16 and 64 years,Transport,Day Pass,Month Pass,Address,Latitude,Longitude,Rating,User Rating Count,Weighted Rating,Score,distance_from_center
+name,City,Country,Neighborhood,Population,Median Household Income,Percentage of population between 16 and 64 years,Transport,Day Pass,Month Pass,Address,Latitude,Longitude,Rating,User Rating Count,Weighted Rating,Score,distance_from_center
 "WORKVILLE - Flexible Office Space, Conference Center, Coworking & Meeting Room Rental NYC",New York,USA,Midtown,58789,192347,0.7,6,49,300,"1412 Broadway 21st Floor, New York, NY 10018, USA",40.753615,-73.9865612,5,349,1745,1,4.82073865281531
 Rise New York,New York,USA,Midtown,58789,192347,0.7,6,0,250,"43 W 23rd St, New York, NY 10010, USA",40.7424647,-73.991176,4.7,258,1212.6,0.879776504297994,3.52424069244458
 The Farm SoHo NYC - Coworking Office Space and Private Offices,New York,USA,SoHo,11675,175209,0.7,4,29,179,"447 Broadway 2nd floor, New York, NY 10013, USA",40.7205729,-74.0014151,4.5,257,1156.5,0.850916905444126,0.946116913679579

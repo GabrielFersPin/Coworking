@@ -24,7 +24,7 @@ st.sidebar.header("Filter Coworking Spaces")
 selected_country = st.sidebar.selectbox("Select Country", df["Country"].unique())
 filtered_cities = df[df["Country"] == selected_country]["City"].unique()
 selected_city = st.sidebar.selectbox("Select City", filtered_cities)
-filtered_neighborhoods = df[(df["Country"] == selected_country) & (df["City"] == selected_city)]["Neightboorhood"].unique()
+filtered_neighborhoods = df[(df["Country"] == selected_country) & (df["City"] == selected_city)]["Neighborhood"].unique()
 selected_neighborhood = st.sidebar.selectbox("Select Neighborhood", filtered_neighborhoods)
 
 max_price = st.sidebar.slider("Max Day Pass Price", float(df["Day Pass"].min()), float(df["Day Pass"].max()), float(df["Day Pass"].mean()))
@@ -33,11 +33,24 @@ max_price = st.sidebar.slider("Max Day Pass Price", float(df["Day Pass"].min()),
 filtered_df = df[(df["Day Pass"] <= max_price) &
                  (df["Country"] == selected_country) &
                  (df["City"] == selected_city) &
-                 (df["Neightboorhood"] == selected_neighborhood)]
+                 (df["Neighborhood"] == selected_neighborhood)]
 
 # Display Data
 st.title("Coworking Space Finder")
-st.dataframe(filtered_df.head())
+st.dataframe(filtered_df)
+
+# Ensure there are no NaN values in Latitude and Longitude
+filtered_data = filtered_data.dropna(subset=["Latitude", "Longitude"])
+
+if filtered_data.empty:
+    st.warning("No coworking spaces found for the selected filters.")
+    map_center = [0, 0]  # Default location (avoid NaN issue)
+else:
+    map_center = [filtered_data["Latitude"].mean(), filtered_data["Longitude"].mean()]
+
+filtered_data["Latitude"] = pd.to_numeric(filtered_data["Latitude"], errors="coerce")
+filtered_data["Longitude"] = pd.to_numeric(filtered_data["Longitude"], errors="coerce")
+
 
 # Map Visualization
 st.header(f"Coworking Spaces in {selected_neighborhood}, {selected_city}, {selected_country}")
@@ -59,7 +72,7 @@ folium_static(coworking_map)
 
 # Recommendation System
 st.subheader("Top Recommended Coworking Spaces")
-df_filtered = df[(df["Country"] == selected_country) & (df["City"] == selected_city) & (df["Neightboorhood"] == selected_neighborhood)]
+df_filtered = df[(df["Country"] == selected_country) & (df["City"] == selected_city) & (df["Neighborhood"] == selected_neighborhood)]
 df_filtered["Score"] = (max_price - df_filtered["Day Pass"]) + (df_filtered["Rating"] * 10) - df_filtered["distance_from_center"]
 recommended_spaces = df_filtered.sort_values(by="Score", ascending=False).head(5)
 st.dataframe(recommended_spaces)
