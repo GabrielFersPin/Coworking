@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import joblib
 import numpy as np
+import plotly.express as px
 import folium
 from streamlit_folium import folium_static
 
@@ -12,67 +13,117 @@ def load_data():
 
 df = load_data()
 
-# Load trained model
-@st.cache_resource
-def load_model():
-    return joblib.load("/workspaces/Coworking/src/results/random_forest_model.pkl")
-
-model = load_model()
-
 # Sidebar Filters
 st.sidebar.header("Filter Coworking Spaces")
+
+# Dropdown filters
 selected_country = st.sidebar.selectbox("Select Country", df["Country"].unique())
-filtered_cities = df[df["Country"] == selected_country]["City"].unique()
-selected_city = st.sidebar.selectbox("Select City", filtered_cities)
-filtered_neighborhoods = df[(df["Country"] == selected_country) & (df["City"] == selected_city)]["Neighborhood"].unique()
-selected_neighborhood = st.sidebar.selectbox("Select Neighborhood", filtered_neighborhoods)
 
-max_price = st.sidebar.slider("Max Day Pass Price", float(df["Day Pass"].min()), float(df["Day Pass"].max()), float(df["Day Pass"].mean()))
+# Filter data by country first
+filtered_data = df[df["Country"] == selected_country]
 
-# Filter Data
-filtered_df = df[(df["Day Pass"] <= max_price) &
-                 (df["Country"] == selected_country) &
-                 (df["City"] == selected_city) &
-                 (df["Neighborhood"] == selected_neighborhood)]
+if filtered_data.empty:
+    st.warning("No coworking spaces found for the selected country.")
+    st.stop()
+
+selected_city = st.sidebar.selectbox("Select City", filtered_data["City"].unique())
+
+# Filter further by city
+filtered_data = filtered_data[filtered_data["City"] == selected_city]
+
+if filtered_data.empty:
+    st.warning("No coworking spaces found for the selected city.")
+    st.stop()
+
+selected_neighborhood = st.sidebar.selectbox("Select Neighborhood", filtered_data["Neighborhood"].unique())
+
+# Final filtering
+filtered_data = filtered_data[filtered_data["Neighborhood"] == selected_neighborhood]
+
+if filtered_data.empty:
+    st.warning("No coworking spaces found for the selected neighborhood.")
+    st.stop()
 
 # Display Data
 st.title("Coworking Space Finder")
-st.dataframe(filtered_df)
+st.dataframe(filtered_data["name"])
 
-# Ensure there are no NaN values in Latitude and Longitude
-filtered_data = filtered_data.dropna(subset=["Latitude", "Longitude"])
+# Display Ratings
+st.header("Ratings Overview")
+st.write("Average Rating: ", filtered_data["Rating"].mean())
+st.write("Average User Rating Count: ", filtered_data["User Rating Count"].mean())
 
-if filtered_data.empty:
-    st.warning("No coworking spaces found for the selected filters.")
-    map_center = [0, 0]  # Default location (avoid NaN issue)
-else:
-    map_center = [filtered_data["Latitude"].mean(), filtered_data["Longitude"].mean()]
+# Display Ratings Distribution
+st.header("Ratings Distribution")
+fig = px.histogram(filtered_data, x="Rating", nbins=10, title="Ratings Distribution")
+st.plotly_chart(fig)
 
+# Display User Rating Count Distribution
+st.header("User Rating Count Distribution")
+fig = px.histogram(filtered_data, x="User Rating Count", nbins=10, title="User Rating Count Distribution")
+st.plotly_chart(fig)
+
+# Display prices
+st.header("Prices Overview")
+st.write("Day Pass Price: ", filtered_data["Day Pass Price"].mean())
+st.write("Monthly Price: ", filtered_data["Monthly Price"].mean())
+
+# Display Prices Distribution
+st.header("Prices Distribution")
+fig = px.histogram(filtered_data, x="Day Pass Price", nbins=10, title="Day Pass Price Distribution")
+st.plotly_chart(fig)
+
+fig = px.histogram(filtered_data, x="Monthly Price", nbins=10, title="Monthly Price Distribution")
+st.plotly_chart(fig)
+
+# Display Transport connectivity
+st.header("Transport Connectivity Overview")
+st.write("Number of conections with public transport: ", filtered_data["Transport"])
+
+# Display Transport Connectivity Distribution
+st.header("Transport Connectivity Distribution")
+fig = px.histogram(filtered_data, x="Transport", nbins=10, title="Transport Connectivity Distribution")
+st.plotly_chart(fig)
+
+# Display Distance to the city center
+st.header("Distance to the city center Overview")
+st.write("Distance to the city center: ", filtered_data["distance_from_center"])
+
+# Display the score of the place
+st.header("Score Overview")
+st.write("Score: ", filtered_data["Weighted Rating"])
+
+# Show website links separately
+st.subheader("Visit Coworking Websites:")
+for _, row in filtered_data.iterrows():
+    st.markdown(f"[{row['name']}]({row['site']})", unsafe_allow_html=True)
 
 # Map Visualization
-st.header(f"Coworking Spaces in {selected_neighborhood}, {selected_city}, {selected_country}")
-map_center = [filtered_df["Latitude"].mean(), filtered_df["Longitude"].mean()]
+st.header(f"Coworking Spaces in {selected_neighborhood}")
+
+# Check for valid latitude/longitude
+filtered_data["Latitude"] = pd.to_numeric(filtered_data["Latitude"], errors="coerce")
+filtered_data["Longitude"] = pd.to_numeric(filtered_data["Longitude"], errors="coerce")
+
+if filtered_data["Latitude"].isna().any() or filtered_data["Longitude"].isna().any():
+    st.error("Some locations have missing coordinates. Check your dataset.")
+    st.stop()
+
+# Calculate map center
+map_center = [filtered_data["Latitude"].mean(), filtered_data["Longitude"].mean()]
 coworking_map = folium.Map(location=map_center, zoom_start=12)
 
-for _, row in filtered_df.iterrows():
-    folium.CircleMarker(
+# Add coworking spaces to the map
+for _, row in filtered_data.iterrows():
+    folium.Marker(
         location=[row['Latitude'], row['Longitude']],
-        radius=row['User Rating Count'] / 10,
-        popup=f"{row['name']}<br>Rating: {row['Rating']}<br>User Rating Count: {row['User Rating Count']}",
-        color='blue',
-        fill=True,
-        fill_color='blue'
+        popup=f"{row['name']}<br>Rating: {row['Rating']}<br>"
+              f"User Rating Count: {row['User Rating Count']}",
+        icon=folium.Icon(color="blue"),
     ).add_to(coworking_map)
 
 # Render the map
 folium_static(coworking_map)
-
-# Recommendation System
-st.subheader("Top Recommended Coworking Spaces")
-df_filtered = df[(df["Country"] == selected_country) & (df["City"] == selected_city) & (df["Neighborhood"] == selected_neighborhood)]
-df_filtered["Score"] = (max_price - df_filtered["Day Pass"]) + (df_filtered["Rating"] * 10) - df_filtered["distance_from_center"]
-recommended_spaces = df_filtered.sort_values(by="Score", ascending=False).head(5)
-st.dataframe(recommended_spaces)
 
 st.write("### Developed by Gabriel Pinheiro")
 st.write("### [LinkedIn](https://www.linkedin.com/in/gabriel-pinheiro-7b4a8a1b1/)")
