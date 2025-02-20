@@ -37,7 +37,7 @@ if filtered_data.empty:
 
 # Display Data
 st.title("Top 5 Coworking Spaces in " + selected_city)
-st.dataframe(filtered_data["name", "Neighborhood", "Rating", "User Rating Count"])
+st.dataframe(filtered_data[["name", "Neighborhood", "Rating", "User Rating Count"]])
 
 # Display Ratings
 st.header("Ratings Overview")
@@ -82,7 +82,7 @@ st.write("Distance to the city center: ", filtered_data["distance_from_center"])
 
 # Display the score of the place
 st.header("Score Overview")
-st.write("Score: ", filtered_data["Weighted Rating"])
+st.write("Score: ", filtered_data["Score"])
 
 # Map Visualization
 st.header(f"Coworking Spaces in {selected_city}")
