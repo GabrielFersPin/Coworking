@@ -35,15 +35,6 @@ if filtered_data.empty:
     st.warning("No coworking spaces found for the selected city.")
     st.stop()
 
-selected_neighborhood = st.sidebar.selectbox("Select Neighborhood", filtered_data["Neighborhood"].unique())
-
-# Final filtering
-filtered_data = filtered_data[filtered_data["Neighborhood"] == selected_neighborhood]
-
-if filtered_data.empty:
-    st.warning("No coworking spaces found for the selected neighborhood.")
-    st.stop()
-
 # Display Data
 st.title("Coworking Space Finder")
 st.dataframe(filtered_data["name"])
@@ -65,15 +56,15 @@ st.plotly_chart(fig)
 
 # Display prices
 st.header("Prices Overview")
-st.write("Day Pass Price: ", filtered_data["Day Pass Price"].mean())
-st.write("Monthly Price: ", filtered_data["Monthly Price"].mean())
+st.write("Day Pass Price: ", filtered_data["Day Pass"].mean())
+st.write("Monthly Price: ", filtered_data["Month Pass"].mean())
 
 # Display Prices Distribution
 st.header("Prices Distribution")
-fig = px.histogram(filtered_data, x="Day Pass Price", nbins=10, title="Day Pass Price Distribution")
+fig = px.histogram(filtered_data, x="Day Pass", nbins=10, title="Day Pass Price Distribution")
 st.plotly_chart(fig)
 
-fig = px.histogram(filtered_data, x="Monthly Price", nbins=10, title="Monthly Price Distribution")
+fig = px.histogram(filtered_data, x="Month Pass", nbins=10, title="Monthly Price Distribution")
 st.plotly_chart(fig)
 
 # Display Transport connectivity
@@ -99,15 +90,7 @@ for _, row in filtered_data.iterrows():
     st.markdown(f"[{row['name']}]({row['site']})", unsafe_allow_html=True)
 
 # Map Visualization
-st.header(f"Coworking Spaces in {selected_neighborhood}")
-
-# Check for valid latitude/longitude
-filtered_data["Latitude"] = pd.to_numeric(filtered_data["Latitude"], errors="coerce")
-filtered_data["Longitude"] = pd.to_numeric(filtered_data["Longitude"], errors="coerce")
-
-if filtered_data["Latitude"].isna().any() or filtered_data["Longitude"].isna().any():
-    st.error("Some locations have missing coordinates. Check your dataset.")
-    st.stop()
+st.header(f"Coworking Spaces in {selected_city}")
 
 # Calculate map center
 map_center = [filtered_data["Latitude"].mean(), filtered_data["Longitude"].mean()]
