@@ -4,7 +4,7 @@ import joblib
 import numpy as np
 import plotly.express as px
 import folium
-from streamlit_folium import folium_static
+from st_folium import folium_static
 
 # Load Data
 @st.cache_data
