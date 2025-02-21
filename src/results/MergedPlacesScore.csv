@@ -1,0 +1,20 @@
+name,Country,Neightboorhood,Population,Median Household Income,Percentage of population between 16 and 64 years,Transport,Day Pass,Month Pass,Address,Latitude,Longitude,Rating,User Rating Count,Weighted Rating,Score
+"WORKVILLE - Flexible Office Space, Conference Center, Coworking & Meeting Room Rental NYC",USA,Midtown,58789,192347.0,0.7,6,49.0,300.0,"1412 Broadway 21st Floor, New York, NY 10018, USA",40.753615,-73.9865612,5.0,349,1745.0,1.0
+Rise New York,USA,Midtown,58789,192347.0,0.7,6,0.0,250.0,"43 W 23rd St, New York, NY 10010, USA",40.7424647,-73.991176,4.7,258,1212.6000000000001,0.8797765042979943
+The Farm SoHo NYC - Coworking Office Space and Private Offices,USA,SoHo,11675,175209.0,0.7,4,29.0,179.0,"447 Broadway 2nd floor, New York, NY 10013, USA",40.7205729,-74.00141510000002,4.5,257,1156.5,0.8509169054441261
+"OASIS by Workville - Conference Center & Corporate Events, Flex Office, Meeting Space Venue & Rooftop",USA,Midtown,58789,192347.0,0.7,6,49.0,350.0,"315 W 35th St Floor 11 - 15, New York, NY 10001, USA",40.7533447,-73.9936044,5.0,162,810.0,0.8392550143266475
+The New Work Project,USA,Williansburg,138980,97432.0,0.6,2,40.0,370.0,"97 N 10th St #2A, Brooklyn, NY 11249, USA",40.7210019,-73.9580849,5.0,126,630.0,0.8083094555873925
+Betahaus | Coworking Barcelona,Spain,Gràcia,123973,34591.3,0.66,1,28.99,398.55,"Carrer de Vilafranca, 7, Gràcia, 08024 Barcelona, Spain",41.406983,2.1567652,4.8,388,1862.3999999999999,0.972
+OneCoWork Plaça Catalunya | Barcelona Coworking,Spain,Ciutat Vella,45671,18133.33,0.75,5,36.23,340.58,"Carrer d'Estruc, 9, Ciutat Vella, 08002 Barcelona, Spain",41.3868865,2.1725053,4.8,310,1488.0,0.9116907216494844
+OneCoWork Catedral | Barcelona Coworking,Spain,Ciutat Vella,45671,18133.33,0.75,5,36.23,384.06,"Av. de la Catedral, 6, Ciutat Vella, 08002 Barcelona, Spain",41.3849907,2.1767637,4.8,205,984.0,0.8305051546391752
+Coworking space Camaleó,Spain,Ciutat Vella,45671,18133.33,0.75,3,36.23,289.86,"Carrer de Sant Pere Mitjà, 67, Ciutat Vella, 08003 Barcelona, Spain",41.3886355,2.1782502,4.7,212,996.4000000000001,0.8219175257731959
+La Vaca Coworking Barcelona,Spain,Sants-Montjuic,40157,27115.94,0.63,2,31.88,347.83,"Carrer de la Creu dels Molers, 19, Sants-Montjuïc, 08004 Barcelona, Spain",41.3741099,2.1619429,4.8,185,888.0,0.8150412371134019
+Freeland,Spain,Adelfas,18832,73676.81,0.65,5,28.99,217.39,"C. de Gandía, 1, local 9A, Retiro, 28007 Madrid, Spain",40.3985851,-3.6717447,4.8,162,777.6,0.8980465116279068
+Coworking LOOM Huertas,Spain,Cortes,10816,57982.61,0.76,10,43.48,398.55,"C. de las Huertas, 11, Centro, 28012 Madrid, Spain",40.414036,-3.700693,4.6,97,446.2,0.7793488372093023
+EslabON Coworking,Spain,Opañel,33883,44714.49,0.7,4,21.74,259.42,"C. de Valle de Oro, 50, local posterior, Carabanchel, 28019 Madrid, Spain",40.38691,-3.723964,4.9,55,269.5,0.7627441860465117
+Area Coworking,Spain,Delicias,28575,65785.51,0.7,4,28.99,347.83,"C. de Tomás Bretón, 50-52, Arganzuela, 28045 Madrid, Spain",40.3971345,-3.6917148,4.9,37,181.3,0.7376279069767442
+Basis Point Shinbashi,Japan,Shinbashi,100000,67176.52,0.65,4,25.84,413.39,"Japan, 〒105-0004 Tokyo, Minato City, Shinbashi, 2-chōme−19−３ カシケイビル 2F",35.6668382,139.759638,4.3,328,1410.3999999999999,0.902
+Pasela Co-work Higashishinjuku,Japan,Higashishinjuku,25000,46506.82,0.65,3,20.67,310.05,"7-chōme-26-7 Shinjuku, Shinjuku City, Tokyo 160-0022, Japan",35.6980541,139.7093684,4.2,248,1041.6000000000001,0.8148292682926829
+AWS Startup Loft Tokyo,Japan,Akasaka,50000,72343.94,0.65,3,31.0,465.07,"Japan, 〒141-0021 Tokyo, Shinagawa City, Kamiōsaki, 3-chōme−1−１ 目黒セントラルスクエア 17F アマゾン新目黒オフィス",35.633345500000004,139.7165887,4.6,141,648.5999999999999,0.7729634146341462
+LULL TECH BEACH shibuya coworking space,Japan,Shibuya,230000,56841.67,0.65,3,31.0,413.39,"Japan, 〒150-0002 Tokyo, Shibuya, 3-chōme−10−１３, Tokyu Reit Shibuya R Building, B1",35.656832,139.7051383,4.8,86,412.8,0.7506585365853657
+【法人登記可】コワーキングスペースfactoria nishiogi,Japan,Nishiogi,80000,43406.37,0.65,3,20.67,310.05,"コメットビル 6F, 2-chōme-3-9 Nishiogikita, Suginami City, Tokyo 167-0042, Japan",35.7047587,139.6008598,4.9,47,230.3,0.7289878048780488

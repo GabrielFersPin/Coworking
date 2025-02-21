@@ -1,0 +1,394 @@
+{
+    "html_attributions": [],
+    "result": {
+        "address_components": [
+            {
+                "long_name": "15",
+                "short_name": "15",
+                "types": [
+                    "street_number"
+                ]
+            },
+            {
+                "long_name": "Calle de Juan de Mariana",
+                "short_name": "C. de Juan de Mariana",
+                "types": [
+                    "route"
+                ]
+            },
+            {
+                "long_name": "Arganzuela",
+                "short_name": "Arganzuela",
+                "types": [
+                    "sublocality_level_1",
+                    "sublocality",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "Madrid",
+                "short_name": "Madrid",
+                "types": [
+                    "locality",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "Madrid",
+                "short_name": "M",
+                "types": [
+                    "administrative_area_level_2",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "Comunidad de Madrid",
+                "short_name": "MD",
+                "types": [
+                    "administrative_area_level_1",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "Spain",
+                "short_name": "ES",
+                "types": [
+                    "country",
+                    "political"
+                ]
+            },
+            {
+                "long_name": "28045",
+                "short_name": "28045",
+                "types": [
+                    "postal_code"
+                ]
+            }
+        ],
+        "adr_address": "<span class=\"street-address\">C. de Juan de Mariana, 15</span>, <span class=\"region\">Arganzuela</span>, <span class=\"postal-code\">28045</span> <span class=\"locality\">Madrid</span>, <span class=\"country-name\">Spain</span>",
+        "business_status": "OPERATIONAL",
+        "current_opening_hours": {
+            "open_now": false,
+            "periods": [
+                {
+                    "close": {
+                        "date": "2024-03-11",
+                        "day": 1,
+                        "time": "1800"
+                    },
+                    "open": {
+                        "date": "2024-03-11",
+                        "day": 1,
+                        "time": "0900"
+                    }
+                },
+                {
+                    "close": {
+                        "date": "2024-03-12",
+                        "day": 2,
+                        "time": "1800"
+                    },
+                    "open": {
+                        "date": "2024-03-12",
+                        "day": 2,
+                        "time": "0900"
+                    }
+                },
+                {
+                    "close": {
+                        "date": "2024-03-06",
+                        "day": 3,
+                        "time": "1800"
+                    },
+                    "open": {
+                        "date": "2024-03-06",
+                        "day": 3,
+                        "time": "0900"
+                    }
+                },
+                {
+                    "close": {
+                        "date": "2024-03-07",
+                        "day": 4,
+                        "time": "1800"
+                    },
+                    "open": {
+                        "date": "2024-03-07",
+                        "day": 4,
+                        "time": "0900"
+                    }
+                },
+                {
+                    "close": {
+                        "date": "2024-03-08",
+                        "day": 5,
+                        "time": "1800"
+                    },
+                    "open": {
+                        "date": "2024-03-08",
+                        "day": 5,
+                        "time": "0900"
+                    }
+                }
+            ],
+            "weekday_text": [
+                "Monday: 9:00\u202fAM\u2009\u2013\u20096:00\u202fPM",
+                "Tuesday: 9:00\u202fAM\u2009\u2013\u20096:00\u202fPM",
+                "Wednesday: 9:00\u202fAM\u2009\u2013\u20096:00\u202fPM",
+                "Thursday: 9:00\u202fAM\u2009\u2013\u20096:00\u202fPM",
+                "Friday: 9:00\u202fAM\u2009\u2013\u20096:00\u202fPM",
+                "Saturday: Closed",
+                "Sunday: Closed"
+            ]
+        },
+        "formatted_address": "C. de Juan de Mariana, 15, Arganzuela, 28045 Madrid, Spain",
+        "formatted_phone_number": "910 78 02 34",
+        "geometry": {
+            "location": {
+                "lat": 40.398326,
+                "lng": -3.6863441
+            },
+            "viewport": {
+                "northeast": {
+                    "lat": 40.3997206302915,
+                    "lng": -3.684880869708497
+                },
+                "southwest": {
+                    "lat": 40.39702266970851,
+                    "lng": -3.687578830291502
+                }
+            }
+        },
+        "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+        "icon_background_color": "#7B9EB0",
+        "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+        "international_phone_number": "+34 910 78 02 34",
+        "name": "Talent Garden Madrid",
+        "opening_hours": {
+            "open_now": false,
+            "periods": [
+                {
+                    "close": {
+                        "day": 1,
+                        "time": "1800"
+                    },
+                    "open": {
+                        "day": 1,
+                        "time": "0900"
+                    }
+                },
+                {
+                    "close": {
+                        "day": 2,
+                        "time": "1800"
+                    },
+                    "open": {
+                        "day": 2,
+                        "time": "0900"
+                    }
+                },
+                {
+                    "close": {
+                        "day": 3,
+                        "time": "1800"
+                    },
+                    "open": {
+                        "day": 3,
+                        "time": "0900"
+                    }
+                },
+                {
+                    "close": {
+                        "day": 4,
+                        "time": "1800"
+                    },
+                    "open": {
+                        "day": 4,
+                        "time": "0900"
+                    }
+                },
+                {
+                    "close": {
+                        "day": 5,
+                        "time": "1800"
+                    },
+                    "open": {
+                        "day": 5,
+                        "time": "0900"
+                    }
+                }
+            ],
+            "weekday_text": [
+                "Monday: 9:00\u202fAM\u2009\u2013\u20096:00\u202fPM",
+                "Tuesday: 9:00\u202fAM\u2009\u2013\u20096:00\u202fPM",
+                "Wednesday: 9:00\u202fAM\u2009\u2013\u20096:00\u202fPM",
+                "Thursday: 9:00\u202fAM\u2009\u2013\u20096:00\u202fPM",
+                "Friday: 9:00\u202fAM\u2009\u2013\u20096:00\u202fPM",
+                "Saturday: Closed",
+                "Sunday: Closed"
+            ]
+        },
+        "photos": [
+            {
+                "height": 4240,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/105049439494630080636\">Talent Garden Madrid</a>"
+                ],
+                "photo_reference": "ATplDJbCVsUmmaxa_Kbw9rZycukqPC1nPVFvZcZXBlSSLYpekJ1E4qFWBpiMniBSvGDH64zVBLt5tF1halFsCp1dU9HlMX8Dc5bwkak_KYpEKXse8rlyR6Xo4C94wQeyOnPw_F63faJGj58P-R3LU4Pzz6SjXD8zfhpHG89ohrxtDMxkqzk4",
+                "width": 2832
+            },
+            {
+                "height": 2832,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/105049439494630080636\">Talent Garden Madrid</a>"
+                ],
+                "photo_reference": "ATplDJYLgbrjspVX6FpGiOOsXGShYDazNIkS4TGw2W7KtrpVM2HqnfblHsLByOjStfYjZbDPQZLwQYekfCsOXHf8tDVmEFsKP-4fpL2MvzCboXKh1uelweJg2nipClmQxdXVfA6mET_t3dJdO1NNn20lQ6fC-lCchaVTEnv01E8dXi4LS5ay",
+                "width": 4240
+            },
+            {
+                "height": 2562,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/103644858766260406648\">Un opinante delirante</a>"
+                ],
+                "photo_reference": "ATplDJay0SjuNphH-Wb04HEeZrlIDdKApREkfkBgqaXRDMgDsx06Dh3BfAjKp1ad_la4emTU90C3URH7lVeaULB9GPk0kV8vBICyP9KuXWUs562lU00fdSdR6WsIvEmX3aVb7BI7zVIbjSQbyFR6KKQlCpWhwiqlcxtAgdiZrFgiGCT7aeFO",
+                "width": 3924
+            },
+            {
+                "height": 4240,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/105049439494630080636\">Talent Garden Madrid</a>"
+                ],
+                "photo_reference": "ATplDJbWGkm9ox7IRd5cFJF7FOfpATJ8ZW56tjfVBA2Bb7tOlvMgpqblfQzJepwQw66CUQWWiw7pRfmsNmqL3q8kOelX9292c8CgOPKAIOv9D1_jf7MdshxWL306IFb4fumcnlOEPyIONcwrOzHL5UE9Oik-ZffE1mNpy3wHXrzIJexCVuhz",
+                "width": 2832
+            },
+            {
+                "height": 3023,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/105049439494630080636\">Talent Garden Madrid</a>"
+                ],
+                "photo_reference": "ATplDJaq-HFW8ph_bk6xFrz6AD4BTwF2Ybu0kObJF9n3Fq9QVq92_LSSZ8RnXhDU36gEjYbBO_SjnwdVhsTxo4700gq-AHtLtHQUSx5IPHYO2eFF5jm2ArHgWI4cSNFpe2MuSpJGjxxfb98UhbonkBmxCM2PRFpeTt1M7pEDac74l82pMRkY",
+                "width": 3578
+            },
+            {
+                "height": 4032,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/113234736260751638740\">Michele Ungolo</a>"
+                ],
+                "photo_reference": "ATplDJaWfjPmYo363jPeYJWcjRiFu6JivHaAWINwNdNjd8MZ_-EDLO_T6v5LxX6_sewL-dR6e-CTZ140MtQqzMDg7dEBzzuNUD0RZJN-a8A5TTIfiIoHr4JDJIPCy2h9Vzyxh_ocVufP4mQ4jhswuKc_BNPcvm_oWorfaBz5op77NM7DJC9U",
+                "width": 2268
+            },
+            {
+                "height": 4032,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/118417398089057379709\">TravelVideoBlogger Iosu L\u00f3pez</a>"
+                ],
+                "photo_reference": "ATplDJZDSOCFZay5Mrg3tXN-bN9eHJCDglO48hMrDjXkGjshO0BOA7djrR0W4SQ4sA2jyO7XBafiJWsNpxIjF4OKlg56ZN0E51S2K5diLYtomejpC2iOoDq8pPyd2RxvkVm4Uwu0Zj--1KkESsBmpyj_N2GWwlyF_tSO_gqaeifx50Bqc_yu",
+                "width": 3024
+            },
+            {
+                "height": 3024,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/105049439494630080636\">Talent Garden Madrid</a>"
+                ],
+                "photo_reference": "ATplDJY6fBgTziazGXqTUnAT6MoeE8O-9b2_yA8cE9LMhCPEUg_t91QaNyIUsT6YFyzbvBqYimtJfmqLwNkaIOPN8Ej1l0yAmOmPXOz7ANWv47Q4kC8QYvBOzz7pOrYFtHY7lrYpkX_0V-6BFqnG-mXCHVEDfbiFIQvfuao2cxoOX76YJ048",
+                "width": 4032
+            },
+            {
+                "height": 2743,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/105049439494630080636\">Talent Garden Madrid</a>"
+                ],
+                "photo_reference": "ATplDJb8HwhkLlW3fA5nvpSCYFeEaCL0d0iAn8kkTPqUs5mZDtuugsCSX9w8fMWh12OMHE7eh_Y0oZJtBFyMyV5M1hIwM7YfjUmiaHtTLWeDuGugE3u6W4ZMQBioNtV0Lvu36q2sFZYGO-cSbQEJFno3qru8UvbwDr-jHl1we9nn1uedwxrL",
+                "width": 3857
+            },
+            {
+                "height": 3456,
+                "html_attributions": [
+                    "<a href=\"https://maps.google.com/maps/contrib/101207149227728027860\">Elisabetta Pique&#39;</a>"
+                ],
+                "photo_reference": "ATplDJZbH7EJJpHQnnPA_4xPxtNt6HXlhh5-6m4QKWnzoLDfUfR2XikfARoTPSLUgyhrgLL_o2gRUvoU4Imc6fUfhLfk-tvBGXXcHrULVy2TEK3sBeCU9FPKoW4O0Zp-VudeJONYg9rxnJHn6Z5UM53W24Q1D2AoVuGLEM613NIR79mUReYB",
+                "width": 4608
+            }
+        ],
+        "place_id": "ChIJrTH0vwYnQg0RwFJPB0NzKeE",
+        "plus_code": {
+            "compound_code": "98X7+8F Madrid, Spain",
+            "global_code": "8CGR98X7+8F"
+        },
+        "rating": 4.5,
+        "reference": "ChIJrTH0vwYnQg0RwFJPB0NzKeE",
+        "reviews": [
+            {
+                "author_name": "Cathy Baba",
+                "author_url": "https://www.google.com/maps/contrib/115830991843240072220/reviews",
+                "language": "en",
+                "original_language": "en",
+                "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjXq6s_kMWIkt3CqN7x_0n8A0_iPnwuIcqZ6OFTlu9-4Rg=s128-c0x00000000-cc-rp-mo-ba3",
+                "rating": 2,
+                "relative_time_description": "3 months ago",
+                "text": "Cold and very noisy. Phone booths are open spaces between 4 walls, but no ceiling. Useless",
+                "time": 1700069641,
+                "translated": false
+            },
+            {
+                "author_name": "Antoinette Franklin",
+                "author_url": "https://www.google.com/maps/contrib/110194546124438174803/reviews",
+                "language": "en",
+                "original_language": "en",
+                "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjV8yWmO4592vhJ45xcUyKvGcTfAIQ912CVTefqYKk3bbFA=s128-c0x00000000-cc-rp-mo",
+                "rating": 5,
+                "relative_time_description": "a year ago",
+                "text": "Decided to visit on my week trip to Madrid. At first I was a little skeptical: thought it would be crowded, noisy, and rude staff. BUT I was wrong. This is such a pleasant place as I was welcomed the moment I walked through the door. Marta and Alexa (I think) were so gracious and helped me get situated for the day. Allowed me to sit and purchase a day pass since it wasn't working online. Marta checked on me through the day and informed me of the office space, private rooms for calls, cafe etc. The guy running the cafe was also very pleasant.\n\nThe internet was super fast - which is very important. The table/sear selection were comfortable, and the outlets are easily accessible.\n\nI will definitely return on my visits and send people their way.\nThank you for a great experience!",
+                "time": 1649332411,
+                "translated": false
+            },
+            {
+                "author_name": "Simon Stepsys",
+                "author_url": "https://www.google.com/maps/contrib/114898362461195160979/reviews",
+                "language": "en",
+                "original_language": "en",
+                "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjUaF4wPfcvof6Nk5JYkIM3aAP_IQ4XYkirKfV6OW-Lq9Jg=s128-c0x00000000-cc-rp-mo-ba6",
+                "rating": 4,
+                "relative_time_description": "4 years ago",
+                "text": "Nice offices walking distance to centre of Madrid.\n\nClean, Spacious, Modern, plenty of room for expansion, some nice bars near by too.",
+                "time": 1579427138,
+                "translated": false
+            },
+            {
+                "author_name": "Nadine",
+                "author_url": "https://www.google.com/maps/contrib/110839601202930237684/reviews",
+                "language": "en",
+                "original_language": "en",
+                "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjXL8WfoZrea-T_stcEM9dyr-PcKA2pWCE2wntPoBOWOl3c=s128-c0x00000000-cc-rp-mo-ba4",
+                "rating": 3,
+                "relative_time_description": "10 months ago",
+                "text": "Close to atocha\nNice day light",
+                "time": 1682627032,
+                "translated": false
+            },
+            {
+                "author_name": "Kyle Ashcraft",
+                "author_url": "https://www.google.com/maps/contrib/117002629986028894382/reviews",
+                "language": "en",
+                "original_language": "en",
+                "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjVBFqjd8PlpihMoo1utRnkRfxjGGm4p-cdDQ6Lak-pvQcc=s128-c0x00000000-cc-rp-mo-ba4",
+                "rating": 5,
+                "relative_time_description": "2 years ago",
+                "text": "As a current member, this is an excellent coworking spot. There are multiple spaces in the building for different needs. The staff are very kind and accommodating. I definitely recommend coming by to check it out!",
+                "time": 1628084238,
+                "translated": false
+            }
+        ],
+        "types": [
+            "point_of_interest",
+            "establishment"
+        ],
+        "url": "https://maps.google.com/?cid=16224625864301564608",
+        "user_ratings_total": 215,
+        "utc_offset": 60,
+        "vicinity": "Calle de Juan de Mariana, 15, Madrid",
+        "website": "https://talentgarden.org/es/coworking/spain/madrid/",
+        "wheelchair_accessible_entrance": true
+    },
+    "status": "OK"
+}

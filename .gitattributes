@@ -1,0 +1,2 @@
+new_venv/lib/python3.12/site-packages/nvidia/nccl/lib/libnccl.so.2 filter=lfs diff=lfs merge=lfs -text
+new_venv/lib/python3.12/site-packages/xgboost/lib/libxgboost.so filter=lfs diff=lfs merge=lfs -text
