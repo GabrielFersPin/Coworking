@@ -44,16 +44,6 @@ st.header("Ratings Overview")
 st.write("Average Rating: ", filtered_data["Rating"].mean())
 st.write("Average User Rating Count: ", filtered_data["User Rating Count"].mean())
 
-# Display Ratings Distribution
-st.header("Ratings Distribution")
-fig = px.histogram(filtered_data, y="Rating", x='name', title="Ratings Distribution")
-st.plotly_chart(fig)
-
-# Display User Rating Count Distribution
-st.header("User Rating Count Distribution")
-fig = px.histogram(filtered_data, y="User Rating Count", x='name', title="User Rating Count Distribution")
-st.plotly_chart(fig)
-
 # Display prices
 st.header("Prices Overview")
 st.write("Day Pass Price: ", filtered_data["Day Pass"].mean())
@@ -61,20 +51,15 @@ st.write("Monthly Price: ", filtered_data["Month Pass"].mean())
 
 # Display Prices Distribution
 st.header("Prices Distribution")
-fig = px.histogram(filtered_data, y="Day Pass", x='name', title="Day Pass Price Distribution")
+fig = px.histogram(filtered_data, y="Day Pass", nbins=5, title="Day Pass Price Distribution")
 st.plotly_chart(fig)
 
-fig = px.histogram(filtered_data, y="Month Pass", x='name', title="Monthly Price Distribution")
+fig = px.histogram(filtered_data, y="Month Pass", nbins=5, title="Monthly Price Distribution")
 st.plotly_chart(fig)
 
 # Display Transport connectivity
 st.header("Transport Connectivity Overview")
 st.write("Number of conections with public transport: ", filtered_data[['name', "Transport"]])
-
-# Display Transport Connectivity Distribution
-st.header("Transport Connectivity Distribution")
-fig = px.histogram(filtered_data, y="Transport", x='name', title="Transport Connectivity Distribution")
-st.plotly_chart(fig)
 
 # Display Distance to the city center
 st.header("Distance to the city center Overview")
