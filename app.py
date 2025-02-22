@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 import folium
 from streamlit_folium import folium_static
+import joblib
 
 # Load Data
 @st.cache_data
@@ -45,11 +46,6 @@ def display_map(recommended_spaces, city):
         ).add_to(coworking_map)
     folium_static(coworking_map)
 
-def predict_price(city, neighborhood, transport_access):
-    # Placeholder for the actual prediction logic
-    # Replace with the actual model prediction
-    return 20.0  # Example fixed price
-
 def main():
     df = load_data()
 
@@ -79,11 +75,65 @@ def main():
     st.write(f"Predicted Monthly Price: {predicted_monthly_price:.2f} EUR")
 
     fig = px.histogram(df, x="Price_Daily", color="City", title="Price Distribution by City")
-    st.plotly_chart(fig)
+    st.plotly_chart(fig)    
 
-    st.write("### Developed by Gabriel Pinheiro")
-    st.write("### [LinkedIn](https://www.linkedin.com/in/gabriel-pinheiro-7b4a8a1b1/)")
-    st.write("### [GitHub](https://github.com/GabrielFersPin?tab=repositories)")
+# Load trained models
+day_pass_model = joblib.load("/workspaces/Coworking/src/results/random_forest_model.pkl")
+month_pass_model = joblib.load("/workspaces/Coworking/src/results/ridge_params_model.pkl")
+
+# Load encoders
+city_encoder = joblib.load("/workspaces/Coworking/src/results/city_encoder.pkl")
+neighborhood_encoder = joblib.load("/workspaces/Coworking/src/results/neighborhood_encoder.pkl")
+
+# Define the prediction function
+def predict_pass_price(city, city_encoder, neighborhood_encoder, model):
+    # Create an empty DataFrame with the same structure as training data
+    input_data = pd.DataFrame(columns=X.columns)
+    input_data.loc[0] = 0  # Initialize with zeros
+
+    # One-hot encode the city
+    df_city = pd.DataFrame({'City': [city]})
+    city_encoded = city_encoder.transform(df_city)
+    city_encoded_df = pd.DataFrame(city_encoded, columns=city_encoder.get_feature_names_out())
+
+    # Add encoded city columns to the input data
+    for col in city_encoded_df.columns:
+        if col in input_data.columns:
+            input_data[col] = city_encoded_df[col].values[0]
+
+    # Set numerical features (use real values if available)
+    input_data['log_population'] = 1000000.0  # Replace with real data
+    input_data['log_income'] = 50000.0  # Replace with real data
+    input_data['log_distance'] = 10.0  # Replace with real data
+    input_data['income_per_capita'] = 5000.0  # Replace with real data
+
+    # Ensure correct column order
+    input_data = input_data.reindex(columns=X.columns, fill_value=0)
+
+    # Predict the pass price
+    predicted_price = model.predict(input_data)
+
+    return predicted_price[0]
+
+# Streamlit UI
+st.title("Coworking Pass Price Predictor")
+
+# Select city
+cities = ["Madrid", "Barcelona", "New York", "Tokyo"]
+selected_city = st.selectbox("Select a city:", cities)
+
+if st.button("Predict Prices"):
+    day_pass_price = predict_pass_price(selected_city, city_encoder, neighborhood_encoder, day_pass_model)
+    month_pass_price = predict_pass_price(selected_city, city_encoder, neighborhood_encoder, month_pass_model)
+
+    st.subheader(f"Predicted Prices for {selected_city}:")
+    st.write(f"**Day Pass Price:** ${day_pass_price:.2f}")
+    st.write(f"**Monthly Pass Price:** ${month_pass_price:.2f}")
+
+
+st.write("### Developed by Gabriel Pinheiro")
+st.write("### [LinkedIn](https://www.linkedin.com/in/gabriel-pinheiro-7b4a8a1b1/)")
+st.write("### [GitHub](https://github.com/GabrielFersPin?tab=repositories)")
 
 if __name__ == "__main__":
     main()
