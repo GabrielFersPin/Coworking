@@ -1,82 +1,73 @@
 # 🏢 Coworking Space Analysis & Recommendation System
+# Coworking Space Recommendation System
 
-## 📌 Project Overview
-This project analyzes coworking spaces across major cities (Barcelona, Madrid, New York, and Tokyo) to provide insights and build a recommendation system based on pricing, location, and user ratings. The goal is to help professionals and businesses find the best coworking space based on their preferences.
+## Project Overview
 
-## 🚀 Features
-- **Web Scraping**: Extracted coworking space data from Google Maps and other sources.
-- **Data Analysis**: Cleaned and processed data, including population, income, transportation, and ratings.
-- **Machine Learning**:
-  - **Price Prediction**: Implemented **Ridge Regression** and **Random Forest** models to predict day pass prices.
-  - **Recommendation System**: Uses a scoring mechanism considering price, rating, and distance from the city center.
-- **Interactive Visualization**:
-  - **Power BI Dashboards**: Insights on coworking spaces, transportation, and pricing.
-  - **Folium Map**: Visual representation of coworking locations with user ratings.
-- **Streamlit Web App**: A user-friendly interface to explore coworking options dynamically.
+This project focuses on creating a recommendation system for coworking spaces based on various features such as location, rating, transport facilities, and distance from the center. It includes a comprehensive analysis and prediction system to help users find the best coworking spaces in their preferred city.
 
-## 📊 Data Sources
-- **Google Maps API**: Extracted locations, ratings, and user reviews.
-- **Wikipedia & Census Data**: Incorporated neighborhood population and income statistics.
-- **Manual Data Collection**: Pricing details for the top-rated coworking spaces.
+## Features
+- Coworking space recommendations based on user preferences (rating, distance, transport, etc.).
+- Visualization of recommended coworking spaces on an interactive map.
+- Predicted prices for coworking space daily passes.
+- Interactive Streamlit web app for seamless user experience.
 
-## 🔍 Data Processing
-- Added **distance from city center** as a key metric.
-- Computed **weighted rating scores** to account for both rating and user count.
-- Feature engineering for predictive modeling.
+## Data Sources
 
-## 🤖 Machine Learning Models
-### **1️⃣ Ridge Regression**
-- Best Parameters: `alpha=10.0`
-- MAE: **3.58** (Mean Absolute Error)
+The data for this project was gathered from multiple sources, including:
+- Coworking space information (location, rating, number of reviews).
+- External APIs and manual data collection for additional insights.
 
-### **2️⃣ Random Forest Regressor**
-- Best Parameters: `max_depth=None`, `n_estimators=100`
-- MAE: **15.93**, RMSE: **21.67**
+## Process
 
-## 🔮 Recommendation System
-A **scoring function** ranks coworking spaces by:
-1. **Affordability**: (User's max price - Predicted Price)
-2. **Quality**: Rating × 10
-3. **Convenience**: Distance from the city center (penalized)
+### 1. Data Collection and Preprocessing
 
-## 🌎 Interactive Map Example
+The first step was to gather data from various sources, such as Google Maps and coworking space directories. Here’s a screenshot of the preprocessing pipeline:
 
+![Data Preprocessing](path/to/your/preprocessing_image.png)
 
-## 🛠 Technologies Used
-- **Python**: `pandas`, `scikit-learn`, `folium`, `Streamlit`
-- **Machine Learning**: Regression models for price prediction
-- **Visualization**: Power BI, Folium, Streamlit
+### 2. Feature Engineering and Analysis
 
-## 💡 How to Use
+Data transformation and feature extraction were performed to make sure we had useful features for the recommendation model. Below is a table that shows the most important features used in the model:
+
+![Feature Engineering](path/to/your/feature_engineering_image.png)
+
+### 3. Model Training and Prediction
+
+The recommendation system was built using a machine learning model. Here’s an image that shows the trained model's results:
+
+![Model Training](path/to/your/model_training_image.png)
+
+### 4. Map Visualization of Recommended Spaces
+
+Once the recommendations were generated, we used Folium to display the recommended coworking spaces on an interactive map:
+
+![Map Visualization](path/to/your/map_visualization_image.png)
+
+### 5. Deployment and Streamlit App
+
+The final recommendation system was deployed using Streamlit, making it easy for users to input their preferences and view the recommendations directly on the web.
+
+Here’s a screenshot of the deployed app interface:
+
+![Streamlit App](path/to/your/streamlit_app_image.png)
+
+## How to Run the Project
+
+### Requirements
+- Python 3.x
+- Streamlit
+- Pandas
+- Scikit-learn
+- Folium
+- Joblib
+- Other necessary libraries (listed in `requirements.txt`)
+
+### Setup
+
 1. Clone the repository:
    ```bash
-   git clone https://github.com/GabrielFersPin/Coworking.git
-   cd Coworking
-   ```
-2. Create a Virtual Environment:
-    ```bash
-    python -m venv new_venv
-    ``
-3. Activate the Virtual Environment:
-    - Windows:
-    ```bash
-    new_venv\Scripts\activate
-    ```
-    - MacOS/Linux:
-    ```bash
-    source new_venv/bin/activate
-    ``` 
-4. Install Dependecies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-5. Run the Streamlit app:
-   ```bash
-   streamlit run app.py
-   ```
-
-## 🏆 Acknowledgments
-Special thanks to the open-source community and data providers for enabling this analysis.
+   git clone https://github.com/your-username/coworking-space-recommendation.git
+  
 
 ---
 

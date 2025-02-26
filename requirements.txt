@@ -13,7 +13,7 @@ cycler==0.12.1
 debugpy==1.8.9
 decorator==5.1.1
 executing==2.1.0
-folium==0.19.4
+folium==0.11.0
 fonttools==4.55.2
 gensim==4.3.3
 geographiclib==2.0
