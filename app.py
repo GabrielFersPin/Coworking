@@ -8,19 +8,29 @@ import os
 ## Load the trained model
 model_path = "/workspaces/Coworking/src/results/random_forest_model.pkl"
 day_pass_model = joblib.load(model_path)
-df = pd.read_csv("/workspaces/Coworking/src/results/MergedPlacesScoreDistance.csv")
-
+month_pass_model = joblib.load('/workspaces/Coworking/src/results/month_ridge_params_model.pkl')
+df_final = pd.read_csv("/workspaces/Coworking/src/results/PreprocessedData.csv")
+df = pd.read_csv('/workspaces/Coworking/src/results/MergedPlacesScoreDistance.csv')
 # Extract feature names used during training
-trained_features = day_pass_model.feature_names_in_
-print("Model trained with features:", trained_features)
+day_trained_features = day_pass_model.feature_names_in_
+month_trained_features = month_pass_model.feature_names_in_
 
 # Load encoders
 city_encoder = joblib.load("/workspaces/Coworking/src/results/city_encoder.pkl")
 
+# Streamlit app
+st.title("Coworking Space Recomendation System")
+
+# User selects a country
+selected_country = st.selectbox("Select a country:", df["Country"].unique())
+
+# User selects a city
+selected_city = st.selectbox("Select a city:", df[df["Country"] == selected_country]["City"].unique())
+
 # Function to predict day pass price
-def predict_pass_price(city, city_encoder, model, trained_features):
+def predict_pass_price(city, city_encoder, model, day_trained_features):
     # Create an empty DataFrame with training features, initializing all values as zero
-    input_data = pd.DataFrame(columns=trained_features)
+    input_data = pd.DataFrame(columns=day_trained_features)
     input_data.loc[0] = 0  # Initialize all values to zero
 
     # One-hot encode the City
@@ -58,20 +68,46 @@ def predict_pass_price(city, city_encoder, model, trained_features):
 
     return prediction[0]
 
-# Streamlit app
-st.title("Coworking Space Day Pass Price Prediction")
+#Function to predict month pass price
+def predict_month_pass_price(city, city_encoder, month_pass_model, month_trained_features):
+    # Create an empty DataFrame with training features, initializing all values as zero
+    input_data = pd.DataFrame(columns=month_trained_features)
+    input_data.loc[0] = 0  # Initialize all values to zero
 
-# User selects a country
-selected_country = st.selectbox("Select a country:", df["Country"].unique())
+    # One-hot encode the City
+    city_encoded = city_encoder.transform(pd.DataFrame({"City": [city]}))
+    city_encoded_df = pd.DataFrame(city_encoded, columns=city_encoder.get_feature_names_out())
 
-# User selects a city
-selected_city = st.selectbox("Select a city:", df[df["Country"] == selected_country]["City"].unique())
+    # Ensure city encoding is applied to the correct columns
+    for col in city_encoded_df.columns:
+        if col in input_data.columns:
+            input_data[col] = city_encoded_df[col].values[0]
 
+    # Set placeholder values for required numerical features
+    default_values = {
+        "log_population": 13.8,  
+        "log_income": 11.5,
+        "log_distance": 1.0,
+        "income_per_capita": 50000
+    }
+    
+    for feature in default_values:
+        if feature in input_data.columns:
+            input_data[feature] = default_values[feature]
 
-if st.button("Predict Day Pass Price"):
-    predicted_price = predict_pass_price(selected_city, city_encoder, day_pass_model, trained_features)
-    st.write(f"Predicted Day Pass Price: **${predicted_price:.2f}**")
+    # Convert to float (Model requires float32/float64)
+    input_data = input_data.astype(float)
 
+    # Debugging
+    print("Input Data:", input_data)
+
+    # Make a prediction
+    prediction = month_pass_model.predict(input_data)
+    
+    # Debugging
+    print("Prediction:", prediction)
+
+    return prediction[0]
 
 # Filtering Section
 st.sidebar.header("Filter Coworking Spaces")
@@ -102,10 +138,21 @@ recommended_spaces = filter_data(df, country, city, min_rating, min_rating_count
 
 # Display recommendations
 st.title(f"Recommended Coworking Spaces in {city}")
+
+# Predict day pass price
+if st.button("Predict Pass Prices"):
+    # Predict both Day Pass and Month Pass Prices
+    predicted_day_price = predict_pass_price(selected_city, city_encoder, day_pass_model, day_trained_features)
+    predicted_month_price = predict_month_pass_price(selected_city, city_encoder, month_pass_model, month_trained_features)
+    
+    # Display the predictions
+    st.write(f"Predicted Day Pass Price: **${predicted_day_price:.2f}**")
+    st.write(f"Predicted Month Pass Price: **${predicted_month_price:.2f}**")
+
 if recommended_spaces.empty:
     st.warning("No coworking spaces match your preferences.")
 else:
-    st.dataframe(recommended_spaces[["name", "Neighborhood", "Rating", "User Rating Count", "distance_from_center", "Transport", "Score"]].head(20))
+    st.dataframe(recommended_spaces[["name", "Neighborhood", "Rating", "User Rating Count", "distance_from_center", "Transport", 'Day Pass', 'Month Pass']].head(20))
 
     # Display coworking spaces on a map
     st.header(f"Map of Recommended Spaces in {city}")

@@ -21,21 +21,21 @@ The data for this project was gathered from multiple sources, including:
 
 ### 1. Data Collection and Preprocessing
 
-The first step was to gather data from various sources, such as Google Maps and coworking space directories. Here’s a screenshot of the preprocessing pipeline:
+The first step was to gather data from various sources, such as Google Maps and coworking space directories.
 
-![Data Preprocessing](path/to/your/preprocessing_image.png)
+![Data Preprocessing](/workspaces/Coworking/src/Images/DataProcessing.png)
 
 ### 2. Feature Engineering and Analysis
 
 Data transformation and feature extraction were performed to make sure we had useful features for the recommendation model. Below is a table that shows the most important features used in the model:
 
-![Feature Engineering](path/to/your/feature_engineering_image.png)
+![Feature Engineering](/workspaces/Coworking/src/Images/CorrelationHeatmap.png)
 
 ### 3. Model Training and Prediction
 
-The recommendation system was built using a machine learning model. Here’s an image that shows the trained model's results:
+The recommendation system was built using a machine learning model.
 
-![Model Training](path/to/your/model_training_image.png)
+![Model Training]()
 
 ### 4. Map Visualization of Recommended Spaces
 
