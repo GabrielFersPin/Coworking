@@ -44,7 +44,23 @@ Once the recommendations were generated, we used Folium to display the recommend
 
 ![Map Visualization](/workspaces/Coworking/src/Images/LocationMap.png)
 
-### 5. Deployment and Streamlit App
+### 5 Challenges and solutions:
+
+- The problems with the Google Maps API: Th API just give me 5 reviews per request, so I could not do the properly sentimental analysis and study the amenities and necessities from the clients.
+- Find online information: I couldn't' find enough information online about the coworking spaces, API's or complete websites.
+- Apply the predictions on the Streamlit: It was very challenging to use the user input into the prediction model to predict the price.
+
+### 6 Future Improvements:
+
+- Expanded Geographic Coverage: Add more cities and international locations to the database
+- Community Reviews: Incorporate user-generated reviews and ratings
+- Amenity-based Filtering: Allow users to filter spaces based on specific amenities (standing desks, private rooms, etc.)
+- Price Prediction Refinement: Improve the price prediction algorithm with more historical data
+- Booking Integration: Enable direct booking of coworking spaces through the platform
+- Personalized Recommendations: Implement collaborative filtering to suggest spaces based on similar users' preferences
+- Accessibility Information: Add detailed information about accessibility features of each space
+
+### 7. Deployment and Streamlit App
 
 The final recommendation system was deployed using Streamlit, making it easy for users to input their preferences and view the recommendations directly on the web.
 
