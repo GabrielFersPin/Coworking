@@ -39,7 +39,7 @@ The data for this project was gathered from multiple sources, including:
 
 The first step was to gather data from various sources, such as Google Maps and coworking space directories. Data was cleaned to handle missing values, and normalized to ensure consistency across different sources.
 
-![Data Preprocessing](/workspaces/Coworking/src/Images/DataProcessing.png)
+![Data Preprocessing](./src/Images/DataProcessing.png)
 
 ### 2. Feature Engineering and Analysis
 
@@ -49,7 +49,7 @@ Data transformation and feature extraction were performed to make sure we had us
 - Public transportation accessibility score
 - Rating and rating user count score
 
-![Feature Engineering](/workspaces/Coworking/src/Images/CorrelationHeatmap.png)
+![Feature Engineering](./src/Images/CorrelationHeatmap.png)
 
 ### 3. Model Training and Prediction
 
@@ -66,7 +66,7 @@ The models were evaluated using:
 
 Once the recommendations were generated, we used Folium to display the recommended coworking spaces on an interactive map:
 
-![Map Visualization](/workspaces/Coworking/src/Images/LocationMap.png)
+![Map Visualization](./src/Images/LocationMap.png)
 
 ### 5. Challenges and Solutions
 
@@ -92,7 +92,7 @@ The final recommendation system was deployed using Streamlit, making it easy for
 
 Here's a screenshot of the deployed app interface:
 
-![Streamlit App](/workspaces/Coworking/src/Images/StreamlitScreenshot.png)
+![Streamlit App](./src/Images/StreamlitScreenshot.png)
 
 ## How to Run the Project
 
