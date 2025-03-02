@@ -7,8 +7,16 @@ import folium
 import os
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
 
-# Load the data
-df = pd.read_csv("/workspaces/Coworking/src/results/MergedPlacesScoreDistance.csv")
+# Set the base directory
+base_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Load the data using relative paths
+df = pd.read_csv(os.path.join(base_dir, "src", "results", "MergedPlacesScoreDistance.csv"))
+
+# Load models
+day_pass_model = joblib.load(os.path.join(base_dir, "models", "day_ridge_model.pkl"))
+month_pass_model = joblib.load(os.path.join(base_dir, "models", "month_ridge_model.pkl"))
+
 # Streamlit app
 st.title("Coworking Space Recommendation System")
 
@@ -81,14 +89,10 @@ st.header("Predict Prices")
 st.write("Please enter the details of the coworking space to predict the prices.")
 st.write("If you don't know the value of a feature, leave it as 0.")
 
-# Load the trained models
-day_pass_model = joblib.load("/workspaces/Coworking/src/results/day_ridge_model.pkl")
-month_pass_model = joblib.load("/workspaces/Coworking/src/results/month_ridge_model.pkl")
-
 # Load the encoders and scaler saved during training
-city_encoder = joblib.load("/workspaces/Coworking/src/results/city_encoder.pkl")
-neighborhood_encoder = joblib.load("/workspaces/Coworking/src/results/neighborhood_encoder.pkl")
-scaler = joblib.load("/workspaces/Coworking/src/results/minmax_scaler.pkl")
+city_encoder = joblib.load(os.path.join(base_dir, "models", "city_encoder.pkl"))
+neighborhood_encoder = joblib.load(os.path.join(base_dir, "models", "neighborhood_encoder.pkl"))
+scaler = joblib.load(os.path.join(base_dir, "models", "minmax_scaler.pkl"))
 
 # Initialize user inputs with normal scale values
 user_inputs = {}
