@@ -6,6 +6,9 @@ import plotly.express as px
 import folium
 import os
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
+import tempfile
+from streamlit_folium import folium_static
+
 
 # Set the base directory
 base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -62,27 +65,22 @@ if recommended_spaces.empty:
 else:
     st.dataframe(recommended_spaces[["name", "Neighborhood", "Rating", "User Rating Count", "distance_from_center", "Transport", 'Day Pass', 'Month Pass']].head(20))
 
-    # Display coworking spaces on a map
-    st.header(f"Map of Recommended Spaces in {city}")
+# Display coworking spaces on a map
+st.header(f"Map of Recommended Spaces in {city}")
+
+if not recommended_spaces.empty:
+    # Create the map
     map_center = [recommended_spaces["Latitude"].mean(), recommended_spaces["Longitude"].mean()]
     coworking_map = folium.Map(location=map_center, zoom_start=12)
 
     for _, row in recommended_spaces.iterrows():
         folium.Marker(
             location=[row['Latitude'], row['Longitude']],
-            popup=f"{row['name']}<br>Rating: {row['Rating']}<br>"
-                  f"User Rating Count: {row['User Rating Count']}<br>"
-                  f"Distance from Center: {row['distance_from_center']} km<br>"
-                  f"Transport: {row['Transport']}",
+            popup=f"{row['name']}<br>Rating: {row['Rating']}",
             icon=folium.Icon(color="blue"),
         ).add_to(coworking_map)
-
-    # Save the map as an HTML file
-    map_html = "/tmp/coworking_map.html"
-    coworking_map.save(map_html)
-
-    # Display the map in Streamlit
-    st.components.v1.html(open(map_html, 'r').read(), height=600)
+    
+    folium_static(coworking_map)
     
 # Predict the price of day pass and month pass
 st.header("Predict Prices")
