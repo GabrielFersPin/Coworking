@@ -32,31 +32,6 @@ The data for this project was gathered from multiple sources, including:
 - **GeoPy 2.2.0** - Geocoding services
 - **Google Places API** - Coworking space data collection
 
-## Project Structure
-
-```
-coworking/
-├── README.md
-├── app.py                      # Streamlit application entry point
-├── requirements.txt            # Project dependencies
-├── data/
-│   ├── raw/                    # Original collected data
-│   └── processed/              # Cleaned and processed datasets
-├── models/
-│   ├── recommendation_model.pkl # Trained recommendation model
-│   └── price_prediction.pkl     # Price prediction model
-├── notebooks/
-│   ├── 01_data_collection.ipynb
-│   ├── 02_data_preprocessing.ipynb
-│   ├── 03_feature_engineering.ipynb
-│   ├── 04_model_training.ipynb
-│   └── 05_evaluation.ipynb
-└── src/
-    ├── data_processing.py      # Data processing utilities
-    ├── recommendation.py       # Recommendation system logic
-    ├── prediction.py           # Price prediction functions
-    └── visualization.py        # Map and data visualization
-```
 
 ## Process
 
