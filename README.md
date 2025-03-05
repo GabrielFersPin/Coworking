@@ -32,7 +32,6 @@ The data for this project was gathered from multiple sources, including:
 - **GeoPy 2.2.0** - Geocoding services
 - **Google Places API** - Coworking space data collection
 
-
 ## Process
 
 ### 1. Data Collection and Preprocessing
@@ -55,26 +54,28 @@ Data transformation and feature extraction were performed to make sure we had us
 
 The recommendation system was built using multiple machine learning models:
 
-- **Ridget Regression Model**: To make the price prediction for day pass and month pass price.
+- **Ridge Regression Model**: Used for predicting the price of day and month passes.
 
 The models were evaluated using:
 
-- Mean Absolute Error (MAE): 4.45  For day price
-- Mean Absolute Error (MAE): 59.16 For month price
+- **Best Ridge MAE** (Mean Absolute Error) for day pass: **18.45**
+- **Best Ridge RMSE** (Root Mean Square Error) for day pass: **22.79**
+- **Best Ridge MAE** for month pass: **87.61**
+- **Best Ridge RMSE** for month pass: **123.14**
 
 ### 4. Map Visualization of Recommended Spaces
 
-Once the recommendations were generated, we used Folium to display the recommended coworking spaces on an interactive map:
+Users can filter features they want to adjust using the Streamlit app's sidebar. The filtered results are then displayed on an interactive map using Folium:
 
 ![Map Visualization](./src/Images/LocationMap.png)
 
 ### 5. Challenges and Solutions
 
-- **Google Maps API limitations**: The API only provides 5 reviews per request, limiting sentiment analysis. Solution: Focus on another amenities.
+- **Google Maps API limitations**: The API only provides 5 reviews per request, limiting sentiment analysis. **Solution**: Focused on alternative features such as location, transport accessibility, and pricing.
   
-- **Limited online information**: Insufficient data about coworking spaces online. Solution: Supplemented with manual data collection via phone calls and site visits for 20% of the spaces.
+- **Limited online information**: Insufficient data about coworking spaces online. **Solution**: Supplemented with manual data collection via phone calls and site visits for 20% of the spaces.
   
-- **Streamlit prediction integration**: Difficulty using user input in the prediction model. Solution: Created a preprocessing pipeline that transforms user inputs to match model requirements and implemented error handling for edge cases.
+- **Streamlit prediction integration**: Difficulty using user input in the prediction model. **Solution**: Created a preprocessing pipeline that transforms user inputs to match model requirements and implemented error handling for edge cases.
 
 ### 6. Future Improvements
 
@@ -85,6 +86,8 @@ Once the recommendations were generated, we used Folium to display the recommend
 - **Booking Integration**: Enable direct booking of coworking spaces through the platform
 - **Personalized Recommendations**: Implement collaborative filtering to suggest spaces based on similar users' preferences
 - **Accessibility Information**: Add detailed information about accessibility features of each space
+- **User Feedback Loop**: Integrate user feedback to enhance recommendation accuracy
+- **Multi-City Comparison**: Provide comparative insights across different cities
 
 ### 7. Deployment and Streamlit App
 
@@ -133,3 +136,4 @@ Here's a screenshot of the deployed app interface:
 
 📌 **Author:** Gabriel Fernandes Pinheiro  
 🔗 [LinkedIn](https://www.linkedin.com/in/gabriel-fernandes-pinheiro) | [GitHub](https://github.com/gabriel-pinheiro)
+
