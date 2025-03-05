@@ -83,7 +83,7 @@ if not recommended_spaces.empty:
     folium_static(coworking_map)
     
 # Predict the price of day pass and month pass
-st.header("Predict Prices")
+st.header("Simulation for predict prices")
 st.write("Please enter the details of the coworking space to predict the prices.")
 st.write("If you don't know the value of a feature, leave it as 0.")
 
@@ -102,135 +102,58 @@ user_inputs["Rating"] = st.number_input("Rating", min_value=0.0, max_value=5.0, 
 user_inputs["User Rating Count"] = st.number_input("User Rating Count", min_value=0, value=0, step=1, key="user_rating_count")
 user_inputs["Distance from Center (km)"] = st.number_input("Distance from Center (km)", min_value=0.0, value=0.0, step=0.1, key="distance")
 user_inputs["Transport"] = st.number_input("Transport Accessibility", min_value=0, value=0, step=1, key="transport")
-user_inputs["income_per_capita"] = st.number_input("Income per Capita", min_value=0, value=0, step=1, key="median_income")
+user_inputs["income_per_capita"] = st.number_input("Income per Capita in USD($)", min_value=0, value=0, step=1, key="median_income")
 user_inputs["Population"] = st.number_input("Population", min_value=0, value=0, step=1, key="population")
-user_inputs["Income"] = st.number_input("Median Household Income", min_value=0, value=0, step=1, key="income")
-
-# Convert user inputs into DataFrame
-input_data = pd.DataFrame([user_inputs])
-
-# Create log-transformed features using log1p (to handle zero values)
-input_data["log_income"] = np.log1p(input_data["Income"])
-input_data["log_population"] = np.log1p(input_data["Population"])
-# If your model was trained on log transformed distance, you could do the same:
-input_data["log_distance"] = np.log1p(input_data["Distance from Center (km)"])
-
-# Drop the original non-log columns, if they're not used by the model
-input_data.drop(["Income", "Population", "Distance from Center (km)"], axis=1, inplace=True)
-
-# One-hot encode categorical features (using the unchanged columns)
-city_encoded = city_encoder.transform(input_data[['City']])
-neighborhood_encoded = neighborhood_encoder.transform(input_data[['Neighborhood']])
-
-city_encoded_df = pd.DataFrame(city_encoded, columns=city_encoder.categories_[0])
-neighborhood_encoded_df = pd.DataFrame(neighborhood_encoded, columns=neighborhood_encoder.categories_[0])
-
-# Combine the encoded columns with the transformed inputs
-input_data_encoded = pd.concat(
-    [input_data.drop(['City', 'Neighborhood'], axis=1), city_encoded_df, neighborhood_encoded_df],
-    axis=1
-)
-
-# Apply scaling only to the log-transformed numerical columns
-numerical_columns = ['log_population', 'log_income', 'log_distance', 'income_per_capita']
-input_data_encoded[numerical_columns] = scaler.transform(input_data_encoded[numerical_columns])
-
-# Filter model features to those present in input_data_encoded
-day_model_features = [feat for feat in day_pass_model.feature_names_in_ if feat in input_data_encoded.columns]
-month_model_features = [feat for feat in month_pass_model.feature_names_in_ if feat in input_data_encoded.columns]
-
-input_data_day = input_data_encoded[day_model_features]
-input_data_month = input_data_encoded[month_model_features]
-
-# Reindex input_data_encoded to include all features expected by the model
-input_data_day = input_data_encoded.reindex(columns=day_pass_model.feature_names_in_, fill_value=0)
-input_data_month = input_data_encoded.reindex(columns=month_pass_model.feature_names_in_, fill_value=0)
-
-# Optionally, drop unwanted columns if they exist
-if 'Day Pass' in input_data_day.columns:
-    input_data_day = input_data_day.drop(columns=['Day Pass'])
-if 'Month Pass' in input_data_month.columns:
-    input_data_month = input_data_month.drop(columns=['Month Pass'])
-
-# Predict the prices
-#day_pass_price = day_pass_model.predict(input_data_day)[0]
-#month_pass_price = month_pass_model.predict(input_data_month)[0]
+user_inputs["Income"] = st.number_input("Median Household Income in USD($)", min_value=0, value=0, step=1, key="income")
 
 def predict_prices(selected_city, selected_neighborhood, user_inputs, df, day_model, month_model, city_encoder, neighborhood_encoder, scaler):
-    """
-    Updated price prediction function with log transformation handling
-    """
-    # Helper function to safely log transform
-    def safe_log_transform(value, is_already_log=False):
-        if is_already_log:
-            return value  # If already log-transformed, return as-is
-        return np.log1p(value)
-    
-    # Prepare input data with careful log transformation
+    # Función para aplicar log sin transformar dos veces
+    def safe_log_transform(value):
+        return np.log1p(value) if value > 0 else 0  # Evita log(0)
+
+    # Obtener valores de usuario o valores por defecto de la ciudad
+    pop_value = user_inputs.get("Population", df[df['City'] == selected_city]['Population'].mean())
+    income_value = user_inputs.get("Income", df[df['City'] == selected_city]['Median Household Income'].mean())
+    distance_value = user_inputs.get("Distance from Center (km)", df[df['City'] == selected_city]['distance_from_center'].mean())
+
+    # Aplicar transformación logarítmica
     prediction_input = {
         'City': selected_city,
         'Neighborhood': selected_neighborhood,
-        'log_population': safe_log_transform(
-            user_inputs.get("Population", df[df['City'] == selected_city]['Population'].mean()),
-            # Add a check if the value looks like it's already log-transformed
-            is_already_log=user_inputs.get("Population", 0) > 10  # Rough heuristic
-        ),
-        'log_income': safe_log_transform(
-            user_inputs.get("Income", df[df['City'] == selected_city]['Median Household Income'].mean()),
-            # Check if income looks like it's already log-transformed
-            is_already_log=user_inputs.get("Income", 0) > 10
-        ),
-        'log_distance': safe_log_transform(
-            user_inputs.get("Distance from Center (km)", df[df['City'] == selected_city]['distance_from_center'].mean()),
-            # Check if distance looks like it's already log-transformed
-            is_already_log=user_inputs.get("Distance from Center (km)", 0) > 10
-        ),
-        'income_per_capita': user_inputs.get("income_per_capita", 
-            df[df['City'] == selected_city]['Median Household Income'].mean() / 
-            df[df['City'] == selected_city]['Population'].mean()
-        )
+        'log_population': safe_log_transform(pop_value),
+        'log_income': safe_log_transform(income_value),
+        'log_distance': safe_log_transform(distance_value),
+        'income_per_capita': income_value / pop_value if pop_value > 0 else 0,
+        'Rating': user_inputs.get("Rating", 0),
+        'User Rating Count': user_inputs.get("User Rating Count", 0),
+        'Transport': user_inputs.get("Transport", 0)
     }
-    
-    # Create input DataFrame
+
+    # Convertir a DataFrame
     input_data = pd.DataFrame([prediction_input])
-    
-    # One-hot encode categorical features
-    city_encoded = city_encoder.transform(input_data[['City']])
-    neighborhood_encoded = neighborhood_encoder.transform(input_data[['Neighborhood']])
-    
-    city_encoded_df = pd.DataFrame(city_encoded, columns=city_encoder.categories_[0])
-    neighborhood_encoded_df = pd.DataFrame(neighborhood_encoded, columns=neighborhood_encoder.categories_[0])
-    
-    # Combine encoded columns with transformed inputs
-    input_data_encoded = pd.concat(
-        [input_data.drop(['City', 'Neighborhood'], axis=1), 
-         city_encoded_df, 
-         neighborhood_encoded_df],
-        axis=1
-    )
-    
-    # Scale numerical columns
+
+    # One-hot encoding
+    city_encoded_df = pd.DataFrame(city_encoder.transform(input_data[['City']]), columns=city_encoder.categories_[0])
+    neighborhood_encoded_df = pd.DataFrame(neighborhood_encoder.transform(input_data[['Neighborhood']]), columns=neighborhood_encoder.categories_[0])
+
+    # Unir datos categóricos y numéricos
+    input_data_encoded = pd.concat([input_data.drop(['City', 'Neighborhood'], axis=1), city_encoded_df, neighborhood_encoded_df], axis=1)
+
+    # Escalar con MinMaxScaler
     numerical_columns = ['log_population', 'log_income', 'log_distance', 'income_per_capita']
     input_data_encoded[numerical_columns] = scaler.transform(input_data_encoded[numerical_columns])
-    
-    # Prepare inputs for day and month models
-    day_model_features = day_model.feature_names_in_
-    month_model_features = month_model.feature_names_in_
-    
-    # Reindex to match model features, filling missing with 0
-    input_data_day = input_data_encoded.reindex(columns=day_model_features, fill_value=0)
-    input_data_month = input_data_encoded.reindex(columns=month_model_features, fill_value=0)
-    
-    # Predict prices
-    day_pass_price = day_model.predict(input_data_day)[0]
-    month_pass_price = month_model.predict(input_data_month)[0]
-    
-    # Ensure non-negative prices
-    day_pass_price = max(day_pass_price, 0)
-    month_pass_price = max(month_pass_price, 0)
-    
+
+    # Ajustar dimensiones para los modelos
+    input_data_day = input_data_encoded.reindex(columns=day_model.feature_names_in_, fill_value=0)
+    input_data_month = input_data_encoded.reindex(columns=month_model.feature_names_in_, fill_value=0)
+
+    # Predicciones
+    day_pass_price = max(day_model.predict(input_data_day)[0], 0)
+    month_pass_price = max(month_model.predict(input_data_month)[0], 0)
+
     return day_pass_price, month_pass_price
 
+# Predecir precios
 day_pass_price, month_pass_price = predict_prices(
     selected_city, 
     user_inputs["Neighborhood"],
@@ -238,10 +161,21 @@ day_pass_price, month_pass_price = predict_prices(
     df, 
     day_pass_model, 
     month_pass_model,
-    city_encoder,     # Pass the city encoder 
-    neighborhood_encoder,  # Pass the neighborhood encoder
-    scaler  # Pass the scaler used during training
+    city_encoder,  
+    neighborhood_encoder,
+    scaler
 )
-# Show the results
+
+# Mostrar resultados
 st.write(f"Predicted Day Pass Price: ${day_pass_price:.2f}")
-st.write(f"Predicted Month Pass Price: ${month_pass_price:.2f}")
+
+# Display reference prices for comparison
+city_data = df[df['City'] == selected_city]
+if not city_data.empty:
+    avg_day = city_data['Day Pass'].mean()
+    avg_month = city_data['Month Pass'].mean()
+    st.markdown(
+    f"**For reference:**\n\nAverage prices in **{selected_city}** are:\n"
+    f"- **Day pass:** ${avg_day:.2f}\n"
+    f"- **Month pass:** ${avg_month:.2f}"
+    )
