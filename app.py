@@ -139,13 +139,19 @@ def predict_prices(selected_city, selected_neighborhood, user_inputs, df, day_mo
     # Unir datos categóricos y numéricos
     input_data_encoded = pd.concat([input_data.drop(['City', 'Neighborhood'], axis=1), city_encoded_df, neighborhood_encoded_df], axis=1)
 
-    # Escalar con MinMaxScaler
+    # Escalar con MinMaxScaler (excluding specific features)
     numerical_columns = ['log_population', 'log_income', 'log_distance', 'income_per_capita']
     input_data_encoded[numerical_columns] = scaler.transform(input_data_encoded[numerical_columns])
 
     # Ajustar dimensiones para los modelos
     input_data_day = input_data_encoded.reindex(columns=day_model.feature_names_in_, fill_value=0)
     input_data_month = input_data_encoded.reindex(columns=month_model.feature_names_in_, fill_value=0)
+
+    # Añadir las características no escaladas
+    input_data_day['Rating'] = input_data['Rating']
+    input_data_day['Transport'] = input_data['Transport']
+    input_data_month['Rating'] = input_data['Rating']
+    input_data_month['Transport'] = input_data['Transport']
 
     # Predicciones
     day_pass_price = max(day_model.predict(input_data_day)[0], 0)
@@ -168,6 +174,7 @@ day_pass_price, month_pass_price = predict_prices(
 
 # Mostrar resultados
 st.write(f"Predicted Day Pass Price: ${day_pass_price:.2f}")
+st.write(f"Predicted Monthly Membership: ${month_pass_price:.2f}")
 
 # Display reference prices for comparison
 city_data = df[df['City'] == selected_city]
