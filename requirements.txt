@@ -83,6 +83,7 @@ sortedcontainers==2.4.0
 stack-data==0.6.3
 statsmodels==0.14.4
 streamlit==1.40.2
+streamlit-folium
 tenacity==9.0.0
 threadpoolctl==3.5.0
 toml==0.10.2
