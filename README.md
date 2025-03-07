@@ -123,6 +123,14 @@ Here's a screenshot of the deployed app interface:
    pip install -r requirements.txt
    ```
 
+## Update Configuration
+
+Before running the application, update the configuration file with the environment variables:
+
+```bash
+python /workspaces/Coworking/update_config.py
+```
+
 4. Run the Streamlit app:
    ```bash
    streamlit run app.py
