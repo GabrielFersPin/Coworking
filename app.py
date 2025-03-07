@@ -8,7 +8,9 @@ import os
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
 import tempfile
 from streamlit_folium import folium_static
+from dotenv import load_dotenv
 
+load_dotenv()
 
 # Set the base directory
 base_dir = os.path.dirname(os.path.abspath(__file__))
