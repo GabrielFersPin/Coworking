@@ -99,7 +99,6 @@ user_inputs["City"] = selected_city
 neighborhood_options = df[df["City"] == selected_city]["Neighborhood"].unique()
 user_inputs["Neighborhood"] = st.selectbox("Neighborhood", neighborhood_options, key="neighborhood")
 user_inputs["Rating"] = st.number_input("Rating", min_value=0.0, max_value=5.0, value=0.0, step=0.1, key="rating_price")
-user_inputs["User Rating Count"] = st.number_input("User Rating Count", min_value=0, value=0, step=1, key="user_rating_count")
 user_inputs["Distance from Center (km)"] = st.number_input("Distance from Center (km)", min_value=0.0, value=0.0, step=0.1, key="distance")
 user_inputs["Transport"] = st.number_input("Transport Accessibility", min_value=0, value=0, step=1, key="transport")
 user_inputs["income_per_capita"] = st.number_input("Income per Capita in USD($)", min_value=0, value=0, step=1, key="median_income")
@@ -125,7 +124,7 @@ def predict_prices(selected_city, selected_neighborhood, user_inputs, df, day_mo
         'log_distance': safe_log_transform(distance_value),
         'income_per_capita': income_value / pop_value if pop_value > 0 else 0,
         'Rating': user_inputs.get("Rating", 0),
-        'User Rating Count': user_inputs.get("User Rating Count", 0),
+        'User Rating Count': 0,
         'Transport': user_inputs.get("Transport", 0)
     }
 
@@ -147,11 +146,15 @@ def predict_prices(selected_city, selected_neighborhood, user_inputs, df, day_mo
     input_data_day = input_data_encoded.reindex(columns=day_model.feature_names_in_, fill_value=0)
     input_data_month = input_data_encoded.reindex(columns=month_model.feature_names_in_, fill_value=0)
 
-    # Añadir las características no escaladas
+    # Add back non-scaled features
     input_data_day['Rating'] = input_data['Rating']
     input_data_day['Transport'] = input_data['Transport']
-    input_data_month['Rating'] = input_data['Rating']
-    input_data_month['Transport'] = input_data['Transport']
+
+    for test_count in [0, 1, 2, 5, 10, 20, 50, 100]:
+        test_data = input_data_day.copy()
+        test_data['User Rating Count'] = test_count
+        test_price = max(day_model.predict(test_data)[0], 0)
+        print(f"User Rating Count: {test_count}, Predicted Day Pass Price: ${test_price:.2f}")
 
     # Predicciones
     day_pass_price = max(day_model.predict(input_data_day)[0], 0)
