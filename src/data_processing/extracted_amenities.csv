@@ -1,0 +1,1215 @@
+extracted_amenities
+['parking']
+[]
+[]
+"['bike_storage', 'locker']"
+['rooftop']
+"['parking', 'lounge']"
+['rooftop']
+['coffee']
+[]
+[]
+[]
+"['wifi', 'parking']"
+"['wifi', 'kitchen', 'printing', 'meeting_rooms']"
+"['wifi', 'parking']"
+"['coffee', 'wifi', 'rooftop']"
+[]
+"['wifi', 'meeting_rooms', 'locker']"
+"['wifi', 'kitchen', 'parking', 'events']"
+"['meeting_rooms', 'rooftop']"
+['meeting_rooms']
+['printing']
+['events']
+"['coffee', 'printing']"
+[]
+['meeting_rooms']
+[]
+['rooftop']
+"['coffee', 'kitchen', 'events']"
+"['coffee', 'wifi', 'meeting_rooms']"
+[]
+['parking']
+"['wifi', 'events', 'rooftop']"
+['parking']
+"['wifi', 'events']"
+[]
+"['wifi', 'kitchen', 'printing', 'events']"
+"['coffee', '24/7_access', 'events', 'wifi', 'printing', 'locker']"
+[]
+"['wifi', 'events']"
+[]
+"['wifi', 'parking', 'printing', 'events']"
+"['coffee', '24/7_access', 'rooftop']"
+"['coffee', 'wifi', 'meeting_rooms', 'events']"
+['parking']
+"['wifi', 'kitchen', 'parking', 'events']"
+['wifi']
+"['coffee', 'wifi', 'locker']"
+[]
+['events']
+['parking']
+"['coffee', 'printing']"
+['gym']
+['wifi']
+[]
+"['coffee', 'printing']"
+['coffee']
+"['wifi', 'parking', 'printing', 'events']"
+['kitchen']
+[]
+"['wifi', 'kitchen']"
+"['24/7_access', 'events']"
+['events']
+['meeting_rooms']
+"['gym', 'events', 'rooftop']"
+"['wifi', 'printing']"
+"['gym', 'parking', 'kitchen', 'rooftop']"
+[]
+['events']
+[]
+['coffee']
+[]
+[]
+"['shower', 'kitchen', 'meeting_rooms']"
+['events']
+"['kitchen', 'meeting_rooms', 'events']"
+"['shower', 'parking', 'rooftop']"
+"['wifi', 'events']"
+"['24/7_access', 'wifi', 'meeting_rooms', 'events']"
+"['24/7_access', 'wifi', 'meeting_rooms']"
+[]
+"['wifi', 'lounge', 'kitchen', 'events']"
+"['wifi', 'kitchen', 'parking', 'events']"
+"['coffee', 'events']"
+"['parking', 'meeting_rooms']"
+"['coffee', 'parking', 'kitchen']"
+[]
+[]
+['24/7_access']
+"['coffee', 'wifi', 'kitchen', 'events']"
+"['lounge', 'kitchen']"
+['24/7_access']
+['wifi']
+"['parking', 'kitchen', 'meeting_rooms', 'wifi', 'printing']"
+"['gym', 'lounge', 'rooftop']"
+[]
+[]
+[]
+['coffee']
+[]
+[]
+['lounge']
+"['coffee', 'lounge']"
+[]
+[]
+"['24/7_access', 'wifi', 'kitchen']"
+['meeting_rooms']
+"['wifi', 'kitchen', 'rooftop']"
+"['coffee', 'wifi', 'parking']"
+['coffee']
+"['wifi', 'kitchen']"
+"['wifi', 'lounge', 'kitchen']"
+"['coffee', '24/7_access', 'parking', 'wifi', 'printing']"
+['lounge']
+[]
+[]
+['kitchen']
+"['coffee', 'rooftop', 'kitchen', 'wifi', 'printing']"
+['coffee']
+['wifi']
+"['kitchen', 'events']"
+[]
+"['coffee', 'wifi', 'kitchen', 'printing']"
+[]
+['wifi']
+"['gym', '24/7_access']"
+['coffee']
+"['coffee', 'lounge', 'meeting_rooms']"
+[]
+"['kitchen', 'events', 'locker']"
+['meeting_rooms']
+"['wifi', 'parking']"
+['meeting_rooms']
+['events']
+"['coffee', 'kitchen', 'events']"
+['24/7_access']
+"['coffee', 'wifi', 'rooftop']"
+"['coffee', 'parking']"
+[]
+"['coffee', 'kitchen']"
+[]
+"['wifi', 'lounge', 'meeting_rooms']"
+"['coffee', 'events', 'lounge', 'meeting_rooms', 'wifi']"
+"['shower', 'wifi', 'parking']"
+[]
+[]
+"['coffee', 'rooftop', 'meeting_rooms', 'locker']"
+['lounge']
+"['coffee', 'wifi', 'kitchen', 'meeting_rooms']"
+"['wifi', 'printing']"
+['wifi']
+['wifi']
+"['coffee', 'meeting_rooms']"
+['wifi']
+['parking']
+"['wifi', 'meeting_rooms']"
+[]
+"['coffee', 'wifi', 'printing', 'events']"
+"['coffee', 'wifi', 'meeting_rooms', 'events']"
+"['gym', 'meeting_rooms']"
+"['wifi', 'events']"
+"['wifi', 'locker']"
+[]
+['kitchen']
+"['coffee', '24/7_access', 'events', 'meeting_rooms', 'wifi']"
+['meeting_rooms']
+"['wifi', 'parking']"
+[]
+"['coffee', 'lounge']"
+['wifi']
+"['wifi', 'parking']"
+[]
+"['coffee', 'printing', 'meeting_rooms', 'rooftop']"
+['lounge']
+[]
+"['wifi', 'lounge', 'printing', 'meeting_rooms']"
+['meeting_rooms']
+"['coffee', 'lounge', 'events']"
+['events']
+['meeting_rooms']
+"['meeting_rooms', 'events']"
+"['coffee', 'wifi']"
+['events']
+"['printing', 'events']"
+"['24/7_access', 'wifi']"
+[]
+"['coffee', 'wifi', '24/7_access']"
+['rooftop']
+[]
+[]
+[]
+['lounge']
+['parking']
+['parking']
+"['coffee', 'kitchen']"
+[]
+"['coffee', 'parking', 'rooftop']"
+"['wifi', 'printing', 'events']"
+[]
+"['wifi', 'printing']"
+"['pet_friendly', 'meeting_rooms', 'rooftop']"
+"['coffee', 'wifi']"
+"['wifi', 'events']"
+"['wifi', 'parking']"
+[]
+"['coffee', 'rooftop']"
+"['24/7_access', 'events']"
+['kitchen']
+"['events', 'rooftop']"
+[]
+['events']
+"['coffee', 'meeting_rooms']"
+"['coffee', '24/7_access', 'rooftop', 'lounge', 'kitchen', 'wifi', 'printing']"
+"['events', 'rooftop']"
+['events']
+"['coffee', 'wifi', 'locker']"
+"['coffee', 'parking', 'events', 'kitchen', 'wifi']"
+['rooftop']
+"['wifi', 'parking', 'rooftop']"
+['coffee']
+[]
+"['coffee', 'wifi']"
+"['coffee', 'rooftop', 'events', 'kitchen', 'wifi']"
+"['coffee', 'wifi', 'kitchen', 'events']"
+"['meeting_rooms', 'rooftop']"
+[]
+"['coffee', 'wifi', 'events', 'rooftop']"
+"['coffee', 'wifi']"
+"['parking', 'events', 'rooftop']"
+[]
+"['wifi', 'printing']"
+"['parking', 'events', 'rooftop']"
+[]
+[]
+"['lounge', 'kitchen', 'events', 'rooftop']"
+"['coffee', 'wifi', 'printing']"
+"['coffee', 'meeting_rooms']"
+"['coffee', 'meeting_rooms']"
+[]
+[]
+[]
+"['rooftop', 'events', 'lounge', 'kitchen', 'meeting_rooms']"
+"['coffee', 'wifi']"
+"['events', 'rooftop']"
+[]
+"['coffee', 'wifi', 'printing', 'events']"
+"['coffee', 'lounge', 'kitchen', 'rooftop']"
+[]
+"['coffee', 'meeting_rooms']"
+"['gym', 'kitchen']"
+[]
+"['coffee', 'kitchen', 'meeting_rooms']"
+[]
+['wifi']
+"['coffee', '24/7_access', 'rooftop']"
+"['wifi', 'lounge', 'kitchen']"
+['kitchen']
+['wifi']
+[]
+"['wifi', 'kitchen', 'printing']"
+['printing']
+"['events', 'rooftop']"
+"['events', 'rooftop']"
+['locker']
+['coffee']
+"['coffee', 'kitchen', '24/7_access']"
+"['gym', 'kitchen']"
+['wifi']
+"['kitchen', 'events']"
+"['coffee', 'wifi', 'kitchen']"
+[]
+['kitchen']
+"['events', 'rooftop']"
+['events']
+['events']
+"['gym', 'parking', 'events']"
+[]
+"['meeting_rooms', 'rooftop']"
+[]
+"['coffee', 'events']"
+[]
+['meeting_rooms']
+[]
+"['wifi', 'kitchen', 'printing']"
+"['coffee', 'wifi', 'parking', '24/7_access']"
+[]
+"['wifi', 'parking', 'printing']"
+['events']
+[]
+"['wifi', 'kitchen', 'parking']"
+['wifi']
+[]
+"['wifi', 'kitchen', 'parking']"
+"['coffee', 'events']"
+"['parking', 'rooftop']"
+"['coffee', 'kitchen', 'meeting_rooms', 'events']"
+"['events', 'rooftop']"
+"['coffee', 'events']"
+"['events', 'rooftop']"
+[]
+"['events', 'rooftop']"
+[]
+[]
+"['kitchen', 'printing', 'meeting_rooms', 'locker']"
+"['24/7_access', 'wifi', 'parking', 'rooftop']"
+"['coffee', 'wifi', 'printing']"
+['meeting_rooms']
+"['wifi', 'meeting_rooms']"
+['events']
+"['coffee', 'wifi', 'kitchen', 'events']"
+['coffee']
+"['coffee', 'rooftop', 'lounge', 'kitchen', 'meeting_rooms']"
+[]
+"['coffee', 'rooftop']"
+"['wifi', 'kitchen', 'printing', 'meeting_rooms']"
+"['coffee', '24/7_access', 'wifi', 'printing', 'locker']"
+"['coffee', '24/7_access']"
+"['kitchen', 'meeting_rooms', 'events']"
+"['coffee', 'wifi', 'kitchen', 'events']"
+['meeting_rooms']
+"['rooftop', 'kitchen', 'meeting_rooms', 'wifi', 'printing']"
+"['coffee', 'wifi', 'kitchen', 'events']"
+[]
+"['wifi', 'events', 'locker']"
+[]
+['coffee']
+[]
+"['coffee', 'wifi', 'lounge']"
+"['wifi', 'kitchen', 'events']"
+['coffee']
+"['24/7_access', 'kitchen', 'meeting_rooms', 'wifi', 'locker']"
+['shower']
+"['coffee', 'wifi', 'printing', 'meeting_rooms']"
+"['coffee', 'kitchen']"
+"['coffee', 'parking', 'rooftop', 'events', 'meeting_rooms', 'wifi', 'locker']"
+[]
+['wifi']
+[]
+[]
+"['coffee', '24/7_access', 'gym', 'kitchen', 'wifi', 'printing']"
+[]
+"['bike_storage', 'locker']"
+[]
+[]
+['wifi']
+[]
+"['coffee', 'parking', 'lounge', 'wifi', 'printing']"
+"['coffee', 'gym']"
+[]
+['parking']
+"['lounge', 'events']"
+"['wifi', 'kitchen', 'events']"
+[]
+['coffee']
+"['coffee', 'wifi', 'printing']"
+"['coffee', 'shower', 'kitchen', 'meeting_rooms', 'wifi', 'locker']"
+"['coffee', 'wifi', 'lounge']"
+[]
+[]
+['wifi']
+"['events', 'lounge', 'wifi', 'printing', 'locker']"
+"['wifi', 'kitchen', 'printing', 'rooftop']"
+[]
+['parking']
+"['wifi', 'kitchen', 'rooftop']"
+"['lounge', 'meeting_rooms']"
+"['coffee', 'lounge', 'events']"
+"['kitchen', 'events']"
+[]
+"['lounge', 'kitchen']"
+['events']
+"['wifi', 'printing', 'meeting_rooms']"
+[]
+"['24/7_access', 'events']"
+"['kitchen', 'meeting_rooms']"
+['events']
+[]
+[]
+[]
+"['coffee', 'wifi']"
+"['24/7_access', 'printing', 'events']"
+"['wifi', 'meeting_rooms']"
+['events']
+[]
+"['24/7_access', 'events']"
+['events']
+['printing']
+['events']
+[]
+['parking']
+[]
+[]
+['parking']
+"['24/7_access', 'events']"
+['coffee']
+['events']
+['parking']
+"['coffee', 'parking']"
+['parking']
+"['parking', 'bike_storage']"
+[]
+[]
+['parking']
+"['24/7_access', 'events']"
+[]
+[]
+['events']
+[]
+"['lounge', 'meeting_rooms', 'events']"
+"['coffee', '24/7_access', 'bike_storage', 'gym', 'events', 'meeting_rooms', 'wifi', 'locker']"
+"['meeting_rooms', 'events']"
+"['coffee', 'gym']"
+[]
+['printing']
+[]
+"['24/7_access', 'events']"
+[]
+['events']
+[]
+['lounge']
+['parking']
+[]
+"['lounge', 'rooftop']"
+"['24/7_access', 'events']"
+['events']
+[]
+['parking']
+[]
+['lounge']
+['24/7_access']
+[]
+['lounge']
+[]
+"['lounge', 'locker']"
+"['coffee', 'wifi', 'kitchen']"
+"['24/7_access', 'events']"
+[]
+['events']
+"['wifi', 'lounge', 'kitchen']"
+[]
+"['coffee', 'lounge', 'kitchen', 'events']"
+[]
+[]
+['lounge']
+[]
+"['24/7_access', 'events']"
+['events']
+[]
+[]
+[]
+[]
+"['lounge', 'kitchen']"
+[]
+"['24/7_access', 'events']"
+['coffee']
+['events']
+[]
+['coffee']
+[]
+['lounge']
+"['bike_storage', 'locker']"
+['coffee']
+[]
+"['24/7_access', 'events']"
+[]
+['events']
+[]
+[]
+[]
+[]
+"['phone_booth', 'lounge', 'kitchen', 'meeting_rooms', 'wifi']"
+[]
+[]
+"['24/7_access', 'events']"
+['events']
+['events']
+"['coffee', 'rooftop', 'events', 'lounge', 'meeting_rooms', 'wifi']"
+['wifi']
+"['wifi', 'lounge', 'kitchen']"
+"['24/7_access', 'wifi', 'kitchen']"
+['coffee']
+"['coffee', 'wifi']"
+"['coffee', 'kitchen']"
+"['24/7_access', 'wifi', 'printing', 'events']"
+"['24/7_access', 'events']"
+['events']
+[]
+[]
+[]
+"['coffee', 'wifi']"
+"['wifi', 'printing', 'meeting_rooms']"
+[]
+['24/7_access']
+['events']
+['wifi']
+"['24/7_access', 'events']"
+['events']
+"['printing', 'meeting_rooms']"
+[]
+"['coffee', '24/7_access', 'kitchen', 'events']"
+[]
+"['gym', 'parking', 'lounge']"
+"['24/7_access', 'printing', 'events']"
+"['24/7_access', 'events']"
+['events']
+[]
+"['24/7_access', 'lounge', 'kitchen']"
+[]
+[]
+[]
+[]
+[]
+[]
+"['24/7_access', 'events']"
+"['coffee', 'wifi']"
+['coffee']
+['events']
+['coffee']
+[]
+[]
+['events']
+['events']
+[]
+[]
+"['24/7_access', 'events']"
+['events']
+"['coffee', '24/7_access', 'bike_storage', 'gym', 'events', 'meeting_rooms', 'wifi', 'locker']"
+"['coffee', '24/7_access', 'events', 'kitchen', 'wifi']"
+"['24/7_access', 'rooftop', 'events', 'kitchen', 'wifi', 'printing']"
+"['wifi', 'kitchen', 'rooftop']"
+"['24/7_access', 'parking', 'events', 'kitchen', 'meeting_rooms', 'wifi', 'printing']"
+[]
+"['coffee', '24/7_access', 'events', 'kitchen', 'wifi']"
+"['24/7_access', 'events']"
+['events']
+[]
+['gym']
+"['shower', 'coffee', 'gym']"
+"['24/7_access', 'events']"
+"['kitchen', 'meeting_rooms']"
+['wifi']
+['wifi']
+"['coffee', 'kitchen']"
+"['24/7_access', 'events']"
+"['lounge', 'kitchen']"
+['events']
+[]
+[]
+[]
+"['coffee', 'rooftop']"
+"['coffee', 'events']"
+"['kitchen', 'meeting_rooms']"
+"['kitchen', 'printing']"
+"['24/7_access', 'events']"
+"['24/7_access', 'parking', 'lounge', 'kitchen']"
+['events']
+"['lounge', 'kitchen']"
+"['wifi', 'meeting_rooms', 'locker']"
+['events']
+"['coffee', 'meeting_rooms']"
+['wifi']
+['events']
+"['24/7_access', 'wifi', 'printing', 'events']"
+"['24/7_access', 'events']"
+[]
+['events']
+['events']
+[]
+['wifi']
+[]
+[]
+[]
+"['coffee', 'wifi', 'parking', '24/7_access']"
+"['24/7_access', 'events']"
+['wifi']
+['events']
+['lounge']
+['coffee']
+[]
+[]
+"['wifi', 'printing', 'events']"
+[]
+"['coffee', 'printing']"
+"['24/7_access', 'events']"
+['events']
+"['24/7_access', 'parking']"
+"['wifi', 'kitchen', 'printing', 'meeting_rooms']"
+[]
+"['bike_storage', 'lounge', 'kitchen', 'wifi', 'locker']"
+[]
+"['bike_storage', 'locker']"
+[]
+"['coffee', 'meeting_rooms']"
+"['24/7_access', 'events']"
+['events']
+[]
+['meeting_rooms']
+['rooftop']
+"['coffee', '24/7_access', 'lounge', 'kitchen', 'meeting_rooms', 'wifi', 'printing']"
+[]
+['events']
+[]
+"['wifi', 'events']"
+"['24/7_access', 'events']"
+['events']
+['wifi']
+"['coffee', 'events']"
+"['lounge', 'kitchen']"
+[]
+[]
+[]
+[]
+['lounge']
+"['24/7_access', 'events']"
+['events']
+"['wifi', 'kitchen', 'printing', 'meeting_rooms']"
+['lounge']
+"['coffee', 'wifi', 'printing']"
+"['24/7_access', 'kitchen', 'meeting_rooms']"
+"['coffee', 'wifi', 'kitchen']"
+"['24/7_access', 'parking', 'lounge']"
+[]
+['meeting_rooms']
+"['24/7_access', 'events']"
+['events']
+['24/7_access']
+['wifi']
+[]
+"['24/7_access', 'meeting_rooms']"
+"['lounge', 'events']"
+"['lounge', 'kitchen']"
+"['24/7_access', 'lounge']"
+"['wifi', 'printing']"
+"['24/7_access', 'events']"
+"['wifi', 'events']"
+['events']
+['coffee']
+['meeting_rooms']
+['coffee']
+[]
+['lounge']
+['events']
+"['coffee', 'lounge', '24/7_access']"
+"['24/7_access', 'events']"
+['events']
+"['coffee', 'parking']"
+[]
+['kitchen']
+"['coffee', 'wifi', 'kitchen', 'events']"
+"['phone_booth', 'kitchen']"
+"['coffee', 'wifi']"
+[]
+['gym']
+"['24/7_access', 'events']"
+['lounge']
+['events']
+[]
+['24/7_access']
+[]
+['coffee']
+"['coffee', 'wifi', 'events', 'gym']"
+[]
+[]
+"['coffee', 'events', 'kitchen', 'wifi', 'printing']"
+"['24/7_access', 'events']"
+['events']
+['events']
+[]
+"['coffee', 'wifi']"
+[]
+['kitchen']
+['coffee']
+['rooftop']
+"['24/7_access', 'events']"
+"['coffee', '24/7_access', 'lounge', 'kitchen', 'locker']"
+['events']
+['parking']
+[]
+[]
+[]
+['kitchen']
+['gym']
+['wifi']
+"['24/7_access', 'events']"
+[]
+[]
+['events']
+[]
+['printing']
+"['wifi', 'events']"
+[]
+['events']
+[]
+"['24/7_access', 'events']"
+['events']
+[]
+['events']
+[]
+['printing']
+[]
+"['lounge', 'kitchen', 'meeting_rooms']"
+"['coffee', 'kitchen', 'meeting_rooms']"
+"['24/7_access', 'wifi']"
+"['24/7_access', 'events']"
+[]
+['meeting_rooms']
+['events']
+[]
+"['coffee', '24/7_access', 'rooftop', 'parking', 'locker']"
+[]
+['wifi']
+[]
+[]
+[]
+"['24/7_access', 'events']"
+['events']
+[]
+"['wifi', 'kitchen']"
+"['wifi', 'kitchen', 'events']"
+"['coffee', 'rooftop', 'events', 'kitchen', 'wifi']"
+[]
+['coffee']
+"['gym', 'kitchen', '24/7_access']"
+"['coffee', 'lounge', 'bike_storage', 'locker']"
+"['24/7_access', 'events']"
+[]
+['events']
+"['wifi', 'printing']"
+"['coffee', 'kitchen', 'meeting_rooms', 'wifi', 'printing']"
+"['coffee', 'lounge', 'kitchen']"
+"['24/7_access', 'parking', 'events', 'kitchen', 'meeting_rooms', 'wifi']"
+"['coffee', 'lounge']"
+[]
+"['24/7_access', 'events']"
+"['coffee', 'lounge', 'events']"
+['24/7_access']
+['events']
+[]
+"['kitchen', 'meeting_rooms']"
+['24/7_access']
+"['24/7_access', 'wifi']"
+"['coffee', 'kitchen']"
+"['coffee', 'kitchen']"
+"['24/7_access', 'events']"
+['events']
+['24/7_access']
+"['coffee', 'kitchen']"
+['24/7_access']
+[]
+['coffee']
+"['24/7_access', 'wifi']"
+['24/7_access']
+"['coffee', 'wifi', 'kitchen']"
+"['24/7_access', 'events']"
+['coffee']
+['events']
+"['coffee', 'lounge', 'events']"
+['lounge']
+[]
+[]
+[]
+['parking']
+['wifi']
+"['24/7_access', 'events']"
+"['coffee', 'kitchen']"
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['events']
+['wifi']
+[]
+[]
+[]
+[]
+[]
+[]
+[]
+['wifi']
+[]
+[]
+[]
+[]
+[]
+['meeting_rooms']
+[]
+[]
+[]
+['parking']
+[]
+[]
+['meeting_rooms']
+[]
+['meeting_rooms']
+[]
+[]
+[]
+[]
+[]
+['meeting_rooms']
+[]
+[]
+['rooftop']
+[]
+['meeting_rooms']
+['meeting_rooms']
+['lounge']
+[]
+['meeting_rooms']
+['parking']
+"['coffee', 'lounge']"
+['rooftop']
+['meeting_rooms']
+[]
+[]
+[]
+['lounge']
+[]
+[]
+"['bike_storage', 'printing', 'locker']"
+['meeting_rooms']
+[]
+['locker']
+['wifi']
+['events']
+"['coffee', 'lounge', 'events']"
+['meeting_rooms']
+[]
+[]
+[]
+[]
+[]
+[]
+[]
+"['coffee', 'kitchen']"
+[]
+"['coffee', 'wifi', 'lounge', 'kitchen']"
+['printing']
+[]
+[]
+['events']
+['rooftop']
+['gym']
+[]
+[]
+['wifi']
+[]
+[]
+[]
+"['coffee', 'wifi']"
+['lounge']
+[]
+[]
+['lounge']
+[]
+"['lounge', 'events']"
+['lounge']
+"['wifi', 'meeting_rooms']"
+['wifi']
+"['coffee', 'lounge']"
+['events']
+"['coffee', '24/7_access', 'gym', 'wifi', 'printing', 'locker']"
+['24/7_access']
+[]
+[]
+[]
+['coffee']
+"['24/7_access', 'events', 'lounge', 'meeting_rooms', 'printing']"
+"['coffee', 'wifi']"
+"['coffee', 'meeting_rooms']"
+[]
+[]
+['events']
+[]
+[]
+[]
+[]
+"['24/7_access', 'wifi', 'events']"
+"['coffee', 'wifi']"
+['parking']
+[]
+[]
+"['printing', 'meeting_rooms', 'locker']"
+[]
+[]
+[]
+[]
+[]
+"['printing', 'meeting_rooms', 'locker']"
+"['printing', 'meeting_rooms']"
+"['wifi', 'parking']"
+['events']
+"['coffee', 'lounge', 'events']"
+[]
+"['kitchen', 'events']"
+"['coffee', 'lounge', 'events']"
+"['parking', 'lounge', 'events']"
+['events']
+[]
+[]
+"['lounge', 'kitchen']"
+"['coffee', 'wifi', 'printing', '24/7_access']"
+"['coffee', 'lounge', 'events']"
+"['coffee', 'wifi', 'locker']"
+"['printing', 'meeting_rooms']"
+[]
+['lounge']
+['wifi']
+['lounge']
+"['wifi', 'printing']"
+[]
+"['lounge', 'kitchen']"
+['lounge']
+['meeting_rooms']
+['events']
+[]
+['wifi']
+['parking']
+"['wifi', 'printing']"
+['events']
+"['phone_booth', 'wifi', 'printing', 'meeting_rooms']"
+['meeting_rooms']
+['events']
+"['wifi', 'printing']"
+"['lounge', 'events', 'rooftop']"
+"['printing', 'meeting_rooms']"
+"['24/7_access', 'printing', 'meeting_rooms']"
+['wifi']
+['printing']
+['events']
+"['printing', 'meeting_rooms']"
+[]
+[]
+"['coffee', 'printing']"
+"['lounge', 'meeting_rooms']"
+"['printing', 'meeting_rooms']"
+['coffee']
+[]
+"['kitchen', 'meeting_rooms']"
+['rooftop']
+['events']
+[]
+[]
+[]
+[]
+"['parking', 'events']"
+"['coffee', 'printing']"
+"['coffee', '24/7_access', 'meeting_rooms', 'wifi', 'printing', 'locker']"
+[]
+"['meeting_rooms', 'events']"
+[]
+"['wifi', 'meeting_rooms']"
+['rooftop']
+['kitchen']
+[]
+['meeting_rooms']
+"['24/7_access', 'printing', 'meeting_rooms']"
+"['coffee', 'lounge', 'events']"
+"['wifi', 'rooftop']"
+['meeting_rooms']
+['events']
+"['wifi', 'meeting_rooms']"
+"['wifi', 'meeting_rooms']"
+"['coffee', 'lounge']"
+"['shower', 'wifi']"
+[]
+"['wifi', 'parking']"
+[]
+[]
+"['wifi', 'parking']"
+"['wifi', 'parking']"
+"['wifi', 'parking']"
+['events']
+"['gym', 'wifi', 'parking']"
+"['wifi', 'parking']"
+"['wifi', 'parking']"
+"['parking', 'bike_storage', 'locker']"
+[]
+"['coffee', 'lounge', 'events']"
+['wifi']
+['coffee']
+"['parking', 'lounge', 'events']"
+['parking']
+"['bike_storage', 'locker']"
+[]
+"['parking', 'bike_storage', 'locker']"
+"['shower', 'wifi', 'lounge', 'meeting_rooms']"
+"['bike_storage', 'locker']"
+"['coffee', 'parking']"
+"['wifi', 'parking']"
+"['wifi', 'lounge', 'meeting_rooms']"
+"['parking', 'bike_storage', 'locker']"
+['wifi']
+"['wifi', 'parking']"
+['wifi']
+"['parking', 'rooftop', 'locker']"
+"['wifi', 'parking']"
+['events']
+['wifi']
+"['wifi', 'parking']"
+"['coffee', 'wifi', 'meeting_rooms']"
+"['coffee', 'wifi']"
+[]
+"['coffee', '24/7_access', 'events', 'lounge', 'wifi']"
+[]
+['events']
+[]
+"['wifi', 'parking']"
+[]
+"['coffee', 'wifi', 'printing', 'events']"
+['parking']
+[]
+['kitchen']
+['24/7_access']
+"['parking', 'rooftop']"
+"['wifi', 'parking']"
+[]
+[]
+"['coffee', 'wifi', 'printing', 'events']"
+"['coffee', 'wifi', 'printing', 'events']"
+"['coffee', 'rooftop', 'lounge', 'kitchen', 'wifi']"
+"['coffee', 'meeting_rooms', 'rooftop']"
+[]
+['coffee']
+"['coffee', 'wifi', 'parking', 'meeting_rooms']"
+[]
+[]
+"['coffee', 'wifi']"
+['kitchen']
+"['coffee', 'wifi', 'kitchen', 'printing']"
+"['coffee', 'wifi', 'printing']"
+['events']
+"['coffee', 'parking', 'kitchen']"
+['lounge']
+['parking']
+"['wifi', 'parking', 'meeting_rooms', 'locker']"
+"['shower', 'coffee', 'lounge', 'printing']"
+['events']
+['events']
+"['parking', 'rooftop']"
+"['coffee', 'wifi', 'meeting_rooms', 'events']"
+"['coffee', '24/7_access', 'rooftop', 'events', 'wifi', 'printing', 'locker']"
+"['wifi', 'kitchen', 'meeting_rooms', 'locker']"
+"['coffee', 'lounge', 'events']"
+"['parking', 'bike_storage', 'locker']"
+"['coffee', '24/7_access']"
+"['coffee', 'lounge', 'meeting_rooms', 'events']"
+"['coffee', 'parking', 'meeting_rooms', 'wifi', 'printing']"
+"['coffee', 'wifi', 'printing', 'events']"
+"['coffee', 'wifi', 'printing', 'locker']"
+"['coffee', 'wifi', 'parking', 'events']"
+[]
+"['coffee', 'wifi', 'meeting_rooms']"
+"['coffee', 'wifi', 'parking', 'rooftop']"
+"['wifi', 'printing']"
+"['coffee', 'rooftop']"
+"['coffee', 'parking', 'lounge', 'meeting_rooms', 'wifi', 'locker']"
+"['coffee', 'wifi', 'parking']"
+"['wifi', 'parking', 'printing', 'locker']"
+"['coffee', 'wifi', '24/7_access', 'events']"
+"['coffee', 'wifi']"
+"['coffee', 'parking', 'rooftop', 'events', 'meeting_rooms', 'wifi']"
+['coffee']
+"['coffee', 'wifi', 'events']"
+"['printing', 'locker']"
+"['coffee', 'wifi', 'parking', 'printing']"
+"['coffee', 'wifi', 'parking', 'events']"
+"['coffee', 'wifi', 'parking', 'events']"
+"['wifi', 'parking', 'printing', 'rooftop']"
+"['meeting_rooms', 'rooftop']"
+[]
+['wifi']
+['coffee']
+"['coffee', 'wifi', 'parking', 'events']"
+"['coffee', 'parking', 'events', 'kitchen', 'wifi']"
+"['coffee', 'wifi', 'parking', 'events']"
+"['coffee', 'wifi', 'parking', 'meeting_rooms']"
+['wifi']
+"['wifi', 'events']"
+"['wifi', 'lounge', 'printing', 'events']"
+"['parking', 'events', 'shower', 'meeting_rooms', 'wifi']"
+"['rooftop', 'events', 'kitchen', 'meeting_rooms', 'wifi']"
+"['coffee', 'wifi', 'events', 'locker']"
+"['coffee', '24/7_access', 'parking', 'meeting_rooms', 'wifi', 'printing', 'locker']"
+['meeting_rooms']
+"['coffee', 'lounge', 'events']"
+"['wifi', 'kitchen', 'locker']"
+"['printing', 'events']"
+"['coffee', 'lounge', 'meeting_rooms', 'wifi', 'printing']"
+"['wifi', 'lounge', 'printing', 'events']"
+"['coffee', 'wifi', 'lounge', 'printing']"
+['meeting_rooms']
+"['coffee', 'rooftop', 'events', 'lounge', 'wifi']"
+"['wifi', 'printing', 'events']"
+"['coffee', 'wifi', 'events', 'locker']"
+"['coffee', 'parking', 'events', 'kitchen', 'wifi', 'printing']"
+"['parking', 'rooftop', 'events', 'lounge', 'kitchen', 'meeting_rooms', 'wifi']"
+"['coffee', 'events', 'meeting_rooms', 'wifi', 'printing']"
+"['coffee', 'parking', 'events', 'wifi', 'printing']"
+"['coffee', 'printing']"
+"['coffee', 'wifi', 'printing', 'locker']"
+"['coffee', 'wifi', 'printing', 'events']"
+"['coffee', 'events', 'kitchen', 'meeting_rooms', 'wifi', 'printing']"
+"['wifi', 'printing', 'events']"
