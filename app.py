@@ -1,95 +1,220 @@
 import streamlit as st
 import pandas as pd
+import ast
 import re
+from collections import Counter
+import os
 
-# Load the data
-df = pd.read_csv("/workspaces/Coworking/src/data_processing/merged_coworking_spaces.csv") 
+# Set paths to the data files
+amenities_file_path = "/workspaces/Coworking/src/data_processing/extracted_amenities.csv"
+coworking_file_path = "/workspaces/Coworking/src/data_processing/merged_coworking_spaces.csv"
 
-# Clean price column
-df["price_numeric"] = df["price"].apply(
-    lambda x: float(re.search(r"\d+(?:[\.,]\d+)?", str(x)).group().replace(",", ".")) 
-    if pd.notnull(x) and re.search(r"\d+", str(x)) else None
-)
+# Check if the files exist
+if not os.path.exists(amenities_file_path):
+    st.error(f"Error: The amenities file {amenities_file_path} does not exist.")
+    st.stop()
+if not os.path.exists(coworking_file_path):
+    st.error(f"Error: The coworking spaces file {coworking_file_path} does not exist.")
+    st.stop()
 
-# First, inspect which rows have prices that are just digits
-invalid_price_rows = df[df["price"].str.strip().isin(["1", "2", "3", "4", "5"])]
+# Load both datasets
+amenities_df = pd.read_csv(amenities_file_path)
+coworking_df = pd.read_csv(coworking_file_path)
 
-# Then, filter them out
-df = df[~df["price"].str.strip().isin(["1", "2", "3", "4", "5"])]
+# Convert string representation of lists to actual lists
+def parse_amenities(amenity_str):
+    if pd.isna(amenity_str) or amenity_str == '[]':
+        return []
+    try:
+        return ast.literal_eval(amenity_str)
+    except:
+        # Handle strings that might be already quoted
+        try:
+            return ast.literal_eval(amenity_str.replace('"', ''))
+        except:
+            return []
 
+# Apply the parsing function
+amenities_df['amenities_list'] = amenities_df['extracted_amenities'].apply(parse_amenities)
 
-# Load amenities dataframe (amenities_df contains only amenities data)
-amenities_df = pd.read_csv('/workspaces/Coworking/src/data_processing/extracted_amenities.csv')
+# Merge the dataframes
+# Assuming they have the same length and order, otherwise we need an ID to join on
+if len(amenities_df) == len(coworking_df):
+    # Direct merge if they're aligned
+    df = pd.concat([coworking_df, amenities_df['amenities_list']], axis=1)
+else:
+    # If they aren't aligned, use reset_index to create a common column for joining
+    amenities_df = amenities_df.reset_index()
+    coworking_df = coworking_df.reset_index()
+    df = pd.merge(coworking_df, amenities_df[['index', 'amenities_list']], on='index', how='left')
 
-selected_city = st.sidebar.selectbox("Choose a city", sorted(df["city"].dropna().unique()))
+# Extract all unique amenities from the amenities lists
+all_amenities = []
+for amenities in df['amenities_list']:
+    if isinstance(amenities, list):  # Check if it's a valid list
+        all_amenities.extend(amenities)
+all_unique_amenities = list(set(all_amenities))
 
-# List of available cities in the 'df' (which contains city data)
-cities = df["city"].unique().tolist()
+# Function to find amenities in description text
+def find_amenities_in_description(description, amenities_list):
+    if pd.isna(description):
+        return []
+    
+    description = description.lower()
+    found_amenities = []
+    
+    # Mapping of amenity terms to standardized amenity names
+    amenity_keywords = {
+        'wifi': 'wifi',
+        'internet': 'wifi',
+        'coffee': 'coffee',
+        'café': 'coffee',
+        'cafe': 'coffee',
+        'kitchen': 'kitchen',
+        'parking': 'parking',
+        'bike': 'bike_storage',
+        'bicycle': 'bike_storage',
+        'locker': 'locker',
+        'meeting': 'meeting_rooms',
+        'conference': 'meeting_rooms',
+        'printer': 'printing',
+        'print': 'printing',
+        'rooftop': 'rooftop',
+        'terrace': 'rooftop',
+        '24/7': '24/7_access',
+        '24h': '24/7_access',
+        'lounge': 'lounge',
+        'event': 'events',
+        'workspace': 'dedicated_desk',
+        'dedicated desk': 'dedicated_desk'
+        # Add more mappings as needed
+    }
+    
+    for keyword, amenity in amenity_keywords.items():
+        if keyword in description and amenity in all_unique_amenities:
+            found_amenities.append(amenity)
+    
+    return list(set(found_amenities))  # Remove duplicates
 
-# Filter the dataframe by selected city (from 'df' DataFrame)
-city_df = df[df["city"] == selected_city]
+# Enhance amenities with descriptions
+if 'description' in df.columns:
+    for index, row in df.iterrows():
+        desc_amenities = find_amenities_in_description(row.get('description', ''), all_unique_amenities)
+        
+        # Combine with existing amenities list
+        current_amenities = row['amenities_list'] if isinstance(row['amenities_list'], list) else []
+        combined_amenities = list(set(current_amenities + desc_amenities))
+        
+        # Update the amenities list
+        df.at[index, 'amenities_list'] = combined_amenities
 
-# Extract amenity columns from the amenities dataframe (from extracted_amenities.csv)
-amenity_columns = [col for col in amenities_df.columns if col.startswith("has_amenity_")]
-amenity_labels = [col.replace("has_amenity_", "").replace("_", " ").title() for col in amenity_columns]
-amenity_map = dict(zip(amenity_labels, amenity_columns))
+# Count amenities after enhancement
+all_amenities = []
+for amenities in df['amenities_list']:
+    if isinstance(amenities, list):
+        all_amenities.extend(amenities)
 
-st.sidebar.header("Filter by Amenities")
+# Get the most common amenities
+amenity_counts = Counter(all_amenities)
+most_common_amenities = amenity_counts.most_common(10)
 
-# Get most common amenities dynamically from the amenities_df
-common_amenities = amenities_df[amenity_columns].sum().sort_values(ascending=False)
+# Create amenity columns for filtering
+for amenity in set(all_amenities):
+    df[f'has_amenity_{amenity}'] = df['amenities_list'].apply(
+        lambda x: 1 if isinstance(x, list) and amenity in x else 0
+    )
 
-# Let user select city for amenities filtering (but it's just an option since the city is in the 'df')
-# The amenities_df may contain data for multiple cities, so this is useful for filtering
-selected_city_amenity = st.sidebar.selectbox("Select a city (for amenities)", cities)
+# Convert price to numeric if it's not already
+if 'price' in df.columns:
+    df['price_numeric'] = pd.to_numeric(
+        df['price'].str.extract(r'(\d+(?:\.\d+)?)', expand=False), 
+        errors='coerce'
+    )
 
-# Add a 'city' column to amenities_df by merging with city_df (assuming amenities_df and df have the same length)
-amenities_df["city"] = df["city"]
+# App title and description
+st.title("Coworking Space Finder")
+st.write("Find the perfect coworking space based on your preferences")
 
-# Filter amenities dataframe by selected city
-filtered_amenities_df = amenities_df[amenities_df["city"] == selected_city_amenity]
+# Sidebar for filters
+st.sidebar.header("Filter your coworking preferences")
 
-# Let user choose preferred amenities
-selected_amenities = st.sidebar.multiselect(
-    "Select preferred amenities:",
-    common_amenities.index.tolist()
-)
+# City filter if available
+if 'city' in df.columns:
+    cities = sorted(df['city'].dropna().unique().tolist())
+    selected_city = st.sidebar.selectbox("Select city", ["All Cities"] + cities)
 
-# Merge amenities_df (which now has amenities + city) with df (which has name, description, etc.)
-full_amenities_df = pd.concat([df[["name", "description"]], amenities_df], axis=1)
+# Display most common amenities
+st.sidebar.subheader("Most Common Amenities")
+for amenity, count in most_common_amenities:
+    st.sidebar.text(f"{amenity.replace('_', ' ').title()}: {count}")
 
-filtered_amenities_df = full_amenities_df[full_amenities_df["city"] == selected_city_amenity]
+# Amenity selection
+amenity_labels = [amenity.replace("_", " ").title() for amenity in set(all_amenities)]
+amenity_map = dict(zip(amenity_labels, set(all_amenities)))
 
-for amenity in selected_amenities:
-    filtered_amenities_df = filtered_amenities_df[filtered_amenities_df[amenity] == 1]
+# Sort amenities alphabetically for easier selection
+sorted_amenity_labels = sorted(amenity_labels)
 
-# Create a new column 'price_numeric' by extracting the number
-df["price_numeric"] = df["price"].apply(lambda x: float(re.search(r"\d+(?:[\.,]\d+)?", str(x)).group().replace(",", ".")) if pd.notnull(x) and re.search(r"\d+", str(x)) else None)
+# Amenity multi-select
+selected_labels = st.sidebar.multiselect("Select amenities you want", sorted_amenity_labels)
 
-# 💸 Price slider (This part is for filtering based on price in the city dataframe)
-max_price = int(city_df["price_numeric"].max())
-user_price = st.sidebar.slider("Maximum price (€ / month)", 0, max_price, max_price)
+# Price slider if price data is available
+if 'price_numeric' in df.columns and not df['price_numeric'].isna().all():
+    max_price = int(df["price_numeric"].dropna().max())
+    default_price = max_price
+    user_price = st.sidebar.slider("Maximum price (€ / month)", 0, max_price, default_price)
+    has_price_filter = True
+else:
+    has_price_filter = False
+    st.sidebar.info("Price filtering not available for this dataset")
 
-# --- Filtering Logic ---
-# Start with the city filtered dataframe
-filtered_df = city_df.copy()
+# Filter dataframe based on user input
+filtered_df = df.copy()
 
-# Filter by amenities in the city_df
-for amenity in selected_amenities:
-    filtered_df = filtered_df[filtered_df[amenity_map[amenity]] == 1]
+# Apply city filter
+if 'city' in df.columns and selected_city != "All Cities":
+    filtered_df = filtered_df[filtered_df['city'] == selected_city]
 
-# Filter by price (ensure it's numeric)
-filtered_df = filtered_df[filtered_df["price_numeric"] <= user_price]
+# Apply amenity filters
+for label in selected_labels:
+    amenity = amenity_map[label]
+    filtered_df = filtered_df[filtered_df[f'has_amenity_{amenity}'] == 1]
 
-# --- Show Results ---
-st.title("Coworking Recommendation System")
-st.subheader(f"Results for: {selected_city}")
+# Apply price filter if available
+if has_price_filter:
+    filtered_df = filtered_df[filtered_df["price_numeric"] <= user_price]
+
+# Show results
+st.header("Coworking spaces that match your preferences")
+st.write(f"Found {len(filtered_df)} matching spaces")
 
 if filtered_df.empty:
     st.warning("No coworking spaces found with the selected options 😕")
 else:
     for _, row in filtered_df.iterrows():
-        st.markdown(f"### {row['name']}")
-        st.markdown(f"**Price:** {row['price']}")
-        st.markdown(f"[🌐 Visit Website]({row['url']})")
+        # Create a card-like effect for each result
+        col1, col2 = st.columns([3, 1])
+        
+        with col1:
+            st.subheader(row["name"] if "name" in row else "Coworking Space")
+            
+            if "city" in row and not pd.isna(row["city"]):
+                st.write(f"🏙️ {row['city']}")
+            
+            if "price" in row and not pd.isna(row["price"]):
+                st.write(f"💸 {row['price']}")
+            
+            # Display amenities for this space
+            if isinstance(row['amenities_list'], list) and len(row['amenities_list']) > 0:
+                st.write("✨ Amenities: " + ", ".join(amenity.replace('_', ' ').title() for amenity in row['amenities_list']))
+        
+        with col2:
+            if "url" in row and not pd.isna(row["url"]):
+                st.markdown(f"[🔗 View Website]({row['url']})")
+        
+        # Show description snippet if available
+        if "description" in row and not pd.isna(row["description"]):
+            with st.expander("See description"):
+                st.write(row["description"])
+            
         st.markdown("---")
