@@ -5,11 +5,10 @@ import re
 import numpy as np
 from collections import Counter
 import os
-from sklearn.cluster import KMeans
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
+from sklearn.metrics.pairwise import cosine_similarity
 import matplotlib.pyplot as plt
 import seaborn as sns
+import plotly.express as px
 
 # Set page configuration
 st.set_page_config(layout="wide", page_title="Coworking Space Finder")
@@ -140,19 +139,91 @@ for amenity in set(all_amenities):
         lambda x: 1 if isinstance(x, list) and amenity in x else 0
     )
 
-# Convert price to numeric if it's not already
+# Function to detect sequential price patterns like "1 2 3 4" 
+def is_sequential_price(price):
+    if pd.isna(price):
+        return False
+    
+    # Convert the price to string for pattern matching
+    price_str = str(price).strip()
+    
+    # Check for sequential numbers with spaces between them
+    # This pattern matches things like "1 2 3", "10 11 12", etc.
+    seq_pattern = re.compile(r'\b\d+\s+\d+\s+\d+\b')
+    if seq_pattern.search(price_str):
+        return True
+    
+    # Also check for any price that has more than 3 numbers separated by spaces
+    # This would catch patterns like "1 4 7 10" that aren't strictly sequential
+    if len(re.findall(r'\b\d+\b', price_str)) > 3:
+        return True
+    
+    return False
+
+# Convert price to numeric if it's not already, removing sequential price patterns
 if 'price' in df.columns:
-    df['price_numeric'] = pd.to_numeric(
-        df['price'].str.extract(r'(\d+(?:\.\d+)?)', expand=False), 
-        errors='coerce'
-    )
+    # First mark invalid sequential prices
+    df['is_invalid_price'] = df['price'].apply(is_sequential_price)
+    
+    # Extract numeric prices only for valid prices
+    df['price_numeric'] = np.nan  # Initialize with NaN
+    
+    for idx, row in df.iterrows():
+        if not row['is_invalid_price']:
+            # Extract numeric values from valid price strings
+            if not pd.isna(row['price']):
+                price_match = re.search(r'(\d+(?:\.\d+)?)', str(row['price']))
+                if price_match:
+                    df.at[idx, 'price_numeric'] = float(price_match.group(1))
+
+# Build recommendation system
+def build_recommendation_system(df):
+    # Create feature matrix from amenities and other features
+    feature_columns = [col for col in df.columns if col.startswith('has_amenity_')]
+    
+    # Add price as a feature if available (normalized)
+    if 'price_numeric' in df.columns:
+        # Create a copy of price_numeric to avoid modifying the original
+        price_col = df['price_numeric'].copy()
+        # Fill NaN values with median to avoid issues with normalization
+        price_col = price_col.fillna(price_col.median())
+        # Check if there's variance in price (avoid division by zero)
+        if price_col.max() > price_col.min():
+            df['price_normalized'] = (price_col - price_col.min()) / (price_col.max() - price_col.min())
+            feature_columns.append('price_normalized')
+    
+    # Calculate similarity between spaces
+    features_matrix = df[feature_columns].fillna(0)
+    
+    # Only compute similarity if we have enough data
+    if len(features_matrix) > 1:
+        similarity_matrix = cosine_similarity(features_matrix)
+        return similarity_matrix
+    else:
+        return None
+
+# Function to get recommendations
+def get_recommendations(space_idx, similarity_matrix, df, n=5):
+    # Get top N similar spaces
+    similar_spaces = list(enumerate(similarity_matrix[space_idx]))
+    similar_spaces = sorted(similar_spaces, key=lambda x: x[1], reverse=True)
+    similar_spaces = similar_spaces[1:n+1]  # Skip the first one (itself)
+    
+    # Return the similar spaces information with similarity scores
+    recommended_spaces = []
+    for i, score in similar_spaces:
+        space_info = df.iloc[i].copy()
+        space_info['similarity_score'] = score
+        recommended_spaces.append(space_info)
+    
+    return recommended_spaces
 
 # App title and description
 st.title("Coworking Space Finder and Analysis")
 st.write("Find and analyze coworking spaces based on price and amenities")
 
 # Create tabs for different views
-tab1, tab2, tab3 = st.tabs(["Find Spaces", "Cluster Analysis", "Top Rated Spaces"])
+tab1, tab2, tab3 = st.tabs(["Find Spaces", "Similar Spaces", "Top Rated Spaces"])
 
 with tab1:
     # Sidebar for filters
@@ -190,6 +261,10 @@ with tab1:
 
     # Filter dataframe based on user input
     filtered_df = df.copy()
+    
+    # Remove rows with invalid sequential prices
+    if 'is_invalid_price' in filtered_df.columns:
+        filtered_df = filtered_df[~filtered_df['is_invalid_price']]
 
     # Apply city filter
     if 'city' in df.columns and selected_city != "All Cities":
@@ -224,7 +299,7 @@ with tab1:
                 if "address" in row and not pd.isna(row["address"]):
                     st.write(f"📍 {row['address']}")
                 
-                if "price" in row and not pd.isna(row["price"]):
+                if "price" in row and not pd.isna(row["price"]) and not row.get('is_invalid_price', False):
                     st.write(f"💸 {row['price']}")
                 
                 # Display amenities for this space
@@ -243,177 +318,227 @@ with tab1:
             st.markdown("---")
 
 with tab2:
-    st.header("Coworking Space Clustering Analysis")
+    st.header("Find Similar Coworking Spaces")
     
-    # Prepare data for clustering
-    # First, filter out rows with missing price data
-    cluster_df = df.dropna(subset=['price_numeric']).copy()
+    # First, filter out rows with invalid price data or missing names
+    recommendation_df = df.copy()
+    if 'is_invalid_price' in recommendation_df.columns:
+        recommendation_df = recommendation_df[~recommendation_df['is_invalid_price']]
     
-    if len(cluster_df) < 5:
-        st.warning("Not enough data with price information for clustering analysis.")
+    if 'name' in recommendation_df.columns:
+        recommendation_df = recommendation_df.dropna(subset=['name'])
+    
+    if len(recommendation_df) < 2:
+        st.warning("Not enough data to build a recommendation system.")
     else:
-        # Select the most common amenities for clustering to reduce dimensionality
-        top_amenities = [amenity for amenity, _ in most_common_amenities]
-        cluster_features = [f'has_amenity_{amenity}' for amenity in top_amenities]
+        # Build the recommendation system
+        similarity_matrix = build_recommendation_system(recommendation_df)
         
-        # Add price to features
-        cluster_features.append('price_numeric')
-        
-        # Create clustering dataframe with just the features we need
-        X = cluster_df[cluster_features].copy()
-        
-        # Scale the features
-        scaler = StandardScaler()
-        X_scaled = scaler.fit_transform(X)
-        
-        # Determine optimal number of clusters using the elbow method
-        with st.expander("Elbow Method for Optimal Clusters"):
-            col1, col2 = st.columns([1, 3])
-            with col1:
-                max_clusters = min(10, len(cluster_df) // 5)  # Limit max clusters based on data size
-                k_range = range(2, max_clusters + 1)
-                inertias = []
+        if similarity_matrix is None:
+            st.warning("Couldn't build the recommendation system due to limited data features.")
+        else:
+            # Create an interactive exploration section
+            st.subheader("Select a coworking space to find similar options")
+            
+            # City filter for recommendations
+            if 'city' in recommendation_df.columns:
+                rec_cities = sorted(recommendation_df['city'].dropna().unique().tolist())
+                selected_rec_city = st.selectbox("Filter by city", ["All Cities"] + rec_cities)
                 
-                for k in k_range:
-                    kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
-                    kmeans.fit(X_scaled)
-                    inertias.append(kmeans.inertia_)
+                if selected_rec_city != "All Cities":
+                    city_spaces = recommendation_df[recommendation_df['city'] == selected_rec_city]
+                else:
+                    city_spaces = recommendation_df
+            else:
+                city_spaces = recommendation_df
+            
+            # Select a space to find similar ones
+            space_options = city_spaces['name'].tolist()
+            
+            if space_options:
+                selected_space = st.selectbox("Select a coworking space", space_options)
                 
-                # Default number of clusters
-                default_clusters = 4
-                num_clusters = st.slider("Select number of clusters", 2, max_clusters, default_clusters)
-            
-            with col2:
-                fig, ax = plt.figure(figsize=(10, 6)), plt.subplot(111)
-                ax.plot(k_range, inertias, 'bo-')
-                ax.set_xlabel('Number of clusters')
-                ax.set_ylabel('Inertia')
-                ax.set_title('Elbow Method for Optimal k')
-                ax.axvline(x=num_clusters, color='r', linestyle='--')
-                st.pyplot(fig)
-                plt.close(fig)
-        
-        # Perform K-means clustering with the selected number of clusters
-        kmeans = KMeans(n_clusters=num_clusters, random_state=42, n_init=10)
-        cluster_df['cluster'] = kmeans.fit_predict(X_scaled)
-        
-        # Apply PCA for visualization
-        pca = PCA(n_components=2)
-        X_pca = pca.fit_transform(X_scaled)
-        cluster_df['pca1'] = X_pca[:, 0]
-        cluster_df['pca2'] = X_pca[:, 1]
-        
-        # Display clustering results
-        st.subheader(f"Clustering Results ({num_clusters} clusters)")
-        
-        # Cluster visualization
-        fig, ax = plt.figure(figsize=(10, 8)), plt.subplot(111)
-        scatter = sns.scatterplot(
-            x='pca1', 
-            y='pca2', 
-            hue='cluster', 
-            palette='viridis', 
-            data=cluster_df, 
-            s=100, 
-            alpha=0.7,
-            ax=ax
-        )
-        ax.set_title('Coworking Spaces Clustering')
-        ax.set_xlabel('Principal Component 1')
-        ax.set_ylabel('Principal Component 2')
-        
-        # Add cluster centers
-        centers_pca = pca.transform(kmeans.cluster_centers_)
-        ax.scatter(
-            centers_pca[:, 0], 
-            centers_pca[:, 1], 
-            s=200, 
-            marker='X', 
-            c='red', 
-            alpha=0.8, 
-            label='Centroids'
-        )
-        ax.legend()
-        
-        st.pyplot(fig)
-        plt.close(fig)
-        
-        # Cluster analysis
-        st.subheader("Cluster Characteristics")
-        
-        cluster_stats = []
-        for i in range(num_clusters):
-            cluster_data = cluster_df[cluster_df['cluster'] == i]
-            avg_price = cluster_data['price_numeric'].mean()
-            
-            # Calculate amenity frequency in this cluster
-            amenities_freq = {}
-            for amenity in top_amenities:
-                col = f'has_amenity_{amenity}'
-                if col in cluster_data.columns:
-                    amenities_freq[amenity] = cluster_data[col].mean() * 100  # Convert to percentage
-            
-            # Sort amenities by frequency
-            sorted_amenities = sorted(amenities_freq.items(), key=lambda x: x[1], reverse=True)
-            
-            # Get the top 5 most common amenities in this cluster
-            top_cluster_amenities = sorted_amenities[:5]
-            
-            cluster_stats.append({
-                'cluster': i,
-                'size': len(cluster_data),
-                'avg_price': avg_price,
-                'top_amenities': top_cluster_amenities
-            })
-        
-        # Display cluster stats
-        for i, stats in enumerate(cluster_stats):
-            with st.expander(f"Cluster {i} ({stats['size']} spaces)"):
-                st.write(f"**Average Price:** €{stats['avg_price']:.2f} / month")
-                st.write("**Top Amenities:**")
-                for amenity, freq in stats['top_amenities']:
-                    st.write(f"- {amenity.replace('_', ' ').title()}: {freq:.1f}%")
+                # Get the index of the selected space
+                selected_idx = city_spaces[city_spaces['name'] == selected_space].index[0]
                 
-                # Sample spaces in this cluster
-                st.write("**Sample Coworking Spaces in this Cluster:**")
-                sample_spaces = cluster_df[cluster_df['cluster'] == i].head(3)
-                for _, space in sample_spaces.iterrows():
-                    st.write(f"- {space.get('name', 'Unnamed Space')} ({space.get('city', 'Unknown City')}): {space.get('price', 'Price not available')}")
-        
-        # Add option to explore a specific cluster
-        selected_cluster = st.selectbox("Explore a specific cluster", 
-                                       range(num_clusters), 
-                                       format_func=lambda x: f"Cluster {x} ({cluster_stats[x]['size']} spaces)")
-        
-        if selected_cluster is not None:
-            st.subheader(f"Coworking Spaces in Cluster {selected_cluster}")
-            cluster_spaces = cluster_df[cluster_df['cluster'] == selected_cluster].sort_values('price_numeric')
-            
-            # Display spaces in this cluster
-            for _, row in cluster_spaces.iterrows():
+                # Get the recommendations
+                num_recommendations = st.slider("Number of recommendations", 1, 10, 5)
+                recommendations = get_recommendations(selected_idx, similarity_matrix, recommendation_df, n=num_recommendations)
+                
+                # Display the selected space details
+                st.subheader(f"Selected Space: {selected_space}")
+                
+                selected_row = recommendation_df.loc[selected_idx]
+                
                 col1, col2 = st.columns([3, 1])
                 
                 with col1:
-                    st.subheader(row["name"] if "name" in row else "Coworking Space")
-                    
-                    if "city" in row and not pd.isna(row["city"]):
-                        st.write(f"🏙️ {row['city']}")
+                    if "city" in selected_row and not pd.isna(selected_row["city"]):
+                        st.write(f"🏙️ {selected_row['city']}")
                         
-                    if "address" in row and not pd.isna(row["address"]):
-                        st.write(f"📍 {row['address']}")
+                    if "address" in selected_row and not pd.isna(selected_row["address"]):
+                        st.write(f"📍 {selected_row['address']}")
                     
-                    if "price" in row and not pd.isna(row["price"]):
-                        st.write(f"💸 {row['price']}")
+                    if "price" in selected_row and not pd.isna(selected_row["price"]):
+                        st.write(f"💸 {selected_row['price']}")
                     
                     # Display amenities for this space
-                    if isinstance(row['amenities_list'], list) and len(row['amenities_list']) > 0:
-                        st.write("✨ Amenities: " + ", ".join(amenity.replace('_', ' ').title() for amenity in row['amenities_list']))
+                    if isinstance(selected_row['amenities_list'], list) and len(selected_row['amenities_list']) > 0:
+                        st.write("✨ Amenities: " + ", ".join(amenity.replace('_', ' ').title() for amenity in selected_row['amenities_list']))
                 
                 with col2:
-                    if "url" in row and not pd.isna(row["url"]):
-                        st.markdown(f"[🔗 View Website]({row['url']})")
+                    if "url" in selected_row and not pd.isna(selected_row["url"]):
+                        st.markdown(f"[🔗 View Website]({selected_row['url']})")
+                        
+                # Show description if available
+                if "description" in selected_row and not pd.isna(selected_row["description"]):
+                    with st.expander("See description"):
+                        st.write(selected_row["description"])
                 
                 st.markdown("---")
+                
+                # Display similar spaces
+                st.subheader(f"Similar coworking spaces to {selected_space}")
+                
+                for i, space in enumerate(recommendations):
+                    col1, col2, col3 = st.columns([2.5, 0.5, 1])
+                    
+                    with col1:
+                        st.subheader(space["name"])
+                        
+                        if "city" in space and not pd.isna(space["city"]):
+                            st.write(f"🏙️ {space['city']}")
+                            
+                        if "address" in space and not pd.isna(space["address"]):
+                            st.write(f"📍 {space['address']}")
+                        
+                        if "price" in space and not pd.isna(space["price"]):
+                            st.write(f"💸 {space['price']}")
+                        
+                        # Display amenities for this space
+                        if isinstance(space['amenities_list'], list) and len(space['amenities_list']) > 0:
+                            st.write("✨ Amenities: " + ", ".join(amenity.replace('_', ' ').title() for amenity in space['amenities_list']))
+                    
+                    with col2:
+                        # Display similarity score as percentage
+                        similarity = space['similarity_score'] * 100
+                        st.metric("Match", f"{similarity:.1f}%")
+                    
+                    with col3:
+                        if "url" in space and not pd.isna(space["url"]):
+                            st.markdown(f"[🔗 View Website]({space['url']})")
+                    
+                    # Show description if available
+                    if "description" in space and not pd.isna(space["description"]):
+                        with st.expander("See description"):
+                            st.write(space["description"])
+                    
+                    st.markdown("---")
+                
+                # Show visualization of similarities
+                st.subheader("Visualization of Similar Spaces")
+                
+                # Create visualization of similarities
+                if 'price_numeric' in recommendation_df.columns:
+                    # Get all spaces to show in viz (selected + recommendations)
+                    viz_spaces = [selected_idx] + [recommendation_df[recommendation_df['name'] == rec['name']].index[0] for rec in recommendations]
+                    viz_df = recommendation_df.iloc[viz_spaces].copy()
+                    
+                    # Mark the selected space
+                    viz_df['type'] = 'Similar Space'
+                    viz_df.loc[selected_idx, 'type'] = 'Selected Space'
+                    
+                    # Calculate total amenities
+                    amenity_cols = [col for col in viz_df.columns if col.startswith('has_amenity_')]
+                    viz_df['amenity_count'] = viz_df[amenity_cols].sum(axis=1)
+                    
+                    # Create scatter plot
+                    fig = px.scatter(
+                        viz_df, 
+                        x='price_numeric',
+                        y='amenity_count',
+                        color='type',
+                        hover_name='name',
+                        size_max=20,
+                        color_discrete_map={
+                            'Selected Space': '#FF4B4B',
+                            'Similar Space': '#1E88E5'
+                        },
+                        labels={
+                            'price_numeric': 'Price (€)',
+                            'amenity_count': 'Number of Amenities'
+                        }
+                    )
+                    
+                    # Make selected space point larger
+                    fig.update_traces(
+                        marker=dict(size=15),
+                        selector=dict(name='Selected Space')
+                    )
+                    
+                    st.plotly_chart(fig, use_container_width=True)
+                
+                # Create amenity comparison chart
+                st.subheader("Amenity Comparison")
+                
+                # Get most common amenities among this set
+                comparison_spaces = [selected_row] + recommendations
+                comparison_amenities = []
+                for space in comparison_spaces:
+                    if isinstance(space['amenities_list'], list):
+                        comparison_amenities.extend(space['amenities_list'])
+                
+                common_amenities = [amenity for amenity, count in Counter(comparison_amenities).most_common(10)]
+                
+                # Create comparison data
+                comparison_data = []
+                for i, space in enumerate([selected_row] + recommendations):
+                    space_name = space['name']
+                    space_type = "Selected" if i == 0 else "Similar"
+                    
+                    for amenity in common_amenities:
+                        has_amenity = amenity in space['amenities_list'] if isinstance(space['amenities_list'], list) else False
+                        comparison_data.append({
+                            'space': space_name,
+                            'amenity': amenity.replace('_', ' ').title(),
+                            'has_amenity': 'Yes' if has_amenity else 'No',
+                            'type': space_type
+                        })
+                
+                # Convert to DataFrame
+                comparison_df = pd.DataFrame(comparison_data)
+                
+                # Create heatmap
+                if not comparison_df.empty and len(common_amenities) > 0:
+                    pivot_df = comparison_df.pivot_table(
+                        index='space', 
+                        columns='amenity',
+                        values='has_amenity',
+                        aggfunc=lambda x: 1 if 'Yes' in x.values else 0
+                    )
+                    
+                    # Sort rows so selected space is first
+                    pivot_df = pivot_df.reset_index()
+                    pivot_df['is_selected'] = pivot_df['space'] == selected_space
+                    pivot_df = pivot_df.sort_values('is_selected', ascending=False).drop('is_selected', axis=1)
+                    pivot_df = pivot_df.set_index('space')
+                    
+                    # Create heatmap
+                    fig, ax = plt.subplots(figsize=(10, len(pivot_df) * 0.5 + 2))
+                    sns.heatmap(
+                        pivot_df, 
+                        cmap=['#f5f5f5', '#4CAF50'],
+                        cbar=False,
+                        linewidths=1,
+                        linecolor='white',
+                        ax=ax
+                    )
+                    ax.set_title('Amenity Comparison')
+                    plt.tight_layout()
+                    st.pyplot(fig)
+                    plt.close(fig)
+            else:
+                st.info("No spaces available with the selected filter.")
 
 with tab3:
     st.header("Top Rated Coworking Spaces")
@@ -434,6 +559,30 @@ with tab3:
         else:
             filtered_top_rated = top_rated_df
         
+        # First show the map for the selected city
+        if 'latitude' in filtered_top_rated.columns and 'longitude' in filtered_top_rated.columns:
+            st.subheader(f"Map of Top Coworking Spaces {f'in {selected_top_rated_city}' if selected_top_rated_city != 'All Cities' else ''}")
+            
+            # Filter out rows with missing coordinates
+            map_data = filtered_top_rated.dropna(subset=['latitude', 'longitude'])
+            
+            if not map_data.empty:
+                # Add ranking to name for better map identification
+                map_data = map_data.sort_values('score', ascending=False).reset_index(drop=True)
+                map_data['display_name'] = map_data.apply(lambda x: f"#{x.name + 1} {x['name']}", axis=1)
+                
+                # Create a dataframe with coordinates for mapping
+                map_df = pd.DataFrame({
+                    'lat': map_data['latitude'],
+                    'lon': map_data['longitude'],
+                    'name': map_data['display_name']
+                })
+                
+                # Display map with increased height for better visibility
+                st.map(map_df, use_container_width=True, zoom=12)
+            else:
+                st.info("No location data available for mapping")
+        
         # Display as city groups
         if 'city' in filtered_top_rated.columns:
             # Group by city
@@ -445,7 +594,7 @@ with tab3:
                 
                 for i, (_, row) in enumerate(city_spaces.iterrows()):
                     # Create a card with ranking
-                    col1, col2, col3 = st.columns([1, 3, 1])
+                    col1, col2 = st.columns([1, 4])
                     
                     with col1:
                         # Display rank with trophy for #1
@@ -471,18 +620,61 @@ with tab3:
                         # Show distance if available
                         if "distance" in row and not pd.isna(row["distance"]):
                             st.write(f"🚶 {row['distance']:.2f}km from city center")
-                    
-                    with col3:
+                        
+                        # Add website link
                         if "url" in row and not pd.isna(row["url"]):
                             st.markdown(f"[🔗 View Website]({row['url']})")
+                        
+                        # Show all available amenities if they exist
+                        amenities_col = next((col for col in row.index if col.endswith('amenities_list')), None)
+                        if amenities_col and isinstance(row[amenities_col], list) and len(row[amenities_col]) > 0:
+                            st.write("✨ **Amenities:**")
+                            amenities_text = ", ".join(amenity.replace('_', ' ').title() for amenity in row[amenities_col])
+                            st.write(amenities_text)
+                        
+                        # Add expandable section for more details
+                        with st.expander("More Details"):
+                            # Show any additional information that might be available
+                            for col_name, value in row.items():
+                                # Skip columns we've already displayed or that are internal
+                                if col_name in ['name', 'address', 'price', 'distance', 'url', 'latitude', 'longitude', 
+                                                'score', 'city', 'amenities_list', 'index'] or col_name.startswith('has_amenity_'):
+                                    continue
+                                
+                                # Skip empty values
+                                if pd.isna(value) or value == '' or value == []:
+                                    continue
+                                
+                                # Format column name for display
+                                display_name = col_name.replace('_', ' ').title()
+                                
+                                # Handle different data types appropriately
+                                if isinstance(value, (int, float)):
+                                    st.write(f"**{display_name}:** {value}")
+                                elif isinstance(value, list):
+                                    st.write(f"**{display_name}:** {', '.join(str(item) for item in value)}")
+                                else:
+                                    st.write(f"**{display_name}:** {value}")
+                            
+                            # Add any ratings information if available
+                            ratings_col = next((col for col in row.index if 'rating' in col.lower()), None)
+                            if ratings_col and not pd.isna(row[ratings_col]):
+                                st.write(f"**User Rating:** {row[ratings_col]}⭐")
+                            
+                            # Add any reviews count if available
+                            reviews_col = next((col for col in row.index if 'review' in col.lower()), None)
+                            if reviews_col and not pd.isna(row[reviews_col]):
+                                st.write(f"**Number of Reviews:** {row[reviews_col]}")
                     
                     st.markdown("---")
         else:
             # Simple list without city grouping
             st.subheader("Top Rated Coworking Spaces")
             
-            for i, (_, row) in enumerate(filtered_top_rated.sort_values('Score', ascending=False).head(10).iterrows()):
-                col1, col2, col3 = st.columns([1, 3, 1])
+            top_spaces = filtered_top_rated.sort_values('Score', ascending=False).head(5)
+            
+            for i, (_, row) in enumerate(top_spaces.iterrows()):
+                col1, col2 = st.columns([1, 4])
                 
                 with col1:
                     # Display rank with trophy for #1
@@ -504,29 +696,40 @@ with tab3:
                     
                     if "price" in row and not pd.isna(row["price"]):
                         st.write(f"💸 {row['price']}")
-                
-                with col3:
+                    
+                    # Add website link
                     if "url" in row and not pd.isna(row["url"]):
                         st.markdown(f"[🔗 View Website]({row['url']})")
+                    
+                    # Show all available amenities if they exist
+                    amenities_col = next((col for col in row.index if col.endswith('amenities_list')), None)
+                    if amenities_col and isinstance(row[amenities_col], list) and len(row[amenities_col]) > 0:
+                        st.write("✨ **Amenities:**")
+                        amenities_text = ", ".join(amenity.replace('_', ' ').title() for amenity in row[amenities_col])
+                        st.write(amenities_text)
+                    
+                    # Add expandable section for more details
+                    with st.expander("More Details"):
+                        # Show any additional information that might be available
+                        for col_name, value in row.items():
+                            # Skip columns we've already displayed or that are internal
+                            if col_name in ['name', 'address', 'price', 'url', 'latitude', 'longitude', 
+                                            'score', 'amenities_list', 'index'] or col_name.startswith('has_amenity_'):
+                                continue
+                            
+                            # Skip empty values
+                            if pd.isna(value) or value == '' or value == []:
+                                continue
+                            
+                            # Format column name for display
+                            display_name = col_name.replace('_', ' ').title()
+                            
+                            # Handle different data types appropriately
+                            if isinstance(value, (int, float)):
+                                st.write(f"**{display_name}:** {value}")
+                            elif isinstance(value, list):
+                                st.write(f"**{display_name}:** {', '.join(str(item) for item in value)}")
+                            else:
+                                st.write(f"**{display_name}:** {value}")
                 
                 st.markdown("---")
-        
-        # Add a map if coordinates are available
-        if 'latitude' in filtered_top_rated.columns and 'longitude' in filtered_top_rated.columns:
-            st.subheader("Locations of Top Rated Spaces")
-            
-            # Filter out rows with missing coordinates
-            map_data = filtered_top_rated.dropna(subset=['latitude', 'longitude'])
-            
-            if not map_data.empty:
-                # Create a dataframe with coordinates
-                map_df = pd.DataFrame({
-                    'lat': map_data['latitude'],
-                    'lon': map_data['longitude'],
-                    'name': map_data['name']
-                })
-                
-                # Display map
-                st.map(map_df)
-            else:
-                st.info("No location data available for mapping")
