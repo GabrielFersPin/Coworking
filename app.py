@@ -14,8 +14,8 @@ import plotly.express as px
 st.set_page_config(layout="wide", page_title="Coworking Space Finder")
 
 # Set paths to the data files
-amenities_file_path = ""
-coworking_file_path = "/workspaces/Coworking/src/data_processing/merged_coworking_spaces.csv"
+amenities_file_path = "/workspaces/Coworking/src/results/extracted_amenities.csv"
+coworking_file_path = "/workspaces/Coworking/src/results/merged_coworking_spaces.csv"
 top_rated_file_path = "/workspaces/Coworking/src/results/MergedPlacesScoreDistance.csv"
 
 # Check if the files exist
