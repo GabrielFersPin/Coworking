@@ -67,17 +67,7 @@ The recommendation results are displayed on an interactive map, allowing users t
 
 The Streamlit application provides an intuitive interface for users to specify their preferences and view personalized recommendations:
 
-![Streamlit App](./src/Images/StreamlitScreenshot.png)
-
-### Prediction Performance
-
-The price prediction models achieved promising results:
-- **Day Pass Price Prediction**:
-  - Mean Absolute Error (MAE): 18.45
-  - Root Mean Square Error (RMSE): 22.79
-- **Monthly Pass Price Prediction**:
-  - Mean Absolute Error (MAE): 87.61
-  - Root Mean Square Error (RMSE): 123.14
+![Streamlit App](/workspaces/Coworking/src/Images/Screencast from 2025-04-10 17-40-16.webm)
 
 ### Data Processing Pipeline
 
