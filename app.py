@@ -15,12 +15,11 @@ st.set_page_config(layout="wide", page_title="Coworking Space Finder")
 
 # Get the directory where the current script is located
 current_dir = os.path.dirname(os.path.abspath(__file__))
-# Construct path relative to current script
-amenities_file_path = os.path.join(current_dir, "results", "extracted_amenities.csv")
 
-# Set paths to the data files
-coworking_file_path = "/workspaces/Coworking/src/results/merged_coworking_spaces.csv"
-top_rated_file_path = "/workspaces/Coworking/src/results/MergedPlacesScoreDistance.csv"
+# Construct paths relative to current script
+amenities_file_path = os.path.join(current_dir, "src", "results", "extracted_amenities.csv")
+coworking_file_path = os.path.join(current_dir, "src", "results", "merged_coworking_spaces.csv")
+top_rated_file_path = os.path.join(current_dir, "src", "results", "MergedPlacesScoreDistance.csv")
 
 # Check if the files exist
 if not os.path.exists(amenities_file_path):
