@@ -349,29 +349,14 @@ with tab2:
         if similarity_matrix is None:
             st.warning("Couldn't build the recommendation system due to limited data features.")
         else:
-            # Create an interactive exploration section
-            st.subheader("Already found a space you like? Select it here to discover similar options that might be an even better fit for your needs.")
-            
-            # City filter for recommendations
-            if 'city' in recommendation_df.columns:
-                rec_cities = sorted(recommendation_df['city'].dropna().unique().tolist())
-                selected_rec_city = st.selectbox("Filter by city", ["All Cities"] + rec_cities)
-                
-                if selected_rec_city != "All Cities":
-                    city_spaces = recommendation_df[recommendation_df['city'] == selected_rec_city]
-                else:
-                    city_spaces = recommendation_df
+            # Get recommendations based on selected space from tab1
+            if 'selected_space' not in st.session_state:
+                st.info("Please select a space in the 'Find Spaces' tab first")
             else:
-                city_spaces = recommendation_df
-            
-            # Select a space to find similar ones
-            space_options = city_spaces['name'].tolist()
-            
-            if space_options:
-                selected_space = st.selectbox("Select a coworking space", space_options)
+                selected_space = st.session_state.selected_space
                 
                 # Get the index of the selected space
-                selected_idx = city_spaces[city_spaces['name'] == selected_space].index[0]
+                selected_idx = recommendation_df[recommendation_df['name'] == selected_space].index[0]
                 
                 # Get the recommendations
                 num_recommendations = st.slider("Number of recommendations", 1, 10, 5)
@@ -549,8 +534,8 @@ with tab2:
                     plt.tight_layout()
                     st.pyplot(fig)
                     plt.close(fig)
-            else:
-                st.info("No spaces available with the selected filter.")
+                else:
+                    st.info("No spaces available with the selected filter.")
 
 with tab3:
     st.header("Top Rated Coworking Spaces")
