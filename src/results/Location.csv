@@ -1,79 +1,99 @@
-Latitude,Longitude,Name,City
-41.406983,2.1567652,Betahaus | Coworking Barcelona,Barcelona
-41.3868865,2.1725053,OneCoWork Plaça Catalunya | Barcelona Coworking,Barcelona
-41.3741099,2.1619429,La Vaca Coworking Barcelona,Barcelona
-41.3917396,2.1771453,MOB Bailén - Coworking in Barcelona,Barcelona
-41.3987757,2.155823,Kubik Barcelona,Barcelona
-41.3948339,2.1579685,Meet BCN - Coworking Space in Barcelona,Barcelona
-41.3819284,2.1518547,The Office Coworking Barcelona,Barcelona
-41.3688837,2.1889494,Norrsken House Barcelona,Barcelona
-41.3945415,2.1571174,Cowork Rambla Catalunya - Coworking Barcelona,Barcelona
-41.3849907,2.1767637,OneCoWork Catedral | Barcelona Coworking,Barcelona
-41.3886355,2.1782502,Coworking space Camaleó,Barcelona
-41.3918893,2.1619234,Sitandplug,Barcelona
-41.3780247,2.1580196,"Coworking Sant Antoni Barcelona | Fix, Flex y Day Pass",Barcelona
-41.3970675,2.170017,Aticco Bailén - Coworking Eixample Dreta,Barcelona
-41.409976,2.204478,The Social Hub Coworking Barcelona Poblenou,Barcelona
-41.3794378,2.1750553,Barcelona Reial Coworking,Barcelona
-41.395981,2.1727349,Coworking Transforma bcn,Barcelona
-41.4011,2.19774,"Spaces - Barcelona, Spaces 22 Arroba",Barcelona
-41.3995176,2.1908934,Wojo Coworking Barcelona Poblenou - Alquiler oficinas y salas de reuniones,Barcelona
-41.3958582,2.1717358,Sowo Coworking Barcelona,Barcelona
-40.38691,-3.723964,EslabON Coworking,Madrid
-40.3693709,-3.7426362,COWORKING - ALQUILER SALAS - DESPACHOS - CENTRO DE NEGOCIOS Aguacate,Madrid
-40.3911122,-3.7012758,Espacio Coworking CC Plaza Río 2,Madrid
-40.3969667,-3.6996101,CO-MA COWORKING,Madrid
-40.3916462,-3.7117388,Coworking La Ebanistería,Madrid
-40.3488939,-3.7241163,SoWORK Coworking en Leganés,Madrid
-40.3922666,-3.7246678,ACCESS POINT COWORKING,Madrid
-40.3853893,-3.7056078,Espacio Oculto Madrid,Madrid
-40.3951538,-3.7002199,El coworking de altamarea,Madrid
-40.3506665,-3.7235092,Coworking La Guarida Creativa Leganés,Madrid
-40.4166515,-3.6988242,JERÓNIMO by Bonsai (Coworking Space),Madrid
-40.3971345,-3.6917148,Area Coworking,Madrid
-40.398326,-3.6863441,Talent Garden Madrid,Madrid
-40.4060106,-3.6728029,The Small House CoWorKing,Madrid
-40.4054792,-3.6780491,MODO Coworking,Madrid
-40.3985851,-3.6717447,Freeland,Madrid
-40.414036,-3.700693,Coworking LOOM Huertas,Madrid
-40.4087857,-3.6999598,Manual - Casa Creativa,Madrid
-40.753615,-73.9865612,"WORKVILLE - Flexible Office Space, Conference Center, Coworking & Meeting Room Rental NYC",New York
-40.7205729,-74.0014151,The Farm SoHo NYC - Coworking Office Space and Private Offices,New York
-40.7464954,-73.9882611,Nomadworks,New York
-40.7424647,-73.991176,Rise New York,New York
-40.656528,-74.0077559,Coworking @ Industry City,New York
-40.7566858,-73.9800174,WorkHouse NYC,New York
-40.7052115,-74.0118713,Bond Collective - 60 Broad,New York
-40.7533447,-73.9936044,"OASIS by Workville - Conference Center & Corporate Events, Flex Office, Meeting Space Venue & Rooftop",New York
-40.7591686,-73.9774926,Workspace by Rockefeller Group,New York
-40.7053557,-74.0130268,Primary,New York
-40.713008,-74.013169,Croissant,New York
-40.7459949,-73.9839746,Blender Workspace,New York
-40.7067881,-74.0128956,Bond Collective - 55 Broadway,New York
-40.718728,-73.9896868,The Yard: Lower East Side Coworking Office Space NYC,New York
-40.699249,-73.938367,Bond Collective - Bushwick,New York
-40.7794575,-73.9547265,The Commons,New York
-40.7631712,-73.9733933,Carr Workplaces Central Park - Coworking & Office Space,New York
-40.7210019,-73.9580849,The New Work Project,New York
-40.7485519,-73.9893869,The Yard: Herald Square Coworking Office Space Manhattan,New York
-40.717187,-73.996865,Based In Coworking and Event Space,Tokyo
-35.6584107,139.7022406,WeWork Shibuya Scramble Square,Tokyo
-35.6680481,139.7321217,Tokyo Chapter - ninetytwo13,Tokyo
-35.6622153,139.6996339,.andwork shibuya,Tokyo
-35.7120933,139.7047394,CASE Shinjuku,Tokyo
-35.6761153,139.7686644,WeWork TOKYO SQUARE GARDEN,Tokyo
-35.7047587,139.6008598,【法人登記可】コワーキングスペースfactoria nishiogi,Tokyo
-35.656832,139.7051383,LULL TECH BEACH shibuya coworking space,Tokyo
-35.6338465,139.7082072,Impact HUB Tokyo,Tokyo
-35.7326273,139.7412732,RYOZAN PARK 巣鴨（GRAND）,Tokyo
-35.658203,139.7283009,BLINK Roppongi,Tokyo
-35.6333455,139.7165887,AWS Startup Loft Tokyo,Tokyo
-35.6980541,139.7093684,Pasela Co-work Higashishinjuku,Tokyo
-35.7035819,139.802646,TOKYOシェアオフィス墨田,Tokyo
-35.6247716,139.7254332,Gotanda co-working space pao pao,Tokyo
-35.686504,139.7028899,WeWork LINK SQUARE SHINJUKU,Tokyo
-35.6584638,139.7022621,SHIBUYA QWS,Tokyo
-35.6611668,139.6687076,SYCL by KEIO,Tokyo
-35.6663355,139.7042701,WeWork Iceberg,Tokyo
-35.6668382,139.759638,Basis Point Shinbashi,Tokyo
-35.6922101,139.7794247,S-TOKYO,Tokyo
+Latitude,Longitude,Name,geometry.location.lat,geometry.location.lng,name
+41.406983,2.1567652,Betahaus | Coworking Barcelona,,,
+41.3868865,2.1725053,OneCoWork Plaça Catalunya | Barcelona Coworking,,,
+41.3741099,2.1619429,La Vaca Coworking Barcelona,,,
+41.3917396,2.1771453,MOB Bailén - Coworking in Barcelona,,,
+41.3987757,2.155823,Kubik Barcelona,,,
+41.3948339,2.1579685,Meet BCN - Coworking Space in Barcelona,,,
+41.3819284,2.1518547,The Office Coworking Barcelona,,,
+41.3688837,2.1889494,Norrsken House Barcelona,,,
+41.3945415,2.1571174,Cowork Rambla Catalunya - Coworking Barcelona,,,
+41.3849907,2.1767637,OneCoWork Catedral | Barcelona Coworking,,,
+41.3886355,2.1782502,Coworking space Camaleó,,,
+41.3918893,2.1619234,Sitandplug,,,
+41.3780247,2.1580196,"Coworking Sant Antoni Barcelona | Fix, Flex y Day Pass",,,
+41.397067500000006,2.170017,Aticco Bailén - Coworking Eixample Dreta,,,
+41.409976,2.204478,The Social Hub Coworking Barcelona Poblenou,,,
+41.3794378,2.1750553,Barcelona Reial Coworking,,,
+41.395981,2.1727349,Coworking Transforma bcn,,,
+41.4011,2.19774,"Spaces - Barcelona, Spaces 22 Arroba",,,
+41.3995176,2.1908934,Wojo Coworking Barcelona Poblenou - Alquiler oficinas y salas de reuniones,,,
+41.3958582,2.1717358,Sowo Coworking Barcelona,,,
+,,,40.38691,-3.723964,EslabON Coworking
+,,,40.3693709,-3.7426362,COWORKING - ALQUILER SALAS - DESPACHOS - CENTRO DE NEGOCIOS Aguacate
+,,,40.39111219999999,-3.7012758,Espacio Coworking CC Plaza Río 2
+,,,40.3969667,-3.6996101,CO-MA COWORKING
+,,,40.3916462,-3.7117388,Coworking La Ebanistería
+,,,40.3488939,-3.724116299999999,SoWORK Coworking en Leganés
+,,,40.3922666,-3.7246678,ACCESS POINT COWORKING
+,,,40.3853893,-3.7056078,Espacio Oculto Madrid
+,,,40.3951538,-3.7002199,El coworking de altamarea
+,,,40.3506665,-3.7235092,Coworking La Guarida Creativa Leganés
+,,,40.4166515,-3.6988242,JERÓNIMO by Bonsai (Coworking Space)
+,,,40.3971345,-3.6917148,Area Coworking
+,,,40.398326,-3.6863441,Talent Garden Madrid
+,,,40.40601059999999,-3.6728029,The Small House CoWorKing
+,,,40.40547919999999,-3.6780491,MODO Coworking
+,,,40.3985851,-3.6717447,Freeland
+,,,40.414036,-3.700693,Coworking LOOM Huertas
+,,,40.4087857,-3.6999598,Manual - Casa Creativa
+40.753615,-73.9865612,"WORKVILLE - Flexible Office Space, Conference Center, Coworking & Meeting Room Rental NYC",,,
+40.7205729,-74.00141510000002,The Farm SoHo NYC - Coworking Office Space and Private Offices,,,
+40.7464954,-73.9882611,Nomadworks,,,
+40.7424647,-73.991176,Rise New York,,,
+40.656528,-74.00775589999999,Coworking @ Industry City,,,
+40.7566858,-73.9800174,WorkHouse NYC,,,
+40.7052115,-74.0118713,Bond Collective - 60 Broad,,,
+40.7533447,-73.9936044,"OASIS by Workville - Conference Center & Corporate Events, Flex Office, Meeting Space Venue & Rooftop",,,
+40.7591686,-73.97749259999999,Workspace by Rockefeller Group,,,
+40.7053557,-74.01302679999999,Primary,,,
+40.713008,-74.01316899999999,Croissant,,,
+40.7459949,-73.9839746,Blender Workspace,,,
+40.7067881,-74.0128956,Bond Collective - 55 Broadway,,,
+40.718728,-73.9896868,The Yard: Lower East Side Coworking Office Space NYC,,,
+40.699249,-73.938367,Bond Collective - Bushwick,,,
+40.7794575,-73.95472649999999,The Commons,,,
+40.7631712,-73.9733933,Carr Workplaces Central Park - Coworking & Office Space,,,
+40.7210019,-73.9580849,The New Work Project,,,
+40.7485519,-73.9893869,The Yard: Herald Square Coworking Office Space Manhattan,,,
+40.717187,-73.996865,Based In Coworking and Event Space,,,
+35.6584107,139.70224059999998,WeWork Shibuya Scramble Square,,,
+35.6680481,139.7321217,Tokyo Chapter - ninetytwo13,,,
+35.6622153,139.69963389999998,.andwork shibuya,,,
+35.7120933,139.7047394,CASE Shinjuku,,,
+35.6761153,139.7686644,WeWork TOKYO SQUARE GARDEN,,,
+35.7047587,139.6008598,【法人登記可】コワーキングスペースfactoria nishiogi,,,
+35.656832,139.7051383,LULL TECH BEACH shibuya coworking space,,,
+35.6338465,139.7082072,Impact HUB Tokyo,,,
+35.7326273,139.7412732,RYOZAN PARK 巣鴨（GRAND）,,,
+35.658203,139.7283009,BLINK Roppongi,,,
+35.633345500000004,139.7165887,AWS Startup Loft Tokyo,,,
+35.6980541,139.7093684,Pasela Co-work Higashishinjuku,,,
+35.7035819,139.80264599999998,TOKYOシェアオフィス墨田,,,
+35.624771599999995,139.7254332,Gotanda co-working space pao pao,,,
+35.686504,139.70288990000003,WeWork LINK SQUARE SHINJUKU,,,
+35.6584638,139.70226209999998,SHIBUYA QWS,,,
+35.6611668,139.6687076,SYCL by KEIO,,,
+35.666335499999995,139.7042701,WeWork Iceberg,,,
+35.6668382,139.759638,Basis Point Shinbashi,,,
+35.6922101,139.7794247,S-TOKYO,,,
+-23.5626751,-46.6558894,"Coworka - Endereço Fiscal, Comercial, Virtual e Coworking com Salas de Reunião",,,
+-23.5601949,-46.6514124,iSpaces Coworking - São Paulo,,,
+-23.5521431,-46.6597214,Coworking Higienopolis,,,
+-23.5629132,-46.6544432,WeWork Sala Comercial & Coworking,,,
+-23.570991,-46.649886,Google Campus São Paulo,,,
+-23.5575987,-46.6606117,Coworking Av Paulista WORKINGSP Office Service,,,
+-23.5611371,-46.6563664,Coworking Smart - Paulista I,,,
+-23.5613011,-46.6515549,Creative Space Coworking,,,
+-23.5962714,-46.68774,Coworking Offices Vila Olimpia,,,
+-23.56845,-46.6485277,491 Coworking,,,
+-23.5727779,-46.6449913,Rocket N Coworking,,,
+-23.541524,-46.6421599,Mango Tree Coworking,,,
+-23.5673394,-46.6851862,"Spaces - Sao Paulo, Spaces - Vila Madalena - Pinheiros",,,
+-23.5460453,-46.6353086,Easily Work Coworking,,,
+-23.5649741,-46.6552514,818 Coworking,,,
+-23.5425228,-46.6514884,Be Coworking - Higienópolis,,,
+-23.5790709,-46.6358603,Sextante Coworking,,,
+-23.5581935,-46.6625364,Bendito Coworking - Unidade Al. Santos,,,
+-23.566566,-46.6506311,Coworking Smart - Paulista II,,,
+-23.6071538,-46.6944256,Casa Coworking,,,
