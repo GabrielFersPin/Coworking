@@ -222,8 +222,8 @@ def get_recommendations(space_idx, similarity_matrix, df, n=5):
     return recommended_spaces
 
 # App title and description
-st.title("Coworking Space Finder and Analysis")
-st.write("Find and analyze coworking spaces based on price and amenities")
+st.title("Coworking Space Finder")
+st.write("Find your perfect coworking space in just a few clicks. Filter by amenities, compare options, or discover top-rated spaces nearby.")
 
 # Create tabs for different views
 tab1, tab2, tab3 = st.tabs(["Find Spaces", "Similar Spaces", "Top Rated Spaces"])
@@ -231,6 +231,7 @@ tab1, tab2, tab3 = st.tabs(["Find Spaces", "Similar Spaces", "Top Rated Spaces"]
 with tab1:
     # Sidebar for filters
     st.sidebar.header("Filter your coworking preferences")
+    st.sidebar.subheader("Select your preferences")
 
     # City filter if available
     if 'city' in df.columns:
@@ -311,6 +312,7 @@ with tab1:
 
     # Show results
     st.header("Coworking spaces that match your preferences")
+    st.subheader("Select filters on the left to find coworking spaces that match your exact needs. Choose your city, desired amenities, and budget to see personalized results.")
     st.write(f"Found {len(filtered_df)} matching spaces")
 
     if filtered_df.empty:
@@ -368,7 +370,7 @@ with tab2:
             st.warning("Couldn't build the recommendation system due to limited data features.")
         else:
             # Create an interactive exploration section
-            st.subheader("Select a coworking space to find similar options")
+            st.subheader("Already found a space you like? Select it here to discover similar options that might be an even better fit for your needs.")
             
             # City filter for recommendations
             if 'city' in recommendation_df.columns:
@@ -572,194 +574,94 @@ with tab2:
 
 with tab3:
     st.header("Top Rated Coworking Spaces")
+    st.subheader("Explore coworking spaces ranked by score and city metrics")
     
     if not has_top_rated:
         st.warning("Top rated spaces data not available")
     else:
         # City filter for top rated tab
-        if 'city' in top_rated_df.columns:
-            top_rated_cities = sorted(top_rated_df['city'].dropna().unique().tolist())
-            selected_top_rated_city = st.selectbox("Select city", ["All Cities"] + top_rated_cities, key="city_filter_tab3")
+        if 'City' in top_rated_df.columns:
+            top_rated_cities = sorted(top_rated_df['City'].dropna().unique().tolist())
+            selected_top_rated_city = st.selectbox("Select city", top_rated_cities, key="city_filter_tab3")
             
-            # Filter by city if selected
-            if selected_top_rated_city != "All Cities":
-                filtered_top_rated = top_rated_df[top_rated_df['city'] == selected_top_rated_city]
-            else:
-                filtered_top_rated = top_rated_df
-        else:
-            filtered_top_rated = top_rated_df
-        
-        # First show the map for the selected city
-        if 'latitude' in filtered_top_rated.columns and 'longitude' in filtered_top_rated.columns:
-            st.subheader(f"Map of Top Coworking Spaces {f'in {selected_top_rated_city}' if selected_top_rated_city != 'All Cities' else ''}")
+            # Filter by selected city
+            filtered_top_rated = top_rated_df[top_rated_df['City'] == selected_top_rated_city]
+            filtered_top_rated = filtered_top_rated.sort_values('Score', ascending=False)
             
-            # Filter out rows with missing coordinates
-            map_data = filtered_top_rated.dropna(subset=['latitude', 'longitude'])
+            # Show city statistics
+            st.subheader(f"Average Prices of the Best Coworkings in {selected_top_rated_city}")
+            col1, col2 = st.columns(2)
             
-            if not map_data.empty:
-                # Add ranking to name for better map identification
-                map_data = map_data.sort_values('score', ascending=False).reset_index(drop=True)
-                map_data['display_name'] = map_data.apply(lambda x: f"#{x.name + 1} {x['name']}", axis=1)
+            with col1:
+                avg_day_price = filtered_top_rated['Day Pass'].mean()
+                if not pd.isna(avg_day_price):
+                    st.metric("Average Day Pass", f"€{avg_day_price:.2f}")
+                else:
+                    st.metric("Average Day Pass", "Not available")
+            
+            with col2:
+                avg_month_price = filtered_top_rated['Month Pass'].mean()
+                if not pd.isna(avg_month_price):
+                    st.metric("Average Monthly Pass", f"€{avg_month_price:.2f}")
+                else:
+                    st.metric("Average Monthly Pass", "Not available")
+            
+            # Show map
+            if 'Latitude' in filtered_top_rated and 'Longitude' in filtered_top_rated:
+                st.subheader(f"Map of Coworking Spaces in {selected_top_rated_city}")
                 
-                # Create a dataframe with coordinates for mapping
-                map_df = pd.DataFrame({
-                    'lat': map_data['latitude'],
-                    'lon': map_data['longitude'],
-                    'name': map_data['display_name']
-                })
+                map_data = filtered_top_rated[['Latitude', 'Longitude', 'name', 'Score']].copy()
+                map_data = map_data.dropna(subset=['Latitude', 'Longitude'])
                 
-                # Display map with increased height for better visibility
-                st.map(map_df, use_container_width=True, zoom=12)
-            else:
-                st.info("No location data available for mapping")
-        
-        # Display as city groups
-        if 'city' in filtered_top_rated.columns:
-            # Group by city
-            cities = filtered_top_rated['city'].unique()
-            
-            for city in cities:
-                st.subheader(f"Top Coworking Spaces in {city}")
-                city_spaces = filtered_top_rated[filtered_top_rated['city'] == city].sort_values('score', ascending=False).head(5)
-                
-                for i, (_, row) in enumerate(city_spaces.iterrows()):
-                    # Create a card with ranking
-                    col1, col2 = st.columns([1, 4])
+                if not map_data.empty:
+                    # Create display dataframe for map
+                    map_df = pd.DataFrame({
+                        'lat': map_data['Latitude'],
+                        'lon': map_data['Longitude'],
+                        'name': map_data.apply(lambda x: f"{x['name']} ({x['Score']:.1f}⭐)", axis=1)
+                    })
                     
-                    with col1:
-                        # Display rank with trophy for #1
-                        if i == 0:
-                            st.markdown(f"<h1 style='text-align: center; color: gold;'>🏆</h1>", unsafe_allow_html=True)
-                        else:
-                            st.markdown(f"<h2 style='text-align: center;'>#{i+1}</h2>", unsafe_allow_html=True)
-                        
-                        # Display score
-                        if 'score' in row:
-                            score = row['score']
-                            st.markdown(f"<h3 style='text-align: center;'>{score:.1f}⭐</h3>", unsafe_allow_html=True)
-                    
-                    with col2:
-                        st.subheader(row["name"] if "name" in row else "Coworking Space")
-                        
-                        if "address" in row and not pd.isna(row["address"]):
-                            st.write(f"📍 {row['address']}")
-                        
-                        if "price" in row and not pd.isna(row["price"]):
-                            st.write(f"💸 {row['price']}")
-                        
-                        # Show distance if available
-                        if "distance" in row and not pd.isna(row["distance"]):
-                            st.write(f"🚶 {row['distance']:.2f}km from city center")
-                        
-                        # Add website link
-                        if "url" in row and not pd.isna(row["url"]):
-                            st.markdown(f"[🔗 View Website]({row['url']})")
-                        
-                        # Show all available amenities if they exist
-                        amenities_col = next((col for col in row.index if col.endswith('amenities_list')), None)
-                        if amenities_col and isinstance(row[amenities_col], list) and len(row[amenities_col]) > 0:
-                            st.write("✨ **Amenities:**")
-                            amenities_text = ", ".join(amenity.replace('_', ' ').title() for amenity in row[amenities_col])
-                            st.write(amenities_text)
-                        
-                        # Add expandable section for more details
-                        with st.expander("More Details"):
-                            # Show any additional information that might be available
-                            for col_name, value in row.items():
-                                # Skip columns we've already displayed or that are internal
-                                if col_name in ['name', 'address', 'price', 'distance', 'url', 'latitude', 'longitude', 
-                                                'score', 'city', 'amenities_list', 'index'] or col_name.startswith('has_amenity_'):
-                                    continue
-                                
-                                # Skip empty values
-                                if pd.isna(value) or value == '' or value == []:
-                                    continue
-                                
-                                # Format column name for display
-                                display_name = col_name.replace('_', ' ').title()
-                                
-                                # Handle different data types appropriately
-                                if isinstance(value, (int, float)):
-                                    st.write(f"**{display_name}:** {value}")
-                                elif isinstance(value, list):
-                                    st.write(f"**{display_name}:** {', '.join(str(item) for item in value)}")
-                                else:
-                                    st.write(f"**{display_name}:** {value}")
-                            
-                            # Add any ratings information if available
-                            ratings_col = next((col for col in row.index if 'rating' in col.lower()), None)
-                            if ratings_col and not pd.isna(row[ratings_col]):
-                                st.write(f"**User Rating:** {row[ratings_col]}⭐")
-                            
-                            # Add any reviews count if available
-                            reviews_col = next((col for col in row.index if 'review' in col.lower()), None)
-                            if reviews_col and not pd.isna(row[reviews_col]):
-                                st.write(f"**Number of Reviews:** {row[reviews_col]}")
-                    
-                    st.markdown("---")
-        else:
-            # Simple list without city grouping
-            st.subheader("Top Rated Coworking Spaces")
+                    st.map(map_df, zoom=11)
+                else:
+                    st.info("No location data available for mapping")
             
-            top_spaces = filtered_top_rated.sort_values('Score', ascending=False).head(5)
+            # Display spaces
+            st.subheader(f"Coworking Spaces in {selected_top_rated_city}")
             
-            for i, (_, row) in enumerate(top_spaces.iterrows()):
+            for i, (_, row) in enumerate(filtered_top_rated.iterrows()):
                 col1, col2 = st.columns([1, 4])
                 
                 with col1:
-                    # Display rank with trophy for #1
+                    # Rank display
                     if i == 0:
                         st.markdown(f"<h1 style='text-align: center; color: gold;'>🏆</h1>", unsafe_allow_html=True)
                     else:
                         st.markdown(f"<h2 style='text-align: center;'>#{i+1}</h2>", unsafe_allow_html=True)
                     
-                    # Display score
-                    if 'score' in row:
-                        score = row['score'] 
-                        st.markdown(f"<h3 style='text-align: center;'>{score:.1f}⭐</h3>", unsafe_allow_html=True)
+                    # Score display
+                    if 'Score' in row:
+                        st.markdown(f"<h3 style='text-align: center;'>{row['Score']:.1f}⭐</h3>", unsafe_allow_html=True)
                 
                 with col2:
-                    st.subheader(row["name"] if "name" in row else "Coworking Space")
+                    st.subheader(row["name"])
                     
-                    if "address" in row and not pd.isna(row["address"]):
-                        st.write(f"📍 {row['address']}")
+                    # Location info
+                    if pd.notna(row["Address"]):
+                        st.write(f"📍 {row['Address']}")
+                    if pd.notna(row["Neighborhood"]):
+                        st.write(f"🏘️ {row['Neighborhood']}")
                     
-                    if "price" in row and not pd.isna(row["price"]):
-                        st.write(f"💸 {row['price']}")
+                    # Ratings info
+                    if pd.notna(row["Rating"]):
+                        rating_text = f"⭐ {row['Rating']}/5"
+                        if pd.notna(row["User Rating Count"]):
+                            rating_text += f" ({int(row['User Rating Count'])} reviews)"
+                        st.write(rating_text)
                     
-                    # Add website link
-                    if "url" in row and not pd.isna(row["url"]):
-                        st.markdown(f"[🔗 View Website]({row['url']})")
-                    
-                    # Show all available amenities if they exist
-                    amenities_col = next((col for col in row.index if col.endswith('amenities_list')), None)
-                    if amenities_col and isinstance(row[amenities_col], list) and len(row[amenities_col]) > 0:
-                        st.write("✨ **Amenities:**")
-                        amenities_text = ", ".join(amenity.replace('_', ' ').title() for amenity in row[amenities_col])
-                        st.write(amenities_text)
-                    
-                    # Add expandable section for more details
-                    with st.expander("More Details"):
-                        # Show any additional information that might be available
-                        for col_name, value in row.items():
-                            # Skip columns we've already displayed or that are internal
-                            if col_name in ['name', 'address', 'price', 'url', 'latitude', 'longitude', 
-                                            'score', 'amenities_list', 'index'] or col_name.startswith('has_amenity_'):
-                                continue
-                            
-                            # Skip empty values
-                            if pd.isna(value) or value == '' or value == []:
-                                continue
-                            
-                            # Format column name for display
-                            display_name = col_name.replace('_', ' ').title()
-                            
-                            # Handle different data types appropriately
-                            if isinstance(value, (int, float)):
-                                st.write(f"**{display_name}:** {value}")
-                            elif isinstance(value, list):
-                                st.write(f"**{display_name}:** {', '.join(str(item) for item in value)}")
-                            else:
-                                st.write(f"**{display_name}:** {value}")
+                    # Distance from center
+                    if pd.notna(row["distance_from_center"]):
+                        st.write(f"🚶 {row['distance_from_center']:.2f}km from city center")
                 
                 st.markdown("---")
+        else:
+            st.error("City information not available in the dataset")
