@@ -434,16 +434,20 @@ with tab2:
                 
                 # Show visualization of similarities
                 st.subheader("Visualization of Similar Spaces")
-                
+
                 # Create visualization of similarities
                 if 'price_numeric' in recommendation_df.columns:
-                    # Get all spaces to show in viz (selected + recommendations)
-                    viz_spaces = [selected_idx] + [recommendation_df[recommendation_df['name'] == rec['name']].index[0] for rec in recommendations]
-                    viz_df = recommendation_df.iloc[viz_spaces].copy()
+                    # Use the names to build a list of spaces (selected + recommendations)
+                    viz_names = [selected_space] + [rec['name'] for rec in recommendations]
+                    # Filter the recommendation dataframe based on these names
+                    viz_df = recommendation_df[recommendation_df['name'].isin(viz_names)].copy()
+                    # Reorder so the selected space comes first
+                    viz_df['order'] = viz_df['name'].apply(lambda x: viz_names.index(x))
+                    viz_df = viz_df.sort_values('order').drop('order', axis=1)
                     
                     # Mark the selected space
                     viz_df['type'] = 'Similar Space'
-                    viz_df.loc[selected_idx, 'type'] = 'Selected Space'
+                    viz_df.loc[viz_df['name'] == selected_space, 'type'] = 'Selected Space'
                     
                     # Calculate total amenities
                     amenity_cols = [col for col in viz_df.columns if col.startswith('has_amenity_')]
