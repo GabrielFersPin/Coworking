@@ -8,6 +8,7 @@ import os
 from sklearn.metrics.pairwise import cosine_similarity
 import matplotlib.pyplot as plt
 import seaborn as sns
+import pydeck as pdk
 import plotly.express as px
 
 # Set page configuration
@@ -595,14 +596,14 @@ with tab3:
             with col1:
                 avg_day_price = filtered_top_rated['Day Pass'].mean()
                 if not pd.isna(avg_day_price):
-                    st.metric("Average Day Pass", f"€{avg_day_price:.2f}")
+                    st.metric("Average Day Pass", f"${avg_day_price:.2f}")
                 else:
                     st.metric("Average Day Pass", "Not available")
             
             with col2:
                 avg_month_price = filtered_top_rated['Month Pass'].mean()
                 if not pd.isna(avg_month_price):
-                    st.metric("Average Monthly Pass", f"€{avg_month_price:.2f}")
+                    st.metric("Average Monthly Pass", f"${avg_month_price:.2f}")
                 else:
                     st.metric("Average Monthly Pass", "Not available")
             
@@ -610,18 +611,44 @@ with tab3:
             if 'Latitude' in filtered_top_rated and 'Longitude' in filtered_top_rated:
                 st.subheader(f"Map of Coworking Spaces in {selected_top_rated_city}")
                 
-                map_data = filtered_top_rated[['Latitude', 'Longitude', 'name', 'Score']].copy()
+                map_data = filtered_top_rated[['Latitude', 'Longitude', 'name', 'Score', 'Address']].copy()
                 map_data = map_data.dropna(subset=['Latitude', 'Longitude'])
                 
                 if not map_data.empty:
-                    # Create display dataframe for map
-                    map_df = pd.DataFrame({
-                        'lat': map_data['Latitude'],
-                        'lon': map_data['Longitude'],
-                        'name': map_data.apply(lambda x: f"{x['name']} ({x['Score']:.1f}⭐)", axis=1)
-                    })
                     
-                    st.map(map_df, zoom=11)
+                    # Create layer with tooltips
+                    layer = pdk.Layer(
+                        'ScatterplotLayer',
+                        data=map_data,
+                        get_position=['Longitude', 'Latitude'],
+                        get_color=[255, 0, 0, 160],
+                        get_radius=100,
+                        pickable=True,
+                        auto_highlight=True
+                    )
+
+                    # Set the viewport location
+                    view_state = pdk.ViewState(
+                        longitude=map_data['Longitude'].mean(),
+                        latitude=map_data['Latitude'].mean(),
+                        zoom=12,
+                        pitch=0
+                    )
+
+                    # Render the deck.gl map with tooltips
+                    tooltip = {
+                        "html": "<b>Name:</b> {name}<br><b>Score:</b> {Score}<br><b>Address:</b> {Address}",
+                        "style": {"background": "white", "color": "black", "font-family": '"Helvetica Neue", Arial', "z-index": "10000"}
+                    }
+
+                    r = pdk.Deck(
+                        layers=[layer],
+                        initial_view_state=view_state,
+                        tooltip=tooltip,
+                        map_style='mapbox://styles/mapbox/light-v9'
+                    )
+
+                    st.pydeck_chart(r)
                 else:
                     st.info("No location data available for mapping")
             
