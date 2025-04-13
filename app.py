@@ -30,16 +30,18 @@ if not os.path.exists(coworking_file_path):
     st.error(f"Error: The coworking spaces file {coworking_file_path} does not exist.")
     st.stop()
 
-# Load datasets
-amenities_df = pd.read_csv(amenities_file_path)
-coworking_df = pd.read_csv(coworking_file_path)
+# Load datasets with a loading indicator
+with st.spinner("Loading datasets..."):
+    amenities_df = pd.read_csv(amenities_file_path)
+    coworking_df = pd.read_csv(coworking_file_path)
 
 # Try to load top rated spaces if file exists
 has_top_rated = os.path.exists(top_rated_file_path)
-if has_top_rated:
-    top_rated_df = pd.read_csv(top_rated_file_path)
-else:
-    st.warning(f"Top rated spaces file not found at {top_rated_file_path}")
+with st.spinner("Loading top rated spaces..."):
+    if has_top_rated:
+        top_rated_df = pd.read_csv(top_rated_file_path)
+    else:
+        st.warning(f"Top rated spaces file not found at {top_rated_file_path}")
 
 # Convert string representation of lists to actual lists
 def parse_amenities(amenity_str):
@@ -48,30 +50,28 @@ def parse_amenities(amenity_str):
     try:
         return ast.literal_eval(amenity_str)
     except:
-        # Handle strings that might be already quoted
         try:
             return ast.literal_eval(amenity_str.replace('"', ''))
         except:
             return []
 
-# Apply the parsing function
-amenities_df['amenities_list'] = amenities_df['extracted_amenities'].apply(parse_amenities)
+# Process amenities data with a loading indicator
+with st.spinner("Processing amenities data..."):
+    amenities_df['amenities_list'] = amenities_df['extracted_amenities'].apply(parse_amenities)
 
-# Merge the dataframes
-# Assuming they have the same length and order, otherwise we need an ID to join on
-if len(amenities_df) == len(coworking_df):
-    # Direct merge if they're aligned
-    df = pd.concat([coworking_df, amenities_df['amenities_list']], axis=1)
-else:
-    # If they aren't aligned, use reset_index to create a common column for joining
-    amenities_df = amenities_df.reset_index()
-    coworking_df = coworking_df.reset_index()
-    df = pd.merge(coworking_df, amenities_df[['index', 'amenities_list']], on='index', how='left')
+# Merge the dataframes with a loading indicator
+with st.spinner("Merging datasets..."):
+    if len(amenities_df) == len(coworking_df):
+        df = pd.concat([coworking_df, amenities_df['amenities_list']], axis=1)
+    else:
+        amenities_df = amenities_df.reset_index()
+        coworking_df = coworking_df.reset_index()
+        df = pd.merge(coworking_df, amenities_df[['index', 'amenities_list']], on='index', how='left')
 
 # Extract all unique amenities from the amenities lists
 all_amenities = []
 for amenities in df['amenities_list']:
-    if isinstance(amenities, list):  # Check if it's a valid list
+    if isinstance(amenities, list):
         all_amenities.extend(amenities)
 all_unique_amenities = list(set(all_amenities))
 
@@ -79,11 +79,8 @@ all_unique_amenities = list(set(all_amenities))
 def find_amenities_in_description(description, amenities_list):
     if pd.isna(description):
         return []
-    
     description = description.lower()
     found_amenities = []
-    
-    # Mapping of amenity terms to standardized amenity names
     amenity_keywords = {
         'wifi': 'wifi',
         'internet': 'wifi',
@@ -108,30 +105,26 @@ def find_amenities_in_description(description, amenities_list):
         'workspace': 'dedicated_desk',
         'dedicated desk': 'dedicated_desk'
     }
-    
     for keyword, amenity in amenity_keywords.items():
         if keyword in description and amenity in all_unique_amenities:
             found_amenities.append(amenity)
-    
-    return list(set(found_amenities))  # Remove duplicates
+    return list(set(found_amenities))
 
-# Enhance amenities with descriptions
-if 'description' in df.columns:
-    for index, row in df.iterrows():
-        desc_amenities = find_amenities_in_description(row.get('description', ''), all_unique_amenities)
-        
-        # Combine with existing amenities list
-        current_amenities = row['amenities_list'] if isinstance(row['amenities_list'], list) else []
-        combined_amenities = list(set(current_amenities + desc_amenities))
-        
-        # Update the amenities list
-        df.at[index, 'amenities_list'] = combined_amenities
+# Enhance amenities with descriptions wrapped in a spinner
+with st.spinner("Enhancing amenities with descriptions..."):
+    if 'description' in df.columns:
+        for index, row in df.iterrows():
+            desc_amenities = find_amenities_in_description(row.get('description', ''), all_unique_amenities)
+            current_amenities = row['amenities_list'] if isinstance(row['amenities_list'], list) else []
+            combined_amenities = list(set(current_amenities + desc_amenities))
+            df.at[index, 'amenities_list'] = combined_amenities
 
 # Count amenities after enhancement
-all_amenities = []
-for amenities in df['amenities_list']:
-    if isinstance(amenities, list):
-        all_amenities.extend(amenities)
+with st.spinner("Finalizing data processing..."):
+    all_amenities = []
+    for amenities in df['amenities_list']:
+        if isinstance(amenities, list):
+            all_amenities.extend(amenities)
 
 # Get the most common amenities
 amenity_counts = Counter(all_amenities)
@@ -230,7 +223,6 @@ st.write("Find your perfect coworking space in just a few clicks. Filter by amen
 tab1, tab2, tab3 = st.tabs(["Find Spaces", "Similar Spaces", "Top Rated Spaces"])
 
 with tab1:
-    # Sidebar split into guide and filters
     st.sidebar.header("How to use this tool")
     with st.sidebar.expander("📖 Usage Guide", expanded=True):
         st.markdown("""
