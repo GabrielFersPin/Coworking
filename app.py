@@ -252,11 +252,35 @@ with tab1:
     # Amenity multi-select
     selected_labels = st.sidebar.multiselect("Select amenities you want", sorted_amenity_labels, key="amenity_filter_tab1")
 
-    # Price slider if price data is available
+    # Price filter if price data is available
     if 'price_numeric' in df.columns and not df['price_numeric'].isna().all():
+        min_price = int(df["price_numeric"].dropna().min())
         max_price = int(df["price_numeric"].dropna().max())
-        default_price = max_price
-        user_price = st.sidebar.slider("Maximum price (€ / month)", 0, max_price, default_price, key="price_filter_tab1")
+        
+        # Create price brackets for dropdown
+        price_brackets = ["No limit"]
+        brackets = [100, 200, 500, 1000, 2000, 5000, 10000]
+        brackets = [b for b in brackets if b <= max_price * 1.2]
+        if not brackets or brackets[-1] < max_price:
+            brackets.append(max_price)
+        
+        price_brackets.extend([f"{brackets[i]}" if i == 0 else f"{brackets[i-1]}-{brackets[i]}" 
+                             for i in range(len(brackets))])
+        
+        # Combined price filter using dropdown
+        selected_bracket = st.sidebar.selectbox("Price range", price_brackets, key="price_filter_tab1")
+        
+        # Set price filter value based on selection
+        if selected_bracket == "No limit":
+            price_min, price_max = 0, max_price
+        else:
+            # Parse both minimum and maximum prices from the range
+            if '-€' in selected_bracket:
+                price_min = int(selected_bracket.split('-€')[0])
+                price_max = int(selected_bracket.split('-€')[1])
+            else:
+                price_min = 0
+                price_max = int(selected_bracket)
         has_price_filter = True
     else:
         has_price_filter = False
@@ -272,15 +296,18 @@ with tab1:
     # Apply city filter
     if 'city' in df.columns and selected_city != "All Cities":
         filtered_df = filtered_df[filtered_df['city'] == selected_city]
+    # Apply price filter if available
+    if has_price_filter:
+        filtered_df = filtered_df[
+            (filtered_df["price_numeric"] >= price_min) & 
+            (filtered_df["price_numeric"] <= price_max)
+        ]
 
     # Apply amenity filters
     for label in selected_labels:
         amenity = amenity_map[label]
         filtered_df = filtered_df[filtered_df[f'has_amenity_{amenity}'] == 1]
 
-    # Apply price filter if available
-    if has_price_filter:
-        filtered_df = filtered_df[filtered_df["price_numeric"] <= user_price]
 
     # Show results
     st.header("Coworking spaces that match your preferences")
