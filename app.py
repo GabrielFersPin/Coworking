@@ -230,63 +230,51 @@ st.write("Find your perfect coworking space in just a few clicks. Filter by amen
 tab1, tab2, tab3 = st.tabs(["Find Spaces", "Similar Spaces", "Top Rated Spaces"])
 
 with tab1:
-    # Sidebar for filters
-    st.sidebar.header("Filter your coworking preferences")
-    st.sidebar.subheader("Select your preferences")
+    # Sidebar split into guide and filters
+    st.sidebar.header("How to use this tool")
+    with st.sidebar.expander("📖 Usage Guide", expanded=True):
+        st.markdown("""
+        1. **Select your city** from the dropdown below
+        2. **Choose key amenities** you need
+        3. **Set your budget** using the price filter
+        4. View matching spaces in the main panel
+        
+        💡 **Tip**: Start with fewer filters and add more if you get too many results
+        """)
+    
+    st.sidebar.markdown("---")
+    st.sidebar.header("Essential Filters")
 
     # City filter if available
     if 'city' in df.columns:
         cities = sorted(df['city'].dropna().unique().tolist())
         selected_city = st.sidebar.selectbox("Select city", ["All Cities"] + cities, key="city_filter_tab1")
 
-    # Display most common amenities
-    st.sidebar.subheader("Most Common Amenities")
-    for amenity, count in most_common_amenities:
-        st.sidebar.text(f"{amenity.replace('_', ' ').title()}: {count}")
+    # Simplified amenity selection - show only top 10 most common
+    top_10_amenities = [amenity.replace("_", " ").title() for amenity, _ in most_common_amenities[:10]]
+    amenity_map = dict(zip(top_10_amenities, [am[0] for am in most_common_amenities[:10]]))
+    selected_labels = st.sidebar.multiselect("Must-have amenities", sorted(top_10_amenities), key="amenity_filter_tab1")
 
-    # Amenity selection
-    amenity_labels = [amenity.replace("_", " ").title() for amenity in set(all_amenities)]
-    amenity_map = dict(zip(amenity_labels, set(all_amenities)))
-
-    # Sort amenities alphabetically for easier selection
-    sorted_amenity_labels = sorted(amenity_labels)
-
-    # Amenity multi-select
-    selected_labels = st.sidebar.multiselect("Select amenities you want", sorted_amenity_labels, key="amenity_filter_tab1")
-
-    # Price filter if price data is available
+    # Price filter if available
     if 'price_numeric' in df.columns and not df['price_numeric'].isna().all():
         min_price = int(df["price_numeric"].dropna().min())
         max_price = int(df["price_numeric"].dropna().max())
         
-        # Create price brackets for dropdown
-        price_brackets = ["No limit"]
-        brackets = [100, 200, 500, 1000, 2000, 5000, 10000]
-        brackets = [b for b in brackets if b <= max_price * 1.2]
-        if not brackets or brackets[-1] < max_price:
-            brackets.append(max_price)
-        
-        price_brackets.extend([f"{brackets[i]}" if i == 0 else f"{brackets[i-1]}-{brackets[i]}" 
-                             for i in range(len(brackets))])
-        
-        # Combined price filter using dropdown
+        # Simplified price brackets
+        price_brackets = ["No limit", "0-200", "201-500", "501-1000", "1000+"]
         selected_bracket = st.sidebar.selectbox("Price range", price_brackets, key="price_filter_tab1")
         
-        # Set price filter value based on selection
+        # Parse price range
         if selected_bracket == "No limit":
             price_min, price_max = 0, max_price
+        elif selected_bracket == "1000+":
+            price_min, price_max = 1000, max_price
         else:
-            # Parse both minimum and maximum prices from the range
-            if '-€' in selected_bracket:
-                price_min = int(selected_bracket.split('-€')[0])
-                price_max = int(selected_bracket.split('-€')[1])
-            else:
-                price_min = 0
-                price_max = int(selected_bracket)
+            price_min = int(selected_bracket.split("-")[0])
+            price_max = int(selected_bracket.split("-")[1])
         has_price_filter = True
     else:
         has_price_filter = False
-        st.sidebar.info("Price filtering not available for this dataset")
 
     # Filter dataframe based on user input
     filtered_df = df.copy()
@@ -298,6 +286,7 @@ with tab1:
     # Apply city filter
     if 'city' in df.columns and selected_city != "All Cities":
         filtered_df = filtered_df[filtered_df['city'] == selected_city]
+    
     # Apply price filter if available
     if has_price_filter:
         filtered_df = filtered_df[
@@ -310,10 +299,9 @@ with tab1:
         amenity = amenity_map[label]
         filtered_df = filtered_df[filtered_df[f'has_amenity_{amenity}'] == 1]
 
-
     # Show results
     st.header("Coworking spaces that match your preferences")
-    st.subheader("Select filters on the left to find coworking spaces that match your exact needs. Choose your city, desired amenities, and budget to see personalized results.")
+    st.subheader("Select filters on the left to find coworking spaces that match your exact needs.")
     st.write(f"Found {len(filtered_df)} matching spaces")
 
     if filtered_df.empty:
