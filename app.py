@@ -299,23 +299,18 @@ with tab1:
     if filtered_df.empty:
         st.warning("No coworking spaces found with the selected options 😕")
     else:
-        for _, row in filtered_df.iterrows():
+        for idx, row in filtered_df.iterrows():
             # Create a card-like effect for each result
-            col1, col2 = st.columns([3, 1])
+            col1, col2, col3 = st.columns([3, 1, 1])
             
             with col1:
                 st.subheader(row["name"] if "name" in row else "Coworking Space")
-                
                 if "city" in row and not pd.isna(row["city"]):
                     st.write(f"🏙️ {row['city']}")
-                    
                 if "address" in row and not pd.isna(row["address"]):
                     st.write(f"📍 {row['address']}")
-                
                 if "price" in row and not pd.isna(row["price"]) and not row.get('is_invalid_price', False):
                     st.write(f"💸 {row['price']}")
-                
-                # Display amenities for this space
                 if isinstance(row['amenities_list'], list) and len(row['amenities_list']) > 0:
                     st.write("✨ Amenities: " + ", ".join(amenity.replace('_', ' ').title() for amenity in row['amenities_list']))
             
@@ -323,11 +318,15 @@ with tab1:
                 if "url" in row and not pd.isna(row["url"]):
                     st.markdown(f"[🔗 View Website]({row['url']})")
             
-            # Show description snippet if available
+            with col3:
+                if st.button("Select this space", key=f"select_{idx}"):
+                    st.session_state.selected_space = row["name"]
+                    st.success(f"Selected {row['name']}")
+            
             if "description" in row and not pd.isna(row["description"]):
                 with st.expander("See description"):
                     st.write(row["description"])
-                
+                    
             st.markdown("---")
 
 with tab2:
@@ -565,7 +564,7 @@ with tab3:
             top_rated_cities = sorted(top_rated_df['City'].dropna().unique().tolist())
             selected_top_rated_city = st.selectbox("Select city", top_rated_cities, key="city_filter_tab3")
             
-            # Filter by selected city
+                        # Filter by selected city
             filtered_top_rated = top_rated_df[top_rated_df['City'] == selected_top_rated_city]
             filtered_top_rated = filtered_top_rated.sort_values('Score', ascending=False)
             
