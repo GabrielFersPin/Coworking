@@ -222,13 +222,236 @@ def get_recommendations(space_idx, similarity_matrix, df, n=5):
     
     return recommended_spaces
 
+# Function to build and train the price prediction model
+def build_price_prediction_model(df):
+    # Check if we have enough price data to build a model
+    if 'price_numeric' not in df.columns or df['price_numeric'].isna().sum() > 0.7 * len(df):
+        print("Not enough valid price data to build a model")
+        return None, None, None, None
+    
+    # Create a copy of the dataframe with relevant features
+    model_df = df.copy()
+    
+    # IMPORTANT: Filter out rows with NaN in price_numeric before anything else
+    model_df = model_df.dropna(subset=['price_numeric'])
+    
+    # Check if we still have enough data
+    if len(model_df) < 10:  # arbitrary minimum, adjust as needed
+        print(f"Only {len(model_df)} valid price datapoints, which is not enough")
+        return None, None, None, None
+    
+    print(f"Building model with {len(model_df)} valid price datapoints")
+    
+    # Prepare features
+    # 1. Amenity features (already binary)
+    amenity_cols = [col for col in model_df.columns if col.startswith('has_amenity_')]
+    
+    # 2. Location features
+    categorical_features = []
+    if 'city' in model_df.columns and model_df['city'].nunique() > 1:
+        categorical_features.append('city')
+    if 'neighborhood' in model_df.columns and model_df['neighborhood'].nunique() > 1:
+        categorical_features.append('neighborhood')
+    
+    # 3. Distance features
+    numeric_features = []
+    if 'distance_from_center' in model_df.columns:
+        numeric_features.append('distance_from_center')
+    
+    # Prepare the target variable
+    y = model_df['price_numeric'].copy()
+    
+    # Create X by combining all features, ensuring they exist in the dataframe
+    features_to_use = []
+    for feature_list in [amenity_cols, categorical_features, numeric_features]:
+        for feature in feature_list:
+            if feature in model_df.columns:
+                features_to_use.append(feature)
+    
+    # Check if we have any features
+    if not features_to_use:
+        print("No valid features found for price prediction")
+        return None, None, None, None
+    
+    X = model_df[features_to_use].copy()
+    
+    # Handle missing values in X
+    for col in numeric_features:
+        if col in X.columns:
+            X[col] = X[col].fillna(X[col].median())
+    
+    for col in categorical_features:
+        if col in X.columns:
+            X[col] = X[col].fillna("unknown")
+    
+    # Make sure there are no NaN values left in either X or y
+    if X.isna().any().any():
+        print("Warning: NaN values in features after preprocessing, filling with zeros")
+        X = X.fillna(0)
+    
+    # Double-check y again for NaN values 
+    if y.isna().any():
+        print("Warning: NaN values in target variable, dropping those rows")
+        # Get indices of non-NaN values in y
+        valid_indices = y[~y.isna()].index
+        X = X.loc[valid_indices]
+        y = y.loc[valid_indices]
+    
+    # Print shape for debugging
+    print(f"Final dataset shape: X: {X.shape}, y: {y.shape}")
+    
+    try:
+        # Split the data
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.2, random_state=42
+        )
+        
+        # Create preprocessing pipeline based on available features
+        transformers = []
+        
+        # Only add numeric transformer if we have numeric features
+        if numeric_features and any(col in X.columns for col in numeric_features):
+            numeric_cols = [col for col in numeric_features if col in X.columns]
+            if numeric_cols:
+                numeric_transformer = Pipeline(steps=[
+                    ('imputer', SimpleImputer(strategy='median'))
+                ])
+                transformers.append(('num', numeric_transformer, numeric_cols))
+        
+        # Only add categorical transformer if we have categorical features
+        if categorical_features and any(col in X.columns for col in categorical_features):
+            cat_cols = [col for col in categorical_features if col in X.columns]
+            if cat_cols:
+                categorical_transformer = Pipeline(steps=[
+                    ('imputer', SimpleImputer(strategy='constant', fill_value='unknown')),
+                    ('onehot', OneHotEncoder(handle_unknown='ignore'))
+                ])
+                transformers.append(('cat', categorical_transformer, cat_cols))
+        
+        # Handle the case when we only have binary amenity features
+        if amenity_cols and all(col.startswith('has_amenity_') for col in X.columns):
+            preprocessor = 'passthrough'  # No preprocessing needed
+        else:
+            # Create the column transformer if we have transformers
+            if transformers:
+                preprocessor = ColumnTransformer(
+                    transformers=transformers,
+                    remainder='passthrough'  # Pass through any other columns (like amenities)
+                )
+            else:
+                preprocessor = 'passthrough'  # No preprocessing needed
+        
+        # Create and train the model pipeline
+        model = Pipeline(steps=[
+            ('preprocessor', preprocessor),
+            ('regressor', RandomForestRegressor(n_estimators=100, random_state=42))
+        ])
+        
+        # Train the model
+        model.fit(X_train, y_train)
+        
+        # Evaluate the model
+        y_pred = model.predict(X_test)
+        mae = mean_absolute_error(y_test, y_pred)
+        r2 = r2_score(y_test, y_pred)
+        
+        print(f"Model MAE: {mae:.2f}, R²: {r2:.2f}")
+        
+        # Calculate feature importances
+        feature_importances = {}
+        if hasattr(model['regressor'], 'feature_importances_'):
+            # Get feature names after preprocessing
+            if preprocessor == 'passthrough':
+                # If passthrough, feature names are the same
+                feature_names = X.columns.tolist()
+            else:
+                try:
+                    # Try to get feature names from the column transformer
+                    feature_names = []
+                    # Handle the case for categorical features that have been one-hot encoded
+                    for name, trans, cols in transformers:
+                        if name == 'cat':
+                            feature_names.extend(
+                                trans.named_steps['onehot'].get_feature_names_out(cols).tolist()
+                            )
+                        else:
+                            feature_names.extend(cols)
+                    
+                    # Add remaining columns 
+                    feature_names.extend([col for col in X.columns if col.startswith('has_amenity_')])
+                except:
+                    # Fallback to simple feature naming
+                    feature_names = [f"feature_{i}" for i in range(len(model['regressor'].feature_importances_))]
+            
+            # Make sure we have the right number of names
+            if len(feature_names) != len(model['regressor'].feature_importances_):
+                print(f"Warning: Feature names count ({len(feature_names)}) doesn't match importance count ({len(model['regressor'].feature_importances_)})")
+                feature_names = [f"feature_{i}" for i in range(len(model['regressor'].feature_importances_))]
+            
+            # Get feature importances
+            importances = model['regressor'].feature_importances_
+            
+            # Create a dictionary of feature importances
+            feature_importances = dict(zip(feature_names, importances))
+            
+            # Sort by importance
+            feature_importances = {k: v for k, v in sorted(
+                feature_importances.items(), key=lambda item: item[1], reverse=True
+            )}
+        
+        return model, features_to_use, mae, feature_importances
+    
+    except Exception as e:
+        print(f"Error building price prediction model: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return None, None, None, None
+# Function to predict the price for a given coworking space
+def predict_price(model, feature_columns, space_data):
+    if model is None:
+        return None
+    # Ensure the row has all feature columns; fill missing columns with 0
+    features = space_data.reindex(feature_columns, fill_value=0).copy()
+    predicted_price = model.predict([features])[0]
+    return predicted_price
+
+# Function to analyze if a space is underpriced or overpriced
+def analyze_price(actual_price, predicted_price, threshold=0.2):
+    if actual_price is None or predicted_price is None:
+        return "Unknown", 0
+    
+    price_difference = actual_price - predicted_price
+    percentage_difference = price_difference / predicted_price if predicted_price > 0 else 0
+    
+    if percentage_difference > threshold:
+        return "Overpriced", percentage_difference
+    elif percentage_difference < -threshold:
+        return "Underpriced", percentage_difference
+    else:
+        return "Fair Price", percentage_difference
+
+
+# Build the price prediction model
+with st.spinner("Building price prediction model..."):
+    try:
+        price_model, price_features, price_mae, price_importances = build_price_prediction_model(df)
+        if price_model is not None:
+            st.session_state.price_model = price_model
+            st.session_state.price_features = price_features
+            st.session_state.price_mae = price_mae
+            st.session_state.price_importances = price_importances
+    except Exception as e:
+        st.error(f"Error building price prediction model: {str(e)}")
+        st.session_state.price_model = None
+
+# Streamlit app starts here
 # App title and description
 st.title("Coworking Space Finder")
 st.write("Find your perfect coworking space in just a few clicks. Filter by amenities, compare options, or discover top-rated spaces nearby.")
 
 # Create tabs for different views
-tab1, tab2, tab3 = st.tabs(["Find Spaces", "Similar Spaces", "Top Rated Spaces"])
-
+tab1, tab2, tab3, tab4 = st.tabs(["Find Spaces", "Similar Spaces", "Top Rated Spaces", "Price Analysis"])
+# Tab 1: Find Spaces
 with tab1:
     st.sidebar.header("How to use this tool")
     with st.sidebar.expander("📖 Usage Guide", expanded=True):
@@ -667,3 +890,250 @@ with tab3:
                 st.markdown("---")
         else:
             st.error("City information not available in the dataset")
+# In the Price Analysis tab
+with tab4:
+    st.header("Coworking Space Price Analysis")
+    st.subheader("Analyze prices and identify good deals")
+    
+    if not hasattr(st.session_state, 'price_model') or st.session_state.price_model is None:
+        st.warning("Insufficient data to build a price prediction model. Please add more pricing data.")
+    else:
+        # Show model performance
+        st.metric("Model Accuracy (Mean Absolute Error)", f"${st.session_state.price_mae:.2f}")
+        
+        # Show top factors affecting price
+        st.subheader("Top factors affecting coworking space prices")
+        top_factors = list(st.session_state.price_importances.items())[:10]
+        
+        # Create a bar chart of feature importances
+        factor_df = pd.DataFrame(top_factors, columns=['Feature', 'Importance'])
+        factor_df['Feature'] = factor_df['Feature'].apply(lambda x: x.replace('has_amenity_', '').replace('_', ' ').title())
+        
+        fig = px.bar(
+            factor_df,
+            x='Importance',
+            y='Feature',
+            orientation='h',
+            title='Feature Importance for Price Prediction',
+            labels={'Importance': 'Importance Score', 'Feature': 'Feature'},
+            color='Importance',
+            color_continuous_scale='Viridis',
+        )
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Show price analysis for all spaces
+        st.subheader("Price Analysis of Coworking Spaces")
+        
+        # Filter for spaces with valid prices
+        valid_price_df = df[~df['price_numeric'].isna()].copy()
+        
+        if len(valid_price_df) > 0:
+            # Add predictions to the dataframe
+            if st.session_state.price_features:
+                # Ensure we only use features that exist in the DataFrame
+                valid_features = [f for f in st.session_state.price_features if f in valid_price_df.columns]
+                
+                # Create feature matrix for prediction
+                X_pred = valid_price_df[valid_features].copy()
+                
+                # Make predictions
+                try:
+                    predictions = st.session_state.price_model.predict(X_pred)
+                    valid_price_df['predicted_price'] = predictions
+                except Exception as e:
+                    st.error(f"Error making predictions: {str(e)}")
+                    valid_price_df['predicted_price'] = np.nan
+            else:
+                st.error("No valid features found for price prediction")
+                valid_price_df['predicted_price'] = np.nan
+            
+            # Add price analysis
+            valid_price_df[['price_status', 'price_difference']] = valid_price_df.apply(
+                lambda row: pd.Series(
+                    analyze_price(row['price_numeric'], row['predicted_price'])
+                ),
+                axis=1
+            )
+            
+            # Convert price difference to percentage
+            valid_price_df['price_difference_pct'] = valid_price_df['price_difference'] * 100
+            
+            # Add filter for city if available
+            if 'city' in valid_price_df.columns:
+                cities = sorted(valid_price_df['city'].dropna().unique().tolist())
+                selected_city = st.selectbox("Select city", ["All Cities"] + cities, key="city_filter_tab4")
+                
+                if selected_city != "All Cities":
+                    valid_price_df = valid_price_df[valid_price_df['city'] == selected_city]
+            
+            # Sort by best deals first
+            st.selectbox(
+                "Sort by",
+                ["Best Deals First", "Most Overpriced First", "Name"],
+                key="price_sort"
+            )
+            
+            if st.session_state.price_sort == "Best Deals First":
+                valid_price_df = valid_price_df.sort_values('price_difference')
+            elif st.session_state.price_sort == "Most Overpriced First":
+                valid_price_df = valid_price_df.sort_values('price_difference', ascending=False)
+            else:
+                valid_price_df = valid_price_df.sort_values('name')
+            
+            # Show the spaces with price analysis
+            for idx, row in valid_price_df.iterrows():
+                col1, col2 = st.columns([3, 1])
+                
+                with col1:
+                    st.subheader(row["name"] if "name" in row else "Coworking Space")
+                    
+                    if "city" in row and not pd.isna(row["city"]):
+                        st.write(f"🏙️ {row['city']}")
+                    
+                    if "address" in row and not pd.isna(row["address"]):
+                        st.write(f"📍 {row['address']}")
+                    
+                    # Show actual price
+                    if "price" in row and not pd.isna(row["price"]):
+                        st.write(f"💸 Actual price: {row['price']}")
+                    
+                    # Show predicted fair price
+                    if not pd.isna(row["predicted_price"]):
+                        st.write(f"🔍 Predicted fair price: ${row['predicted_price']:.2f}")
+                    
+                    # Show price difference
+                    diff_pct = row['price_difference_pct']
+                    if abs(diff_pct) > 5:
+                        if diff_pct < 0:
+                            st.write(f"💰 **Good deal!** {abs(diff_pct):.1f}% below estimated market value")
+                        else:
+                            st.write(f"⚠️ **Overpriced!** {diff_pct:.1f}% above estimated market value")
+                    else:
+                        st.write("✅ Price is fair (within 5% of estimated market value)")
+                
+                with col2:
+                    # Display colorful status indicator
+                    status = row['price_status']
+                    if status == "Underpriced":
+                        st.markdown("""
+                            <div style="background-color: #4CAF50; color: white; padding: 10px; border-radius: 5px; text-align: center;">
+                                <strong>GOOD DEAL</strong>
+                            </div>
+                        """, unsafe_allow_html=True)
+                    elif status == "Overpriced":
+                        st.markdown("""
+                            <div style="background-color: #FF5722; color: white; padding: 10px; border-radius: 5px; text-align: center;">
+                                <strong>OVERPRICED</strong>
+                            </div>
+                        """, unsafe_allow_html=True)
+                    else:
+                        st.markdown("""
+                            <div style="background-color: #2196F3; color: white; padding: 10px; border-radius: 5px; text-align: center;">
+                                <strong>FAIR PRICE</strong>
+                            </div>
+                        """, unsafe_allow_html=True)
+                
+                    # Show URL if available
+                    if "url" in row and not pd.isna(row["url"]):
+                        st.markdown(f"[🔗 View Website]({row['url']})")
+                
+                # Show amenities
+                if isinstance(row['amenities_list'], list) and len(row['amenities_list']) > 0:
+                    st.write("✨ Amenities: " + ", ".join(amenity.replace('_', ' ').title() for amenity in row['amenities_list']))
+                
+                st.markdown("---")
+            
+            # Create a price distribution visualization
+            st.subheader("Price Distribution Analysis")
+            
+            fig = px.scatter(
+                valid_price_df,
+                x='predicted_price',
+                y='price_numeric',
+                color='price_status',
+                hover_name='name',
+                labels={
+                    'predicted_price': 'Predicted Fair Price ($)',
+                    'price_numeric': 'Actual Price ($)'
+                },
+                title='Actual vs. Predicted Prices',
+                color_discrete_map={
+                    'Underpriced': '#4CAF50',
+                    'Fair Price': '#2196F3',
+                    'Overpriced': '#FF5722'
+                }
+            )
+            
+            # Add diagonal line representing perfect prediction
+            max_price = max(valid_price_df['price_numeric'].max(), valid_price_df['predicted_price'].max())
+            fig.add_shape(
+                type='line',
+                x0=0, y0=0,
+                x1=max_price, y1=max_price,
+                line=dict(color='gray', dash='dash')
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+            
+            # Amenity value analysis
+            st.subheader("Amenity Value Analysis")
+            st.write("See how much each amenity adds to the average price")
+            
+            # Calculate the average price impact of top amenities
+            top_amenities = [amenity for amenity, _ in most_common_amenities[:10]]
+            amenity_impact = []
+            
+            for amenity in top_amenities:
+                amenity_col = f'has_amenity_{amenity}'
+                if amenity_col in df.columns:
+                    spaces_with = df[df[amenity_col] == 1]['price_numeric'].dropna()
+                    spaces_without = df[df[amenity_col] == 0]['price_numeric'].dropna()
+                    
+                    if len(spaces_with) > 0 and len(spaces_without) > 0:
+                        avg_with = spaces_with.mean()
+                        avg_without = spaces_without.mean()
+                        price_impact = avg_with - avg_without
+                        
+                        amenity_impact.append({
+                            'amenity': amenity.replace('_', ' ').title(),
+                            'price_impact': price_impact,
+                            'avg_with': avg_with,
+                            'avg_without': avg_without,
+                            'count': len(spaces_with)
+                        })
+            
+            if amenity_impact:
+                impact_df = pd.DataFrame(amenity_impact)
+                impact_df = impact_df.sort_values('price_impact', ascending=False)
+                
+                fig = px.bar(
+                    impact_df,
+                    x='amenity',
+                    y='price_impact',
+                    title='Average Price Impact of Amenities',
+                    labels={'price_impact': 'Price Difference ($)', 'amenity': 'Amenity'},
+                    color='price_impact',
+                    color_continuous_scale='RdBu',
+                    text='price_impact'
+                )
+                
+                fig.update_traces(texttemplate='%{text:.2f}', textposition='outside')
+                fig.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
+                
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.info("Not enough data to analyze amenity price impact")
+        else:
+            st.warning("No valid price data available for analysis")
+# Footer
+st.markdown("---")
+st.markdown("""
+    <style>
+        footer {
+            visibility: hidden;
+        }
+    </style>
+""", unsafe_allow_html=True)
+# Run the app
+if __name__ == "__main__":
+    st.write("Streamlit app is running...")
