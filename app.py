@@ -228,8 +228,13 @@ def build_clustering_model(df, n_clusters=5):
         lower_bound = Q1 - 1.5 * IQR
         upper_bound = Q3 + 1.5 * IQR
         df_filtered = df[(df['price_numeric'] >= lower_bound) & (df['price_numeric'] <= upper_bound)].copy()
+        # Reset index to avoid index matching issues
+        df_filtered = df_filtered.reset_index(drop=True)
+        df = df.reset_index(drop=True)
     else:
         df_filtered = df.copy()
+        df_filtered = df_filtered.reset_index(drop=True)
+        df = df.reset_index(drop=True)
 
     # Get amenity columns
     amenity_cols = [col for col in df.columns if col.startswith('has_amenity_')]
@@ -251,12 +256,8 @@ def build_clustering_model(df, n_clusters=5):
     kmeans = KMeans(n_clusters=n_clusters, random_state=42)
     cluster_labels = kmeans.fit_predict(X)
 
-    # Assign clusters to filtered rows
-    df_filtered['cluster'] = cluster_labels
-
-    # Create an array for cluster assignments for the entire dataframe,
-    # assigning -1 (or any marker) to outlier rows not used in clustering.
-    clusters = -1 * np.ones(df.shape[0], dtype=int)
+    # Create an array for cluster assignments for the entire dataframe
+    clusters = -1 * np.ones(len(df), dtype=int)
     clusters[df_filtered.index] = cluster_labels
 
     # Compute cluster centers using only the filtered data features
@@ -732,7 +733,60 @@ with tab4:
 
     # Build clusters on the filtered data
     with st.spinner("Building clusters for selected city..."):
-        n_clusters = 5  # You can make this configurable
+        # Get feature matrix
+        amenity_cols = [col for col in df_cluster.columns if col.startswith('has_amenity_')]
+        X = df_cluster[amenity_cols].fillna(0)
+        
+        # Check if we have enough data to cluster
+        if len(df_cluster) < 2:
+            st.warning(f"Not enough data to build clusters for {selected_cluster_city}")
+        else:
+            # Let user choose whether to use elbow method or manual selection
+            cluster_method = st.radio("How would you like to choose the number of clusters?", 
+                        ["Elbow Method", "Manual Selection"])
+
+            if cluster_method == "Elbow Method":
+                # Calculate SSE for different values of k
+                sse = []
+                # Adjust k_range based on dataset size
+                max_k = min(10, len(df_cluster) - 1)
+                k_range = range(2, max_k + 1)
+                
+                if 'price_numeric' in df_cluster.columns:
+                    scaler = StandardScaler()
+                    price_scaled = scaler.fit_transform(
+                        df_cluster[['price_numeric']].fillna(df_cluster['price_numeric'].mean()).values
+                    )
+                    X['price_scaled'] = price_scaled
+
+                with st.spinner("Calculating optimal number of clusters..."):
+                    for k in k_range:
+                        kmeans = KMeans(n_clusters=k, random_state=42)
+                        kmeans.fit(X)
+                        sse.append(kmeans.inertia_)
+
+                # Plot elbow curve
+                fig, ax = plt.subplots()
+                plt.plot(k_range, sse, 'bx-')
+                plt.xlabel('k')
+                plt.ylabel('Sum of squared distances')
+                plt.title('Elbow Method For Optimal k')
+                st.pyplot(fig)
+
+                # Find elbow point using the angle method
+                deltas = np.diff(sse)
+                angles = np.diff(deltas)
+                elbow_point = np.argmin(angles) + 2
+                st.write(f"Suggested optimal number of clusters: {elbow_point}")
+                n_clusters = elbow_point
+            else:
+                # Manual selection with slider, limit max value based on data size
+                max_clusters = min(10, len(df_cluster) - 1)
+                n_clusters = st.slider("Select number of clusters", 
+                                     min_value=2, 
+                                     max_value=max_clusters, 
+                                     value=min(5, max_clusters),
+                                     help="Choose how many groups to divide the coworking spaces into")
         clusters, cluster_centers = build_clustering_model(df_cluster, n_clusters)
         if clusters is not None:
             df_cluster['cluster'] = clusters
