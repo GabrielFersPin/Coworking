@@ -261,7 +261,7 @@ st.title("Coworking Space Finder")
 st.write("Find your perfect coworking space in just a few clicks. Filter by amenities, compare options, or discover top-rated spaces nearby.")
 
 # Create tabs for different views
-tab1, tab2, tab3, tab4 = st.tabs(["Find Spaces", "Similar Spaces", "Top Rated Spaces", "Cluster Analysis"])
+tab1, tab2, tab3, tab4 = st.tabs(["Find Spaces", "Similar Spaces", "Top Rated Spaces", "Coworking Styles"])
 
 with tab1:
     st.sidebar.header("How to use this tool")
@@ -703,33 +703,54 @@ with tab3:
             st.error("City information not available in the dataset")
 
 with tab4:
-    st.subheader("Find Your Ideal Coworking Space Type")
+    st.header("Find Your Perfect Workspace Style")
+    
+    # Add a friendly explanation of what this tab does
+    st.markdown("""
+    ### What is this tab about?
+    
+    This feature groups similar coworking spaces together based on their amenities, prices, and features.
+    It helps you discover what type of workspace matches your preferences and working style.
+    
+    **How it works:**
+    - We analyze patterns across all workspaces
+    - Similar spaces are grouped into categories
+    - You can explore which category fits your needs best
+    - See examples of spaces in each category
+    """)
     
     # Build clustering model
     n_clusters = 4
     clusters, cluster_centers = build_clustering_model(df, n_clusters)
     
     if clusters is None:
-        st.error("Could not build clustering model with the available data.")
+        st.error("Could not build workspace categories with the available data.")
         st.stop()
     
     # Add cluster labels to the dataframe
     df_cluster = df.copy()
     df_cluster['cluster'] = clusters
     
-    # Define cluster names
+    # Define cluster names and descriptions
     cluster_names = {
-        0: "Budget-Friendly Spaces",
-        1: "Premium Full-Service Spaces",
+        0: "Budget-Friendly Workspaces",
+        1: "Premium Full-Service Offices",
         2: "Mid-Range Basic Spaces",
-        3: "Specialized Workspaces"
+        3: "Specialized Creative Studios"
+    }
+    
+    cluster_descriptions = {
+        0: "Affordable spaces with essential amenities. Perfect for freelancers and startups watching their budget.",
+        1: "High-end spaces with comprehensive amenities and services. Ideal for established businesses and professionals seeking comfort and convenience.",
+        2: "Balanced price-to-amenity ratio. Good for small teams and professionals who need reliable basics without the premium price.",
+        3: "Spaces with unique features tailored to specific needs. Great for creative professionals and specialized industries."
     }
     
     # City filter for cluster analysis
     if 'city' in df.columns:
         cities = sorted(df['city'].dropna().unique().tolist())
         selected_city_cluster = st.selectbox(
-            "Select city to explore coworking types", 
+            "Select a city to explore workspace types", 
             ["All Cities"] + cities, 
             key="city_filter_tab4"
         )
@@ -746,19 +767,26 @@ with tab4:
     if len(df_cluster_filtered) == 0:
         st.warning(f"No coworking spaces found in {selected_city_cluster}")
     else:
+        # Create a more visual layout for workspace types
+        st.subheader("Workspace Categories")
+        st.write("Click on any category to explore its details and see example spaces")
+        
         # Show number input for examples
-        num_spaces = st.number_input("Number of coworking spaces to show", 
-                                   min_value=1, max_value=10, value=3)
+        num_spaces = st.slider("Number of example spaces to show", 
+                               min_value=1, max_value=10, value=3)
 
         # Display each cluster type with its characteristics
         for cluster_id, name in cluster_names.items():
             cluster_data = df_cluster_filtered[df_cluster_filtered['cluster'] == cluster_id]
             if len(cluster_data) > 0:
                 with st.expander(f"📍 {name} ({len(cluster_data)} spaces)"):
+                    # Add description of this workspace type
+                    st.info(cluster_descriptions[cluster_id])
+                    
                     col1, col2 = st.columns(2)
                     
                     with col1:
-                        st.write("**Typical amenities:**")
+                        st.write("**What you'll typically find:**")
                         amenity_freqs = {}
                         amenity_cols = [col for col in df_cluster.columns if col.startswith('has_amenity_')]
                         for col in amenity_cols:
@@ -767,23 +795,40 @@ with tab4:
                             if freq > 0.3:  # Only show significant amenities
                                 amenity_freqs[amenity_name] = freq
                         
-                        # Show top 5 amenities with percentages
+                        # Show top 5 amenities with percentages and visual indicators
                         for amenity, freq in sorted(amenity_freqs.items(), 
                                                   key=lambda x: x[1], 
                                                   reverse=True)[:5]:
                             percentage = int(freq * 100)
-                            st.write(f"✨ {amenity} ({percentage}% of spaces)")
+                            # Create a simple visual bar
+                            bar_length = int(percentage / 5)  # Scale to reasonable length
+                            bar = "🟩" * bar_length
+                            st.write(f"✨ {amenity}: {bar} ({percentage}%)")
                     
                     with col2:
                         avg_price = cluster_data['price_numeric'].mean()
                         if not pd.isna(avg_price):
-                            st.write("**Average price:**")
-                            st.write(f"💰 {avg_price:.2f}")
-                        st.write("**Number of spaces:**")
-                        st.write(f"🏢 {len(cluster_data)} spaces")
+                            st.write("**Price range:**")
+                            price_min = cluster_data['price_numeric'].min()
+                            price_max = cluster_data['price_numeric'].max()
+                            st.write(f"💰 Avg: {avg_price:.2f} (Range: {price_min:.2f} - {price_max:.2f})")
+                        
+                        st.write("**Availability:**")
+                        st.write(f"🏢 {len(cluster_data)} spaces in {selected_city_cluster if selected_city_cluster != 'All Cities' else 'selected cities'}")
+                        
+                        # Add a "best for" section
+                        st.write("**Best for:**")
+                        if cluster_id == 0:
+                            st.write("👩‍💻 Freelancers and startups on a budget")
+                        elif cluster_id == 1:
+                            st.write("👔 Established businesses and professionals")
+                        elif cluster_id == 2:
+                            st.write("👥 Small teams and independent professionals")
+                        else:
+                            st.write("🎨 Creative professionals and specialized industries")
 
                     # Show example spaces button
-                    if st.button(f"Show spaces in this category", key=f"show_spaces_{cluster_id}"):
+                    if st.button(f"Show me spaces in this category", key=f"show_spaces_{cluster_id}"):
                         matching_spaces = cluster_data.head(num_spaces)
                         st.write(f"**Example spaces in this category:**")
                         
@@ -805,3 +850,15 @@ with tab4:
                                 if "url" in space and not pd.isna(space["url"]):
                                     st.markdown(f"[🔗 View Website]({space['url']})")
                             st.markdown("---")
+                            
+    # Add more context at the bottom
+    st.markdown("""
+    ### How to use this information
+    
+    - **Explore different categories** to understand what's available in the market
+    - **Compare amenities and prices** across workspace types
+    - **Find your ideal match** based on your budget and needs
+    - **View example spaces** to get a feel for each category
+    
+    This analysis helps you narrow down your options without having to visit dozens of spaces individually.
+    """)
