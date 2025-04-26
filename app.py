@@ -219,54 +219,42 @@ def get_recommendations(space_idx, similarity_matrix, df, n=5):
     return recommended_spaces
 
 # Build clustering model
-def build_clustering_model(df, n_clusters=5):
-    # Remove outliers based on price using the IQR method
-    if 'price_numeric' in df.columns:
-        Q1 = df['price_numeric'].quantile(0.25)
-        Q3 = df['price_numeric'].quantile(0.75)
-        IQR = Q3 - Q1
-        lower_bound = Q1 - 1.5 * IQR
-        upper_bound = Q3 + 1.5 * IQR
-        df_filtered = df[(df['price_numeric'] >= lower_bound) & (df['price_numeric'] <= upper_bound)].copy()
-        # Reset index to avoid index matching issues
-        df_filtered = df_filtered.reset_index(drop=True)
-        df = df.reset_index(drop=True)
-    else:
-        df_filtered = df.copy()
-        df_filtered = df_filtered.reset_index(drop=True)
-        df = df.reset_index(drop=True)
-
-    # Get amenity columns
+def build_clustering_model(df, n_clusters):
+    """Build a clustering model for coworking spaces"""
+    # Get amenity columns for clustering
     amenity_cols = [col for col in df.columns if col.startswith('has_amenity_')]
-    if not amenity_cols:
-        return None, None
-
-    # Create feature matrix from filtered dataframe
-    X = df_filtered[amenity_cols].fillna(0)
-
-    # Add price as a normalized feature if available
+    
+    # Create feature matrix
+    features = []
+    
+    # Add amenities
+    if amenity_cols:
+        features.append(df[amenity_cols].fillna(0))
+    
+    # Add normalized price if available
     if 'price_numeric' in df.columns:
+        price_data = df['price_numeric'].fillna(df['price_numeric'].median())
         scaler = StandardScaler()
-        price_scaled = scaler.fit_transform(
-            df_filtered[['price_numeric']].fillna(df_filtered['price_numeric'].mean()).values
+        price_normalized = scaler.fit_transform(price_data.values.reshape(-1, 1))
+        features.append(pd.DataFrame(price_normalized, columns=['price_scaled']))
+    
+    # Combine features
+    if not features:
+        return None, None
+    
+    feature_matrix = pd.concat(features, axis=1)
+    
+    # Apply clustering
+    try:
+        kmeans = KMeans(n_clusters=n_clusters, random_state=42)
+        clusters = kmeans.fit_predict(feature_matrix)
+        cluster_centers = pd.DataFrame(
+            kmeans.cluster_centers_,
+            columns=feature_matrix.columns
         )
-        X['price_scaled'] = price_scaled
-
-    # Fit KMeans on the filtered dataset
-    kmeans = KMeans(n_clusters=n_clusters, random_state=42)
-    cluster_labels = kmeans.fit_predict(X)
-
-    # Create an array for cluster assignments for the entire dataframe
-    clusters = -1 * np.ones(len(df), dtype=int)
-    clusters[df_filtered.index] = cluster_labels
-
-    # Compute cluster centers using only the filtered data features
-    cluster_centers = pd.DataFrame(
-        kmeans.cluster_centers_,
-        columns=X.columns
-    )
-
-    return clusters, cluster_centers
+        return clusters, cluster_centers
+    except:
+        return None, None
 
 # App title and description
 st.title("Coworking Space Finder")
@@ -715,160 +703,105 @@ with tab3:
             st.error("City information not available in the dataset")
 
 with tab4:
-    st.header("Coworking Space Clusters")
-    st.write("Discover patterns and groups of similar coworking spaces based on their amenities and features.")
+    st.subheader("Find Your Ideal Coworking Space Type")
     
-    # In Cluster Analysis: filter coworking spaces by city before clustering
+    # Build clustering model
+    n_clusters = 4
+    clusters, cluster_centers = build_clustering_model(df, n_clusters)
+    
+    if clusters is None:
+        st.error("Could not build clustering model with the available data.")
+        st.stop()
+    
+    # Add cluster labels to the dataframe
+    df_cluster = df.copy()
+    df_cluster['cluster'] = clusters
+    
+    # Define cluster names
+    cluster_names = {
+        0: "Budget-Friendly Spaces",
+        1: "Premium Full-Service Spaces",
+        2: "Mid-Range Basic Spaces",
+        3: "Specialized Workspaces"
+    }
+    
+    # City filter for cluster analysis
     if 'city' in df.columns:
-        cluster_cities = sorted(df['city'].dropna().unique().tolist())
-        selected_cluster_city = st.selectbox("Select city for clustering", ["All Cities"] + cluster_cities, key="city_cluster")
-    else:
-        selected_cluster_city = "All Cities"
-
-    # Filter the dataframe based on the selected city
-    if selected_cluster_city != "All Cities":
-        df_cluster = df[df['city'] == selected_cluster_city].copy()
-    else:
-        df_cluster = df.copy()
-
-    # Build clusters on the filtered data
-    with st.spinner("Building clusters for selected city..."):
-        # Get feature matrix
-        amenity_cols = [col for col in df_cluster.columns if col.startswith('has_amenity_')]
-        X = df_cluster[amenity_cols].fillna(0)
-        
-        # Check if we have enough data to cluster
-        if len(df_cluster) < 2:
-            st.warning(f"Not enough data to build clusters for {selected_cluster_city}")
-        else:
-            # Let user choose whether to use elbow method or manual selection
-            cluster_method = st.radio("How would you like to choose the number of clusters?", 
-                        ["Elbow Method", "Manual Selection"])
-
-            if cluster_method == "Elbow Method":
-                # Calculate SSE for different values of k
-                sse = []
-                # Adjust k_range based on dataset size
-                max_k = min(10, len(df_cluster) - 1)
-                k_range = range(2, max_k + 1)
-                
-                if 'price_numeric' in df_cluster.columns:
-                    scaler = StandardScaler()
-                    price_scaled = scaler.fit_transform(
-                        df_cluster[['price_numeric']].fillna(df_cluster['price_numeric'].mean()).values
-                    )
-                    X['price_scaled'] = price_scaled
-
-                with st.spinner("Calculating optimal number of clusters..."):
-                    for k in k_range:
-                        kmeans = KMeans(n_clusters=k, random_state=42)
-                        kmeans.fit(X)
-                        sse.append(kmeans.inertia_)
-
-                # Plot elbow curve
-                fig, ax = plt.subplots()
-                plt.plot(k_range, sse, 'bx-')
-                plt.xlabel('k')
-                plt.ylabel('Sum of squared distances')
-                plt.title('Elbow Method For Optimal k')
-                st.pyplot(fig)
-
-                # Find elbow point using the angle method
-                deltas = np.diff(sse)
-                angles = np.diff(deltas)
-                elbow_point = np.argmin(angles) + 2
-                st.write(f"Suggested optimal number of clusters: {elbow_point}")
-                n_clusters = elbow_point
-            else:
-                # Manual selection with slider, limit max value based on data size
-                max_clusters = min(10, len(df_cluster) - 1)
-                n_clusters = st.slider("Select number of clusters", 
-                                     min_value=2, 
-                                     max_value=max_clusters, 
-                                     value=min(5, max_clusters),
-                                     help="Choose how many groups to divide the coworking spaces into")
-        clusters, cluster_centers = build_clustering_model(df_cluster, n_clusters)
-        if clusters is not None:
-            df_cluster['cluster'] = clusters
-            st.write(f"Clustered {len(df_cluster)} coworking spaces in {selected_cluster_city}")
-            
-            # Compute cluster characteristics
-            cluster_characteristics = {}
-            for cluster in range(n_clusters):
-                cluster_df = df_cluster[df_cluster['cluster'] == cluster]
-                size = len(cluster_df)
-                avg_price = cluster_df['price_numeric'].mean() if size > 0 else None
-                
-                # Get amenity columns
-                amenity_cols = [col for col in df_cluster.columns if col.startswith('has_amenity_')]
-                amenity_counts = {}
-                for col in amenity_cols:
-                    # Sum the column for the cluster
-                    count = cluster_df[col].sum()
-                    if count > 0:
-                        # Format amenity name
-                        amenity = col.replace('has_amenity_', '').replace('_', ' ').title()
-                        amenity_counts[amenity] = count
-                
-                # Top 3 amenities sorted by occurrence
-                top_amenities = sorted(amenity_counts, key=amenity_counts.get, reverse=True)[:3]
-                
-                cluster_characteristics[cluster] = {
-                    'size': size,
-                    'avg_price': avg_price,
-                    'top_amenities': top_amenities
-                }
-        else:
-            st.warning("Could not build clusters for the selected data.")
-
-    if clusters is not None:
-        # Show cluster statistics
-        st.subheader("Cluster Overview")
-        for cluster in range(n_clusters):
-            chars = cluster_characteristics[cluster]
-            
-            with st.expander(f"Cluster {cluster + 1} ({chars['size']} spaces)"):
-                st.write("**Top Amenities:**")
-                for amenity in chars['top_amenities']:
-                    st.write(f"- {amenity}")
-                
-                if chars['avg_price'] is not None:
-                    st.write(f"**Average Price:** ${chars['avg_price']:.2f}")
-        
-        # Visualization
-        st.subheader("Cluster Visualization")
-        
-        if 'price_numeric' in df_cluster.columns:
-            # Create scatter plot of prices vs amenity count by cluster
-            viz_df = df_cluster.copy()
-            amenity_cols = [col for col in viz_df.columns if col.startswith('has_amenity_')]
-            viz_df['amenity_count'] = viz_df[amenity_cols].sum(axis=1)
-            
-            fig = px.scatter(
-                viz_df,
-                x='price_numeric',
-                y='amenity_count',
-                color='cluster',
-                hover_name='name',
-                labels={
-                    'price_numeric': 'Price',
-                    'amenity_count': 'Number of Amenities',
-                    'cluster': 'Cluster'
-                },
-                title='Clusters by Price and Amenity Count'
-            )
-            st.plotly_chart(fig, use_container_width=True)
-        
-        # Show amenity distribution across clusters
-        st.subheader("Amenity Distribution by Cluster")
-        fig, ax = plt.subplots(figsize=(12, 6))
-        sns.heatmap(
-            cluster_centers.iloc[:, cluster_centers.columns.str.startswith('has_amenity_')],
-            cmap='YlOrRd',
-            ax=ax
+        cities = sorted(df['city'].dropna().unique().tolist())
+        selected_city_cluster = st.selectbox(
+            "Select city to explore coworking types", 
+            ["All Cities"] + cities, 
+            key="city_filter_tab4"
         )
-        plt.xticks(rotation=45, ha='right')
-        plt.tight_layout()
-        st.pyplot(fig)
+
+    # Filter data based on selected city
+    if selected_city_cluster != "All Cities":
+        df_cluster_filtered = df_cluster[df_cluster['city'] == selected_city_cluster]
     else:
-        st.warning("Could not build clusters with the current data")
+        df_cluster_filtered = df_cluster
+
+    # Display filtration info
+    st.write(f"Found {len(df_cluster_filtered)} spaces in {selected_city_cluster if selected_city_cluster != 'All Cities' else 'all cities'}")
+
+    if len(df_cluster_filtered) == 0:
+        st.warning(f"No coworking spaces found in {selected_city_cluster}")
+    else:
+        # Show number input for examples
+        num_spaces = st.number_input("Number of coworking spaces to show", 
+                                   min_value=1, max_value=10, value=3)
+
+        # Display each cluster type with its characteristics
+        for cluster_id, name in cluster_names.items():
+            cluster_data = df_cluster_filtered[df_cluster_filtered['cluster'] == cluster_id]
+            if len(cluster_data) > 0:
+                with st.expander(f"📍 {name} ({len(cluster_data)} spaces)"):
+                    col1, col2 = st.columns(2)
+                    
+                    with col1:
+                        st.write("**Typical amenities:**")
+                        amenity_freqs = {}
+                        amenity_cols = [col for col in df_cluster.columns if col.startswith('has_amenity_')]
+                        for col in amenity_cols:
+                            amenity_name = col.replace('has_amenity_', '').replace('_', ' ').title()
+                            freq = cluster_data[col].mean()
+                            if freq > 0.3:  # Only show significant amenities
+                                amenity_freqs[amenity_name] = freq
+                        
+                        # Show top 5 amenities with percentages
+                        for amenity, freq in sorted(amenity_freqs.items(), 
+                                                  key=lambda x: x[1], 
+                                                  reverse=True)[:5]:
+                            percentage = int(freq * 100)
+                            st.write(f"✨ {amenity} ({percentage}% of spaces)")
+                    
+                    with col2:
+                        avg_price = cluster_data['price_numeric'].mean()
+                        if not pd.isna(avg_price):
+                            st.write("**Average price:**")
+                            st.write(f"💰 {avg_price:.2f}")
+                        st.write("**Number of spaces:**")
+                        st.write(f"🏢 {len(cluster_data)} spaces")
+
+                    # Show example spaces button
+                    if st.button(f"Show spaces in this category", key=f"show_spaces_{cluster_id}"):
+                        matching_spaces = cluster_data.head(num_spaces)
+                        st.write(f"**Example spaces in this category:**")
+                        
+                        for _, space in matching_spaces.iterrows():
+                            col1, col2 = st.columns([3, 1])
+                            with col1:
+                                st.subheader(space["name"])
+                                if "address" in space and not pd.isna(space["address"]):
+                                    st.write(f"📍 {space['address']}")
+                                if "price" in space and not pd.isna(space["price"]):
+                                    st.write(f"💰 {space['price']}")
+                                if isinstance(space['amenities_list'], list):
+                                    st.write("✨ " + ", ".join(
+                                        amenity.replace('_', ' ').title() 
+                                        for amenity in space['amenities_list'][:5]
+                                    ))
+                            
+                            with col2:
+                                if "url" in space and not pd.isna(space["url"]):
+                                    st.markdown(f"[🔗 View Website]({space['url']})")
+                            st.markdown("---")
