@@ -61,6 +61,10 @@ def parse_amenities(amenity_str):
 # Process amenities data with a loading indicator
 with st.spinner("Processing amenities data..."):
     amenities_df['amenities_list'] = amenities_df['extracted_amenities'].apply(parse_amenities)
+    # Remove wifi from amenities lists
+    amenities_df['amenities_list'] = amenities_df['amenities_list'].apply(
+        lambda x: [amenity for amenity in x if 'wifi' not in amenity.lower()]
+    )
 
 # Merge the dataframes with a loading indicator
 with st.spinner("Merging datasets..."):
@@ -75,6 +79,8 @@ with st.spinner("Merging datasets..."):
 all_amenities = []
 for amenities in df['amenities_list']:
     if isinstance(amenities, list):
+        # Remove wifi from existing lists
+        amenities = [amenity for amenity in amenities if 'wifi' not in amenity.lower()]
         all_amenities.extend(amenities)
 all_unique_amenities = list(set(all_amenities))
 
@@ -85,8 +91,7 @@ def find_amenities_in_description(description, amenities_list):
     description = description.lower()
     found_amenities = []
     amenity_keywords = {
-        'wifi': 'wifi',
-        'internet': 'wifi',
+        # Remove wifi-related keywords
         'coffee': 'coffee',
         'café': 'coffee',
         'cafe': 'coffee',
