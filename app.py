@@ -1035,7 +1035,6 @@ with tab4:
                             st.markdown("---")
                             
 with tab5:
-    with tab5:
     st.header("🤖 AI-Powered Coworking Scoring System")
     
     st.markdown("""
