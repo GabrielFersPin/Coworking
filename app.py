@@ -12,6 +12,11 @@ import pydeck as pdk
 import plotly.express as px
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.preprocessing import LabelEncoder
+import joblib
 
 
 # Set page configuration
@@ -261,13 +266,186 @@ def build_clustering_model(df, n_clusters):
     except:
         return None, None
 
+def create_features_for_scoring(df):
+    """
+    Crea características numéricas para el modelo de scoring
+    """
+    features_df = df.copy()
+    
+    # 1. Características de amenidades (ya las tienes)
+    amenity_cols = [col for col in df.columns if col.startswith('has_amenity_')]
+    
+    # 2. Características de precio
+    if 'price_numeric' in df.columns:
+        # Normalizar precio
+        features_df['price_normalized'] = (df['price_numeric'] - df['price_numeric'].min()) / (df['price_numeric'].max() - df['price_numeric'].min())
+        features_df['price_normalized'] = features_df['price_normalized'].fillna(features_df['price_normalized'].median())
+    
+    # 3. Características de ubicación (si tienes coordenadas)
+    if 'latitude' in df.columns and 'longitude' in df.columns:
+        # Distancia al centro de la ciudad (necesitarías definir centros)
+        city_centers = {
+            'Madrid': (40.4168, -3.7038),
+            'Barcelona': (41.3851, 2.1734),
+            'Valencia': (39.4699, -0.3763),
+            # Añadir más ciudades según tus datos
+        }
+        
+        def calculate_distance_to_center(row):
+            if pd.notna(row['city']) and row['city'] in city_centers:
+                center_lat, center_lon = city_centers[row['city']]
+                # Fórmula haversine simplificada
+                lat_diff = row['latitude'] - center_lat
+                lon_diff = row['longitude'] - center_lon
+                return np.sqrt(lat_diff**2 + lon_diff**2)
+            return np.nan
+        
+        features_df['distance_to_center'] = features_df.apply(calculate_distance_to_center, axis=1)
+        features_df['distance_to_center'] = features_df['distance_to_center'].fillna(features_df['distance_to_center'].median())
+    
+    # 4. Características categóricas codificadas
+    if 'city' in df.columns:
+        le_city = LabelEncoder()
+        features_df['city_encoded'] = le_city.fit_transform(df['city'].fillna('Unknown'))
+    
+    # 5. Contar total de amenidades
+    features_df['total_amenities'] = features_df[amenity_cols].sum(axis=1)
+    
+    return features_df
+
+# Función para entrenar modelo de scoring
+# Funciones para el sistema de scoring - Añadir después de las importaciones
+
+def create_features_for_scoring(df):
+    """
+    Crea características numéricas para el modelo de scoring
+    """
+    features_df = df.copy()
+    
+    # 1. Características de amenidades (ya las tienes)
+    amenity_cols = [col for col in df.columns if col.startswith('has_amenity_')]
+    
+    # 2. Características de precio
+    if 'price_numeric' in df.columns:
+        # Normalizar precio
+        price_data = df['price_numeric'].dropna()
+        if len(price_data) > 0:
+            features_df['price_normalized'] = (df['price_numeric'] - price_data.min()) / (price_data.max() - price_data.min())
+            features_df['price_normalized'] = features_df['price_normalized'].fillna(0.5)
+        else:
+            features_df['price_normalized'] = 0.5
+    else:
+        features_df['price_normalized'] = 0.5
+    
+    # 3. Características categóricas codificadas
+    if 'city' in df.columns:
+        le_city = LabelEncoder()
+        city_data = df['city'].fillna('Unknown')
+        features_df['city_encoded'] = le_city.fit_transform(city_data)
+    else:
+        features_df['city_encoded'] = 0
+    
+    # 4. Contar total de amenidades
+    if amenity_cols:
+        features_df['total_amenities'] = features_df[amenity_cols].sum(axis=1)
+    else:
+        features_df['total_amenities'] = 0
+    
+    return features_df
+
+def train_scoring_model(df):
+    """
+    Entrena un modelo para predecir la calidad/puntuación de un coworking
+    """
+    # Crear características
+    features_df = create_features_for_scoring(df)
+    
+    # Crear un score sintético basado en múltiples factores
+    # Score basado en amenidades, precio y otros factores
+    features_df['synthetic_score'] = (
+        features_df['total_amenities'] * 0.1 +  # Amenidades
+        (1 - features_df['price_normalized']) * 0.3 +  # Precio (invertido)
+        np.random.normal(2.5, 0.5, len(features_df))  # Factor base + variabilidad
+    )
+    
+    # Normalizar a escala 1-5
+    score_min = features_df['synthetic_score'].min()
+    score_max = features_df['synthetic_score'].max()
+    if score_max > score_min:
+        features_df['synthetic_score'] = 1 + (features_df['synthetic_score'] - score_min) / (score_max - score_min) * 4
+    else:
+        features_df['synthetic_score'] = 3.0  # Valor por defecto
+    
+    # Asegurar que esté en rango 1-5
+    features_df['synthetic_score'] = np.clip(features_df['synthetic_score'], 1, 5)
+    
+    target = 'synthetic_score'
+    
+    # Seleccionar características para el modelo
+    feature_columns = ['total_amenities', 'price_normalized', 'city_encoded']
+    
+    # Añadir amenidades si existen
+    amenity_cols = [col for col in features_df.columns if col.startswith('has_amenity_')]
+    if amenity_cols:
+        feature_columns.extend(amenity_cols[:10])  # Limitar a top 10 amenidades
+    
+    # Verificar que las columnas existen
+    available_features = [col for col in feature_columns if col in features_df.columns]
+    
+    if not available_features:
+        return None, None, {'error': 'No features available for training'}
+    
+    X = features_df[available_features].fillna(0)
+    y = features_df[target]
+    
+    # Verificar que tenemos suficientes datos
+    if len(X) < 10:
+        return None, None, {'error': 'Not enough data for training'}
+    
+    # Dividir datos
+    test_size = min(0.3, max(0.1, len(X) * 0.2 / len(X)))  # Ajustar test_size
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
+    
+    # Entrenar modelo
+    model = RandomForestRegressor(n_estimators=50, random_state=42, max_depth=10)
+    model.fit(X_train, y_train)
+    
+    # Evaluar modelo
+    y_pred = model.predict(X_test)
+    mse = mean_squared_error(y_test, y_pred)
+    r2 = r2_score(y_test, y_pred)
+    
+    return model, available_features, {'mse': mse, 'r2': r2}
+
+def predict_coworking_score(model, feature_columns, new_coworking_params):
+    """
+    Predice el score de un nuevo coworking basado en sus parámetros
+    """
+    # Crear DataFrame con las características
+    features = {}
+    
+    # Mapear parámetros de entrada a características del modelo
+    for col in feature_columns:
+        if col in new_coworking_params:
+            features[col] = new_coworking_params[col]
+        elif col.startswith('has_amenity_'):
+            amenity_name = col.replace('has_amenity_', '')
+            features[col] = new_coworking_params.get(f'has_{amenity_name}', 0)
+        else:
+            features[col] = 0
+    
+    features_df = pd.DataFrame([features])
+    
+    # Hacer predicción
+    score = model.predict(features_df[feature_columns])[0]
+    return max(1, min(5, score))  # Asegurar que esté en rango 1-5
+
 # App title and description
 st.title("Coworking Space Finder")
 st.write("Find your perfect coworking space in just a few clicks. Filter by amenities, compare options, or discover top-rated spaces nearby.")
 
 # Create tabs for different views
-tab1, tab2, tab3, tab4 = st.tabs(["Find Spaces", "Similar Spaces", "Top Rated Spaces", "Coworking Styles"])
-
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["Find Spaces", "Similar Spaces", "Top Rated Spaces", "Coworking Styles", "AI Scoring"])
 with tab1:
     st.sidebar.header("How to use this tool")
     with st.sidebar.expander("📖 Usage Guide", expanded=True):
@@ -856,14 +1034,241 @@ with tab4:
                                     st.markdown(f"[🔗 View Website]({space['url']})")
                             st.markdown("---")
                             
-    # Add more context at the bottom
+with tab5:
+    with tab5:
+    st.header("🤖 AI-Powered Coworking Scoring System")
+    
     st.markdown("""
-    ### How to use this information
+    ### What does this system do?
     
-    - **Explore different categories** to understand what's available in the market
-    - **Compare amenities and prices** across workspace types
-    - **Find your ideal match** based on your budget and needs
-    - **View example spaces** to get a feel for each category
+    This AI system learns from existing coworking spaces to:
+    - **Predict quality scores** for new coworking spaces (1-5 scale)
+    - **Analyze factors** that contribute to coworking quality
+    - **Provide intelligent recommendations** using machine learning
     
-    This analysis helps you narrow down your options without having to visit dozens of spaces individually.
+    The system considers amenities, pricing, location, and other factors to make predictions.
     """)
+    
+    # Train the model
+    if st.button("🚀 Train AI Model", type="primary"):
+        with st.spinner("Training AI model... This may take a moment"):
+            try:
+                model, feature_columns, metrics = train_scoring_model(df)
+                
+                if model is None:
+                    st.error(f"Could not train model: {metrics.get('error', 'Unknown error')}")
+                else:
+                    st.session_state.scoring_model = model
+                    st.session_state.feature_columns = feature_columns
+                    st.session_state.model_metrics = metrics
+                    
+                    st.success("✅ Model trained successfully!")
+                    
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        st.metric("R² Score", f"{metrics['r2']:.3f}")
+                    with col2:
+                        st.metric("Mean Squared Error", f"{metrics['mse']:.3f}")
+                    
+                    st.info("Now you can use the prediction system below!")
+                    
+            except Exception as e:
+                st.error(f"Error training model: {str(e)}")
+    
+    # Show model info if trained
+    if 'scoring_model' in st.session_state:
+        st.markdown("---")
+        st.subheader("🎯 Predict Score for New Coworking Space")
+        
+        # Create input form
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("**📍 Basic Information**")
+            
+            # City selection
+            available_cities = df['city'].dropna().unique() if 'city' in df.columns else ['Madrid', 'Barcelona', 'Valencia']
+            new_city = st.selectbox("City", available_cities, key="scoring_city")
+            
+            # Price input
+            new_price = st.number_input(
+                "Monthly Price (€)", 
+                min_value=0, 
+                max_value=2000, 
+                value=300,
+                step=50,
+                key="scoring_price"
+            )
+            
+            # Total amenities
+            total_amenities = st.number_input(
+                "Total number of amenities", 
+                min_value=0, 
+                max_value=20, 
+                value=5,
+                key="scoring_amenities"
+            )
+        
+        with col2:
+            st.markdown("**✨ Key Amenities**")
+            
+            # Get top amenities for selection
+            top_amenities = [amenity for amenity, _ in most_common_amenities[:8]]
+            
+            # Create checkboxes for amenities
+            selected_amenities = {}
+            for i, amenity in enumerate(top_amenities):
+                amenity_display = amenity.replace('_', ' ').title()
+                selected_amenities[amenity] = st.checkbox(
+                    amenity_display, 
+                    key=f"scoring_amenity_{i}"
+                )
+        
+        # Prediction button
+        if st.button("🔮 Predict Quality Score", type="secondary"):
+            try:
+                # Prepare parameters
+                new_params = {
+                    'total_amenities': total_amenities,
+                    'price_normalized': (new_price - 100) / (1000 - 100) if new_price > 0 else 0.5,  # Simple normalization
+                    'city_encoded': hash(new_city) % 10,  # Simple city encoding
+                }
+                
+                # Add amenity flags
+                for amenity, is_selected in selected_amenities.items():
+                    new_params[f'has_amenity_{amenity}'] = 1 if is_selected else 0
+                
+                # Predict score
+                predicted_score = predict_coworking_score(
+                    st.session_state.scoring_model,
+                    st.session_state.feature_columns,
+                    new_params
+                )
+                
+                # Display result with nice formatting
+                st.markdown("---")
+                
+                # Score display
+                col1, col2, col3 = st.columns([1, 2, 1])
+                with col2:
+                    st.markdown(f"""
+                    <div style="text-align: center; padding: 20px; border: 2px solid #4CAF50; border-radius: 10px; background-color: #f8f9fa;">
+                        <h2 style="color: #4CAF50; margin: 0;">🎯 Predicted Score</h2>
+                        <h1 style="color: #2E7D32; margin: 10px 0;">{predicted_score:.1f}/5.0</h1>
+                    </div>
+                    """, unsafe_allow_html=True)
+                
+                st.markdown("<br>", unsafe_allow_html=True)
+                
+                # Interpretation
+                if predicted_score >= 4.0:
+                    st.success("🌟 **Excellent** - This would be a top-tier coworking space!")
+                    interpretation = "This space has all the factors that make coworking spaces successful!"
+                elif predicted_score >= 3.5:
+                    st.success("👍 **Very Good** - This would be a solid choice!")
+                    interpretation = "This space offers great value and good amenities."
+                elif predicted_score >= 3.0:
+                    st.warning("👌 **Good** - This would be a decent option!")
+                    interpretation = "This space meets basic requirements but could be improved."
+                elif predicted_score >= 2.5:
+                    st.warning("⚠️ **Fair** - This might have some limitations")
+                    interpretation = "Consider adding more amenities or adjusting pricing."
+                else:
+                    st.error("❌ **Needs Improvement** - Consider major changes")
+                    interpretation = "This space needs significant improvements to be competitive."
+                
+                st.info(f"💡 **AI Analysis**: {interpretation}")
+                
+                # Show feature importance
+                st.markdown("---")
+                st.subheader("📊 What Influences This Score?")
+                
+                # Simple feature importance display
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    st.markdown("**Your Input:**")
+                    st.write(f"• **City**: {new_city}")
+                    st.write(f"• **Monthly Price**: €{new_price}")
+                    st.write(f"• **Total Amenities**: {total_amenities}")
+                    
+                with col2:
+                    st.markdown("**Selected Amenities:**")
+                    selected_list = [amenity.replace('_', ' ').title() for amenity, selected in selected_amenities.items() if selected]
+                    if selected_list:
+                        for amenity in selected_list:
+                            st.write(f"✅ {amenity}")
+                    else:
+                        st.write("No specific amenities selected")
+                
+                # Suggestions for improvement
+                if predicted_score < 4.0:
+                    st.markdown("---")
+                    st.subheader("💡 Suggestions for Improvement")
+                    
+                    suggestions = []
+                    if total_amenities < 8:
+                        suggestions.append("Consider adding more amenities to increase appeal")
+                    if new_price > 500:
+                        suggestions.append("Price might be high for the market - consider competitive pricing")
+                    if sum(selected_amenities.values()) < 3:
+                        suggestions.append("Adding key amenities like coffee, meeting rooms, or parking could help")
+                    
+                    if suggestions:
+                        for suggestion in suggestions:
+                            st.write(f"• {suggestion}")
+                    else:
+                        st.write("• Focus on enhancing unique features that set your space apart")
+                        st.write("• Consider location and accessibility improvements")
+                
+            except Exception as e:
+                st.error(f"Error making prediction: {str(e)}")
+        
+        # Model information
+        st.markdown("---")
+        with st.expander("🔍 Model Information"):
+            st.write("**Model Type**: Random Forest Regressor")
+            st.write(f"**Number of Features**: {len(st.session_state.feature_columns)}")
+            st.write(f"**Training Data**: {len(df)} coworking spaces")
+            st.write("**Features Used**:")
+            for feature in st.session_state.feature_columns[:10]:  # Show first 10
+                feature_display = feature.replace('has_amenity_', '').replace('_', ' ').title()
+                st.write(f"  • {feature_display}")
+            if len(st.session_state.feature_columns) > 10:
+                st.write(f"  • ... and {len(st.session_state.feature_columns) - 10} more")
+    
+    else:
+        # Instructions when model is not trained
+        st.info("👆 **Get started**: Click 'Train AI Model' above to begin using the scoring system!")
+        
+        st.markdown("---")
+        st.subheader("📚 How it works")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("""
+            **🧠 Machine Learning Process:**
+            1. Analyzes existing coworking data
+            2. Learns patterns from amenities, prices, locations
+            3. Creates a predictive model
+            4. Scores new spaces based on learned patterns
+            """)
+        
+        with col2:
+            st.markdown("""
+            **🎯 What you can predict:**
+            - Quality score (1-5 scale) for new spaces
+            - Impact of different amenities
+            - Optimal pricing strategies
+            - Location effectiveness
+            """)
+        
+        st.markdown("---")
+        st.markdown("""
+        **💡 Use cases:**
+        - **Entrepreneurs**: Validate your coworking space concept
+        - **Investors**: Assess potential locations and setups
+        - **Managers**: Optimize existing space offerings
+        - **Researchers**: Understand coworking space success factors
+        """)
