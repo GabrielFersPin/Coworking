@@ -18,7 +18,6 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.preprocessing import LabelEncoder
 import joblib
 
-
 # Set page configuration
 st.set_page_config(layout="wide", page_title="Coworking Space Finder")
 
@@ -1117,7 +1116,23 @@ with tab5:
     _Scroll down to get started!_
     """)
 
-    # Only show the existing space scoring tab
+    # --- Place the button here ---
+    if st.button("Train & Reload AI Model"):
+        with st.spinner("Training and exporting model..."):
+            model, feature_columns, metrics = train_scoring_model(df)
+            if model is not None:
+                os.makedirs("src/ai", exist_ok=True)
+                joblib.dump(model, "src/ai/scoring_model.pkl")
+                joblib.dump(feature_columns, "src/ai/feature_columns.pkl")
+                # Reload the model into session state immediately
+                st.session_state.scoring_model = model
+                st.session_state.feature_columns = feature_columns
+                st.success("Model trained, exported, and reloaded successfully!")
+                st.write(f"Model metrics: {metrics}")
+            else:
+                st.error("Model training failed. Check your data.")
+    # --- End button placement ---
+
     st.subheader("📊 AI Analysis of Existing Coworking Spaces")
 
     # Check if model is trained
