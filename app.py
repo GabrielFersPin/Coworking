@@ -503,8 +503,16 @@ def get_price_analysis(space_data, df):
     return None, None, None, None
 
 # App title and description
-st.title("Coworking Space Finder")
-st.write("Find your perfect coworking space in just a few clicks. Filter by amenities, compare options, or discover top-rated spaces nearby.")
+st.title("Coworking Space Explorer & AI Analyzer")
+st.write("""
+Discover, compare, and analyze coworking spaces with the power of AI.
+- 🔍 **Filter** by city, price, and amenities
+- 🤖 **Get AI-powered quality scores** and recommendations
+- 📊 **Compare spaces** and explore workspace styles
+- 🏆 **Find top-rated and best-matching coworkings** for your needs
+
+Start by selecting your preferences or jump to the AI tab for a detailed analysis!
+""")
 
 # Create tabs for different views
 tab1, tab2, tab3, tab4, tab5 = st.tabs(["Find Spaces", "Similar Spaces", "Top Rated Spaces", "Coworking Styles", "AI Scoring"])
@@ -1340,3 +1348,14 @@ with tab5:
                 except Exception as e:
                     st.error(f"Error analyzing space: {str(e)}")
                     st.write("Debug info:", str(e))
+
+# Auto-load the AI model and feature columns if available
+model_path = os.path.join(current_dir, "src", "ai", "scoring_model.pkl")
+features_path = os.path.join(current_dir, "src", "ai", "feature_columns.pkl")
+
+if 'scoring_model' not in st.session_state or 'feature_columns' not in st.session_state:
+    try:
+        st.session_state.scoring_model = joblib.load(model_path)
+        st.session_state.feature_columns = joblib.load(features_path)
+    except Exception as e:
+        st.warning(f"AI model could not be loaded automatically: {e}")
