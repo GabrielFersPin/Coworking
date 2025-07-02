@@ -1,5 +1,7 @@
 # 🏢 Coworking Space Analysis & Recommendation System
 
+[Streamlit](https://coworking.streamlit.app/)
+
 ## Project Motivation
 
 The rise of remote work has created an increasing demand for flexible workspaces. Many professionals and businesses now seek coworking environments that balance cost, location, and amenities. This project was developed to solve a critical problem: helping users quickly find and compare coworking spaces that best match their specific needs and preferences.
@@ -166,4 +168,4 @@ Through this project, several valuable insights emerged:
 ---
 
 📌 **Author:** Gabriel Fernandes Pinheiro  
-🔗 [LinkedIn](https://www.linkedin.com/in/gabriel-fernandes-pinheiro) | [GitHub](https://github.com/gabriel-pinheiro)
+🔗 [LinkedIn](https://www.linkedin.com/in/gabriel-fernandes-pinheiro) | [GitHub](https://github.com/gabriel-pinheiro) | [Streamlit](https://coworking.streamlit.app/)
