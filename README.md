@@ -1,6 +1,12 @@
 # Coworking Space Explorer & AI Analyzer
 
+<<<<<<< HEAD
 A Streamlit web app to discover, compare, and analyze coworking spaces using advanced filtering, clustering, and AI-powered scoring.
+=======
+[Streamlit](https://coworking.streamlit.app/)
+
+## Project Motivation
+>>>>>>> 43c12e4b3093fb241d330396fa9d4b52b04e32bc
 
 ## 🚀 Features
 
@@ -92,4 +98,8 @@ A Streamlit web app to discover, compare, and analyze coworking spaces using adv
 ---
 
 📌 **Author:** Gabriel Fernandes Pinheiro  
+<<<<<<< HEAD
 🔗 [LinkedIn](https://www.linkedin.com/in/gabriel-fernandes-pinheiro) | [GitHub](https://github.com/gabriel-pinheiro) 
+=======
+🔗 [LinkedIn](https://www.linkedin.com/in/gabriel-fernandes-pinheiro) | [GitHub](https://github.com/gabriel-pinheiro) | [Streamlit](https://coworking.streamlit.app/)
+>>>>>>> 43c12e4b3093fb241d330396fa9d4b52b04e32bc
